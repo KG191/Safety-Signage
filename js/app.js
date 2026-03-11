@@ -224,8 +224,31 @@ function resetCaptureForm() {
         el.classList.remove('ai-suggested', 'ai-high', 'ai-medium', 'ai-low');
     });
 
+    // Hide tag checks group
+    const tagGroup = document.getElementById('tag-checks-group');
+    if (tagGroup) tagGroup.style.display = 'none';
+
     // Keep GPS from previous capture (common to re-use at same location)
 }
+
+// --- Tag checks conditional visibility ---
+// Show the Tags (Section 5) check group only when the sign text suggests a tag
+function updateTagCheckVisibility() {
+    const tagGroup = document.getElementById('tag-checks-group');
+    if (!tagGroup) return;
+
+    const signText = (document.getElementById('capture-sign-text').value || '').toLowerCase();
+    const notes = (document.getElementById('capture-notes').value || '').toLowerCase();
+
+    // Show tag checks if "tag" appears in sign text or notes
+    const isTag = signText.includes('tag') || notes.includes('tag') ||
+                  signText.includes('lockout') || signText.includes('tagout');
+    tagGroup.style.display = isTag ? 'block' : 'none';
+}
+
+// Listen for text changes that might indicate a tag
+document.getElementById('capture-sign-text').addEventListener('input', updateTagCheckVisibility);
+document.getElementById('capture-notes').addEventListener('input', updateTagCheckVisibility);
 
 // --- Utility ---
 

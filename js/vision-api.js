@@ -31,16 +31,23 @@ Analyse the image and return a JSON object (no markdown, no explanation — only
     "correct-colour": true/false,
     "correct-shape": true/false,
     "correct-legend-colour": true/false,
+    "correct-enclosure": true/false or null,
+    "correct-layout": true/false or null,
     "standard-symbol": true/false,
     "adequate-size": true/false or null,
     "legible": true/false,
+    "colour-fidelity": true/false,
     "visible": true/false,
     "location": true/false or null,
+    "mounting-height": true/false or null,
+    "not-moveable": true/false or null,
     "condition": true/false,
+    "construction-safe": true/false or null,
     "illumination": true/false or null,
     "not-hazard": true/false or null,
     "still-relevant": true/false or null,
-    "not-cluttered": true/false or null
+    "not-cluttered": true/false or null,
+    "tag-compliant": true/false or null
   },
   "overall": "compliant"|"minor-nc"|"major-nc"|"missing"|"redundant",
   "reasoning": "brief explanation of assessment",
@@ -59,6 +66,13 @@ Key AS 1319 rules to apply:
 - Fire: red rectangle, white legend
 - Safety colours: Red R13 #CC0000, Yellow Y15 #FDB813, Green G21 #006B3F, Blue B23 #004B87
 - Standard symbols must be from Appendix B or tested per AS 2342
+- correct-enclosure: emergency/fire/prohibition signs require white enclosure or border (Clause 2.2)
+- correct-layout: symbol-only, composite (symbol + text), or multi-message are acceptable; hybrid (words repeat symbol) is deprecated (Clause 2.3.3(d))
+- colour-fidelity: assess whether safety colours appear vivid and close to AS 2700 references, or significantly faded
+- mounting-height: ~1500mm above floor level is the target (Clause 4.2.2)
+- not-moveable: sign should not be on a door, gate, or moveable object (Clause 4.2.4)
+- construction-safe: sign appears structurally sound with secure fasteners (Clause 4.1.1)
+- tag-compliant: if sign is a temporary tag, assess against Section 5; set null if not a tag
 - Set null for checks you cannot assess from the image alone
 - If the image does not contain a safety sign, set isSign=false and all other fields to null
 

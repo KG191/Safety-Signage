@@ -292,9 +292,22 @@ function analyseColours(imageData) {
         confidence = Math.min(1, clarity * 0.7 + gridDomPct * 0.3);
     }
 
+    // Find dominant cluster's average RGB for colour fidelity assessment
+    let dominantRGB = null;
+    if (dominant) {
+        // Find the largest K-means cluster matching the dominant safety colour
+        for (const cluster of clusters) {
+            if (cluster.safetyColour === dominant) {
+                dominantRGB = { r: cluster.r, g: cluster.g, b: cluster.b };
+                break; // Clusters are sorted by count descending
+            }
+        }
+    }
+
     return {
         dominantColour: dominant,
         dominantPercentage: dominantPct > 0 ? dominantPct : (dominant ? percentages[dominant] : 0),
+        dominantRGB,
         secondaryColour: secondary,
         secondaryPercentage: secondaryPct,
         percentages,

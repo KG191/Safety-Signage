@@ -199,19 +199,26 @@ function generateGapAnalysis(captures) {
     // Analyse which compliance checks are most commonly failing
     const failureCounts = {};
     const checkLabels = {
-        'correct-colour': 'Incorrect safety colour (Clause 2.2)',
+        'correct-colour': 'Incorrect safety colour hue (Clause 2.2)',
         'correct-shape': 'Incorrect symbolic shape (Clause 2.2)',
         'correct-legend-colour': 'Incorrect legend colour (Table 3.1)',
+        'correct-enclosure': 'White enclosure/border missing (Clause 2.2)',
+        'correct-layout': 'Incorrect sign layout type (Clause 2.3)',
         'standard-symbol': 'Non-standard symbol used (Clause 3.1/3.2)',
         'adequate-size': 'Inadequate size for viewing distance (Clause 3.4)',
         'legible': 'Legend not legible (Clause 3.4)',
+        'colour-fidelity': 'Colour faded from AS 2700 specification (Clause 3.5)',
         'visible': 'Sign not visible/obscured (Clause 4.2.1)',
         'location': 'Poor location/siting (Clause 4.2.2)',
-        'condition': 'Poor condition/maintenance (Clause 4.3)',
+        'mounting-height': 'Incorrect mounting height (Clause 4.2.2)',
+        'not-moveable': 'Mounted on moveable object (Clause 4.2.4)',
+        'condition': 'Poor surface condition/maintenance (Clause 4.3)',
+        'construction-safe': 'Structurally unsound or fasteners insecure (Clause 4.1.1)',
         'illumination': 'Inadequate illumination (Clause 4.2.5)',
         'not-hazard': 'Sign creates a hazard (Clause 4.1)',
         'still-relevant': 'Sign no longer relevant (Clause 4.1)',
-        'not-cluttered': 'Excessive sign clustering (Clause 4.2.6)'
+        'not-cluttered': 'Excessive sign clustering (Clause 4.2.6)',
+        'tag-compliant': 'Tag does not meet Section 5 requirements'
     };
 
     for (const capture of nonCompliant) {
@@ -256,16 +263,23 @@ function getRecommendation(checkKey) {
         'correct-colour': 'Replace non-compliant signs with signs using correct AS 1319 safety colours (Table 3.2): Red R13, Yellow Y15, Green G21, Blue B23.',
         'correct-shape': 'Ensure signs use the correct symbolic shapes per Table 2.1: circle for regulatory, triangle for warning, rectangle for emergency/fire.',
         'correct-legend-colour': 'Verify legend colours per Table 3.1: black on white/yellow backgrounds, white on green/red backgrounds.',
+        'correct-enclosure': 'Add or restore white enclosure border per Clause 2.2. Emergency, fire, and prohibition signs require a white border or interior.',
+        'correct-layout': 'Review sign layout type — hybrid signs (words repeating symbol meaning) are deprecated per Clause 2.3.3(d). Use symbol-only or composite layouts.',
         'standard-symbol': 'Replace non-standard symbols with AS 1319 Appendix B standard symbolic signs. Any new symbols must be tested per AS 2342.',
         'adequate-size': 'Increase sign size to meet Clause 3.4.2 minimums: 15mm per metre of viewing distance for symbols, 5mm per metre for upper case letters.',
         'legible': 'Improve sign legibility — consider larger letter sizes, better contrast, or repositioning closer to the intended viewing area.',
+        'colour-fidelity': 'Repaint or replace sign — colours have faded from the AS 2700 specification (Clause 3.5). Reference colours: Red R13, Yellow Y15, Green G21, Blue B23.',
         'visible': 'Relocate or clear obstructions to ensure signs are clearly visible. Consider contrast with surroundings (Clause 4.2.1).',
-        'location': 'Reposition signs closer to observer line of sight (~1500mm above floor, ±5°). Ensure adequate advance warning distance for hazards (Clause 4.2.2-4.2.3).',
+        'location': 'Reposition signs closer to observer line of sight. Ensure adequate advance warning distance for hazards (Clause 4.2.2-4.2.3).',
+        'mounting-height': 'Relocate sign to approximately 1500mm above floor level per Clause 4.2.2.',
+        'not-moveable': 'Relocate sign from moveable object (door, gate) to a fixed surface per Clause 4.2.4, so it remains visible at all times.',
         'condition': 'Implement regular sign maintenance program. Replace faded, damaged, or deteriorating signs promptly (Clause 4.3).',
+        'construction-safe': 'Repair or replace sign — construction or fasteners are inadequate per Clause 4.1.1. Ensure edges are not sharp and mounting is secure.',
         'illumination': 'Provide external or internal illumination where ambient lighting is insufficient. Consider retroreflective materials for signs needing visibility in low light (Clause 3.5.2).',
         'not-hazard': 'Reposition signs that project into passageways or could be struck by persons, vehicles or mobile plant (Clause 4.1).',
         'still-relevant': 'Remove signs that are no longer relevant to current conditions. Leaving outdated signs may induce disrespect for all signage (Clause 4.1).',
-        'not-cluttered': 'Reduce sign clustering at this location. Excessive signage reduces comprehension of individual messages (Clause 4.2.6).'
+        'not-cluttered': 'Reduce sign clustering at this location. Excessive signage reduces comprehension of individual messages (Clause 4.2.6).',
+        'tag-compliant': 'Replace tag to meet Section 5 requirements of AS 1319. Ensure correct format, colour coding, and attachment method.'
     };
     return recommendations[checkKey] || `Address compliance issue: ${checkKey}`;
 }
@@ -329,13 +343,18 @@ document.getElementById('btn-export-csv').addEventListener('click', async () => 
 
     const headers = [
         'Item', 'Location', 'Latitude', 'Longitude', 'Category', 'Sign Number',
-        'Sign Text', 'Overall Assessment', 'Colour OK', 'Shape OK', 'Legend Colour OK',
-        'Standard Symbol', 'Adequate Size', 'Legible', 'Visible', 'Location OK',
-        'Condition OK', 'Illumination OK', 'No Hazard', 'Still Relevant', 'Not Cluttered',
+        'Sign Text', 'Overall Assessment',
+        'Colour OK', 'Shape OK', 'Legend Colour OK', 'Enclosure OK', 'Layout OK',
+        'Standard Symbol', 'Adequate Size', 'Legible', 'Colour Fidelity',
+        'Visible', 'Location OK', 'Mounting Height', 'Not Moveable',
+        'Condition OK', 'Construction Safe', 'Illumination OK',
+        'No Hazard', 'Still Relevant', 'Not Cluttered', 'Tag Compliant',
         'Notes', 'Captured At',
         'AI Confidence', 'AI Category', 'AI Sign Number', 'AI Overall',
         'Dominant Colour', 'Detected Shape', 'Auditor Override', 'Detection Time (ms)'
     ];
+
+    const checkVal = (ch, key) => ch[key] === true ? 'Yes' : ch[key] === false ? 'No' : 'N/A';
 
     const rows = captures.map((c, i) => {
         const ch = c.checks || {};
@@ -351,19 +370,26 @@ document.getElementById('btn-export-csv').addEventListener('click', async () => 
             c.signNumber || '',
             c.signText || '',
             OVERALL_LABELS[c.overall] || c.overall,
-            ch['correct-colour'] ? 'Yes' : 'No',
-            ch['correct-shape'] ? 'Yes' : 'No',
-            ch['correct-legend-colour'] ? 'Yes' : 'No',
-            ch['standard-symbol'] ? 'Yes' : 'No',
-            ch['adequate-size'] ? 'Yes' : 'No',
-            ch['legible'] ? 'Yes' : 'No',
-            ch['visible'] ? 'Yes' : 'No',
-            ch['location'] ? 'Yes' : 'No',
-            ch['condition'] ? 'Yes' : 'No',
-            ch['illumination'] ? 'Yes' : 'No',
-            ch['not-hazard'] ? 'Yes' : 'No',
-            ch['still-relevant'] ? 'Yes' : 'No',
-            ch['not-cluttered'] ? 'Yes' : 'No',
+            checkVal(ch, 'correct-colour'),
+            checkVal(ch, 'correct-shape'),
+            checkVal(ch, 'correct-legend-colour'),
+            checkVal(ch, 'correct-enclosure'),
+            checkVal(ch, 'correct-layout'),
+            checkVal(ch, 'standard-symbol'),
+            checkVal(ch, 'adequate-size'),
+            checkVal(ch, 'legible'),
+            checkVal(ch, 'colour-fidelity'),
+            checkVal(ch, 'visible'),
+            checkVal(ch, 'location'),
+            checkVal(ch, 'mounting-height'),
+            checkVal(ch, 'not-moveable'),
+            checkVal(ch, 'condition'),
+            checkVal(ch, 'construction-safe'),
+            checkVal(ch, 'illumination'),
+            checkVal(ch, 'not-hazard'),
+            checkVal(ch, 'still-relevant'),
+            checkVal(ch, 'not-cluttered'),
+            checkVal(ch, 'tag-compliant'),
             c.notes || '',
             c.capturedAt || '',
             d.confidence != null ? Math.round(d.confidence * 100) + '%' : '',

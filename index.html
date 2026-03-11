@@ -213,13 +213,19 @@
                     <div class="check-group">
                         <h3>Colour & Shape (Clause 2.2, Table 2.1)</h3>
                         <label class="check-item">
-                            <input type="checkbox" id="check-correct-colour"> Correct safety colour used
+                            <input type="checkbox" id="check-correct-colour"> Correct safety colour hue
                         </label>
                         <label class="check-item">
                             <input type="checkbox" id="check-correct-shape"> Correct symbolic shape
                         </label>
                         <label class="check-item">
                             <input type="checkbox" id="check-correct-legend-colour"> Correct legend colour
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-correct-enclosure"> White enclosure/border present (Clause 2.2)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-correct-layout"> Correct sign layout type (Clause 2.3)
                         </label>
                     </div>
 
@@ -234,6 +240,9 @@
                         <label class="check-item">
                             <input type="checkbox" id="check-legible"> Legend legible at intended distance
                         </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-colour-fidelity"> Colour not faded from AS 2700 (Clause 3.5)
+                        </label>
                     </div>
 
                     <div class="check-group">
@@ -245,7 +254,16 @@
                             <input type="checkbox" id="check-location"> Appropriate location/siting (Clause 4.2.2)
                         </label>
                         <label class="check-item">
-                            <input type="checkbox" id="check-condition"> Good physical condition/maintenance (Clause 4.3)
+                            <input type="checkbox" id="check-mounting-height"> Mounted at appropriate height ~1500mm (Clause 4.2.2)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-not-moveable"> Not on moveable object (Clause 4.2.4)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-condition"> Good surface condition/maintenance (Clause 4.3)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-construction-safe"> Structurally sound, fasteners secure (Clause 4.1.1)
                         </label>
                         <label class="check-item">
                             <input type="checkbox" id="check-illumination"> Adequate illumination (Clause 4.2.5)
@@ -262,6 +280,13 @@
                         </label>
                         <label class="check-item">
                             <input type="checkbox" id="check-not-cluttered"> Not part of excessive sign clustering (Clause 4.2.6)
+                        </label>
+                    </div>
+
+                    <div class="check-group check-group-tags" id="tag-checks-group" style="display:none;">
+                        <h3>Tags (Section 5)</h3>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-tag-compliant"> Tag meets Section 5 requirements
                         </label>
                     </div>
                 </fieldset>
