@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Safety Signage Audit - AS 1319</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Header -->
+        <header id="app-header">
+            <h1>Safety Signage Audit</h1>
+            <p class="subtitle">AS 1319-1994</p>
+            <nav id="main-nav">
+                <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+                <button class="nav-btn" data-view="new-audit">New Audit</button>
+                <button class="nav-btn" data-view="capture">Capture</button>
+                <button class="nav-btn" data-view="reports">Reports</button>
+                <button class="nav-btn" data-view="reference">Reference</button>
+                <button class="nav-btn" data-view="settings">Settings</button>
+            </nav>
+        </header>
+
+        <!-- Dashboard View -->
+        <section id="view-dashboard" class="view active">
+            <div class="card">
+                <h2>Current Audits</h2>
+                <div id="audit-list" class="audit-list">
+                    <p class="empty-state">No audits yet. Start a new audit to begin.</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Quick Stats</h2>
+                <div id="quick-stats" class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-total-audits">0</span>
+                        <span class="stat-label">Total Audits</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-total-signs">0</span>
+                        <span class="stat-label">Signs Captured</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-compliant">0</span>
+                        <span class="stat-label">Compliant</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-non-compliant">0</span>
+                        <span class="stat-label">Non-Compliant</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Audit View -->
+        <section id="view-new-audit" class="view">
+            <div class="card">
+                <h2>Create New Audit</h2>
+                <form id="new-audit-form">
+                    <div class="form-group">
+                        <label for="audit-site-name">Site Name</label>
+                        <input type="text" id="audit-site-name" required placeholder="e.g. Building A - Level 3">
+                    </div>
+                    <div class="form-group">
+                        <label for="audit-client">Client / Organisation</label>
+                        <input type="text" id="audit-client" placeholder="e.g. Acme Corp">
+                    </div>
+                    <div class="form-group">
+                        <label for="audit-auditor">Auditor Name</label>
+                        <input type="text" id="audit-auditor" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="audit-date">Audit Date</label>
+                        <input type="date" id="audit-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="audit-notes">General Notes</label>
+                        <textarea id="audit-notes" rows="3" placeholder="Any general observations about the site..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Audit & Start Capturing</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Capture View -->
+        <section id="view-capture" class="view">
+            <div class="card">
+                <h2>Capture Signage</h2>
+                <p id="capture-audit-label" class="audit-label">No audit selected</p>
+
+                <!-- Camera Section -->
+                <div id="camera-section" class="camera-section">
+                    <video id="camera-preview" autoplay playsinline></video>
+                    <canvas id="camera-canvas" style="display:none;"></canvas>
+                    <div id="captured-image-container" style="display:none;">
+                        <img id="captured-image" alt="Captured signage">
+                    </div>
+                    <div class="camera-controls">
+                        <button id="btn-start-camera" class="btn btn-secondary">Start Camera</button>
+                        <button id="btn-take-photo" class="btn btn-primary" style="display:none;">Take Photo</button>
+                        <button id="btn-retake" class="btn btn-secondary" style="display:none;">Retake</button>
+                    </div>
+
+                    <!-- Detection Status Bar -->
+                    <div id="detection-status" class="detection-status" style="display:none;">
+                        <div class="detection-progress">
+                            <div id="detection-progress-bar" class="detection-progress-bar"></div>
+                        </div>
+                        <span id="detection-status-text" class="detection-status-text">Analysing...</span>
+                    </div>
+                </div>
+
+                <!-- Detection Results Panel -->
+                <div id="detection-results" class="detection-results-panel" style="display:none;"></div>
+
+                <!-- GPS Section -->
+                <div class="form-group">
+                    <label>GPS Location</label>
+                    <div id="gps-status" class="gps-status">
+                        <span id="gps-text">Location not captured</span>
+                        <button id="btn-get-gps" class="btn btn-small">Get Location</button>
+                    </div>
+                    <input type="hidden" id="capture-lat">
+                    <input type="hidden" id="capture-lng">
+                    <div class="form-group">
+                        <label for="capture-location-desc">Location Description</label>
+                        <input type="text" id="capture-location-desc" placeholder="e.g. Main entrance, east wall">
+                    </div>
+                </div>
+
+                <!-- Sign Classification -->
+                <div class="form-group">
+                    <label for="capture-sign-category">Sign Category (AS 1319 Clause 2.1)</label>
+                    <select id="capture-sign-category" required>
+                        <option value="">-- Select Category --</option>
+                        <optgroup label="Regulatory Signs">
+                            <option value="prohibition">Prohibition (action not permitted)</option>
+                            <option value="mandatory">Mandatory (instruction must be carried out)</option>
+                            <option value="restriction">Limitation / Restriction</option>
+                        </optgroup>
+                        <optgroup label="Hazard Signs">
+                            <option value="danger">DANGER (life-threatening hazard)</option>
+                            <option value="warning">Warning (non-life-threatening hazard)</option>
+                        </optgroup>
+                        <optgroup label="Information Signs">
+                            <option value="emergency">Emergency Information</option>
+                            <option value="fire">Fire</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="capture-sign-number">Standard Sign Number (Appendix B)</label>
+                    <select id="capture-sign-number">
+                        <option value="">-- Select if applicable --</option>
+                        <optgroup label="Prohibition (Table B1)">
+                            <option value="401">401 - Smoking prohibited</option>
+                            <option value="402">402 - Fire, naked flame and smoking prohibited</option>
+                            <option value="403">403 - No pedestrian access</option>
+                            <option value="404">404 - Water not suitable for drinking</option>
+                            <option value="405">405 - Digging prohibited</option>
+                        </optgroup>
+                        <optgroup label="Mandatory (Table B2)">
+                            <option value="421">421 - Eye protection must be worn</option>
+                            <option value="422">422 - Full face mask respiratory protection</option>
+                            <option value="423">423 - Half face mask respiratory protection</option>
+                            <option value="424">424 - Head protection must be worn</option>
+                            <option value="425">425 - Hearing protection must be worn</option>
+                            <option value="426">426 - Hand protection must be worn</option>
+                            <option value="427">427 - Foot protection must be worn</option>
+                            <option value="428">428 - Protective body clothing must be worn</option>
+                            <option value="429">429 - Face protection must be worn</option>
+                            <option value="430">430 - Long hair must be contained or covered</option>
+                        </optgroup>
+                        <optgroup label="Hazard (Table B3)">
+                            <option value="441">441 - Unspecified hazard (exclamation mark)</option>
+                            <option value="442">442 - Fire risk</option>
+                            <option value="443">443 - Explosion risk</option>
+                            <option value="444">444 - Toxic hazard</option>
+                            <option value="445">445 - Corrosion risk</option>
+                            <option value="446">446 - Ionizing radiation risk</option>
+                            <option value="447">447 - Electric shock risk</option>
+                            <option value="448">448 - Laser beam hazard</option>
+                            <option value="449">449 - Opening door hazard</option>
+                            <option value="450">450 - Forklifts hazard</option>
+                            <option value="451">451 - Non-ionizing radiation risk</option>
+                            <option value="452">452 - Biological hazard</option>
+                            <option value="453">453 - Guard dog hazard</option>
+                        </optgroup>
+                        <optgroup label="Emergency Information (Table B4)">
+                            <option value="471">471 - First aid</option>
+                            <option value="472">472 - Emergency eye wash</option>
+                            <option value="473">473 - Emergency shower</option>
+                        </optgroup>
+                        <option value="word-only">Word-message sign only (no symbol)</option>
+                        <option value="non-standard">Non-standard / unrecognised sign</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="capture-sign-text">Text on Sign (if any)</label>
+                    <input type="text" id="capture-sign-text" placeholder="e.g. DANGER - HIGH VOLTAGE">
+                </div>
+
+                <!-- Compliance Checklist -->
+                <fieldset class="compliance-checklist">
+                    <legend>Compliance Assessment (AS 1319)</legend>
+
+                    <div class="check-group">
+                        <h3>Colour & Shape (Clause 2.2, Table 2.1)</h3>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-correct-colour"> Correct safety colour used
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-correct-shape"> Correct symbolic shape
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-correct-legend-colour"> Correct legend colour
+                        </label>
+                    </div>
+
+                    <div class="check-group">
+                        <h3>Design (Section 3)</h3>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-standard-symbol"> Standard symbol from Appendix B used (Clause 3.1/3.2)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-adequate-size"> Adequate size for viewing distance (Clause 3.4)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-legible"> Legend legible at intended distance
+                        </label>
+                    </div>
+
+                    <div class="check-group">
+                        <h3>Installation & Condition (Section 4)</h3>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-visible"> Sign visible and not obscured (Clause 4.2.1)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-location"> Appropriate location/siting (Clause 4.2.2)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-condition"> Good physical condition/maintenance (Clause 4.3)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-illumination"> Adequate illumination (Clause 4.2.5)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-not-hazard"> Sign does not create a hazard (Clause 4.1)
+                        </label>
+                    </div>
+
+                    <div class="check-group">
+                        <h3>Relevance</h3>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-still-relevant"> Sign is still relevant to current hazards (Clause 4.1)
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="check-not-cluttered"> Not part of excessive sign clustering (Clause 4.2.6)
+                        </label>
+                    </div>
+                </fieldset>
+
+                <div class="form-group">
+                    <label for="capture-overall">Overall Assessment</label>
+                    <select id="capture-overall" required>
+                        <option value="">-- Select --</option>
+                        <option value="compliant">Compliant</option>
+                        <option value="minor-nc">Minor Non-Compliance</option>
+                        <option value="major-nc">Major Non-Compliance</option>
+                        <option value="missing">Missing Sign Required</option>
+                        <option value="redundant">Redundant / Should be removed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="capture-notes">Notes / Recommendations</label>
+                    <textarea id="capture-notes" rows="3" placeholder="Describe any non-compliance issues and recommended actions..."></textarea>
+                </div>
+
+                <button id="btn-save-capture" class="btn btn-primary" disabled>Save Signage Record</button>
+            </div>
+        </section>
+
+        <!-- Reports View -->
+        <section id="view-reports" class="view">
+            <div class="card">
+                <h2>Audit Reports</h2>
+                <div class="form-group">
+                    <label for="report-audit-select">Select Audit</label>
+                    <select id="report-audit-select">
+                        <option value="">-- Select Audit --</option>
+                    </select>
+                </div>
+                <button id="btn-generate-report" class="btn btn-primary" disabled>Generate Report</button>
+            </div>
+            <div id="report-output" class="card" style="display:none;">
+                <div id="report-content"></div>
+                <button id="btn-export-csv" class="btn btn-secondary">Export CSV</button>
+                <button id="btn-print-report" class="btn btn-secondary">Print Report</button>
+            </div>
+        </section>
+
+        <!-- Reference View -->
+        <section id="view-reference" class="view">
+            <div class="card">
+                <h2>AS 1319-1994 Quick Reference</h2>
+
+                <h3>Sign Classification (Clause 2.1)</h3>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Shape</th>
+                            <th>Colours</th>
+                            <th>Legend Colour</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Prohibition</td>
+                            <td>Circle with diagonal bar</td>
+                            <td>Red annulus &amp; slash, white interior</td>
+                            <td>Black</td>
+                        </tr>
+                        <tr>
+                            <td>Mandatory</td>
+                            <td>Circle (filled)</td>
+                            <td>Blue circle</td>
+                            <td>White</td>
+                        </tr>
+                        <tr>
+                            <td>Restriction</td>
+                            <td>Circle</td>
+                            <td>Red annulus, white interior</td>
+                            <td>Black</td>
+                        </tr>
+                        <tr>
+                            <td>Warning</td>
+                            <td>Equilateral triangle</td>
+                            <td>Yellow with black enclosure</td>
+                            <td>Black</td>
+                        </tr>
+                        <tr>
+                            <td>DANGER</td>
+                            <td>Red oval with &quot;DANGER&quot;</td>
+                            <td>Red oval on black, white rectangle</td>
+                            <td>Black (message area)</td>
+                        </tr>
+                        <tr>
+                            <td>Emergency Info</td>
+                            <td>Rectangle</td>
+                            <td>Green with white enclosure</td>
+                            <td>White</td>
+                        </tr>
+                        <tr>
+                            <td>Fire</td>
+                            <td>Rectangle</td>
+                            <td>Red with white enclosure</td>
+                            <td>White</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Safety Colours (Clause 3.5, Table 3.2)</h3>
+                <div class="colour-swatches">
+                    <div class="swatch">
+                        <div class="swatch-colour" style="background:#CC0000;"></div>
+                        <span>Red - R13 Signal Red<br>PMS 186C / 1795U</span>
+                    </div>
+                    <div class="swatch">
+                        <div class="swatch-colour" style="background:#FDB813;"></div>
+                        <span>Yellow - Y15 Sunflower<br>PMS 136C / 115U</span>
+                    </div>
+                    <div class="swatch">
+                        <div class="swatch-colour" style="background:#006B3F;"></div>
+                        <span>Green - G21 Jade<br>PMS 349C / 348U</span>
+                    </div>
+                    <div class="swatch">
+                        <div class="swatch-colour" style="background:#004B87;"></div>
+                        <span>Blue - B23 Bright Blue<br>PMS 301C / 293U</span>
+                    </div>
+                </div>
+
+                <h3>Sizing Guide (Clause 3.4.2)</h3>
+                <p><strong>Good lighting, prominent position:</strong></p>
+                <ul>
+                    <li>Symbolic sign size: 15 mm per metre of viewing distance</li>
+                    <li>Upper case letters: 5 mm per metre</li>
+                    <li>Lower case letters: 4 mm per metre</li>
+                </ul>
+                <p><strong>Poor lighting / less conspicuous:</strong> Increase by 50%</p>
+
+                <h3>Standard Symbolic Signs (Appendix B)</h3>
+                <div class="sign-index">
+                    <h4>Prohibition (401-405)</h4>
+                    <ul>
+                        <li>401 - Smoking prohibited</li>
+                        <li>402 - Fire, naked flame and smoking prohibited</li>
+                        <li>403 - No pedestrian access</li>
+                        <li>404 - Water not suitable for drinking</li>
+                        <li>405 - Digging prohibited</li>
+                    </ul>
+                    <h4>Mandatory (421-430)</h4>
+                    <ul>
+                        <li>421 - Eye protection</li>
+                        <li>422 - Full face mask respiratory</li>
+                        <li>423 - Half face mask respiratory</li>
+                        <li>424 - Head protection</li>
+                        <li>425 - Hearing protection</li>
+                        <li>426 - Hand protection</li>
+                        <li>427 - Foot protection</li>
+                        <li>428 - Protective body clothing</li>
+                        <li>429 - Face protection</li>
+                        <li>430 - Long hair contained/covered</li>
+                    </ul>
+                    <h4>Hazard (441-453)</h4>
+                    <ul>
+                        <li>441 - Unspecified hazard (exclamation mark)</li>
+                        <li>442 - Fire risk</li>
+                        <li>443 - Explosion risk</li>
+                        <li>444 - Toxic hazard</li>
+                        <li>445 - Corrosion risk</li>
+                        <li>446 - Ionizing radiation risk</li>
+                        <li>447 - Electric shock risk</li>
+                        <li>448 - Laser beam hazard</li>
+                        <li>449 - Opening door hazard</li>
+                        <li>450 - Forklifts hazard</li>
+                        <li>451 - Non-ionizing radiation risk</li>
+                        <li>452 - Biological hazard</li>
+                        <li>453 - Guard dog hazard</li>
+                    </ul>
+                    <h4>Emergency Information (471-473)</h4>
+                    <ul>
+                        <li>471 - First aid</li>
+                        <li>472 - Emergency eye wash</li>
+                        <li>473 - Emergency shower</li>
+                    </ul>
+                </div>
+
+                <h3>Key Installation Requirements (Section 4)</h3>
+                <ul>
+                    <li>Signs must be visible, legible, and attract attention (4.2.1)</li>
+                    <li>Mount near observer line of sight: ~1500mm above floor ±5° (4.2.2)</li>
+                    <li>Regulatory/hazard signs: allow ample reaction time (4.2.3)</li>
+                    <li>Do not place on moveable objects that void purpose (4.2.4)</li>
+                    <li>Consider illumination where lighting is poor (4.2.5)</li>
+                    <li>Avoid excessive sign clustering that reduces comprehension (4.2.6)</li>
+                    <li>Remove signs when information is no longer relevant (4.1)</li>
+                    <li>Signs must not create a hazard themselves (4.1)</li>
+                </ul>
+            </div>
+        </section>
+        <!-- Settings View -->
+        <section id="view-settings" class="view">
+            <div class="card">
+                <h2>Vision AI Settings</h2>
+                <p class="settings-desc">
+                    Configure the Claude Vision API for high-accuracy sign detection.
+                    Without an API key, the app uses local computer vision (lower accuracy, works offline).
+                </p>
+
+                <div class="vision-status-row">
+                    <span>Vision AI Status:</span>
+                    <span id="vision-api-indicator" class="vision-indicator inactive">Not configured</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="vision-api-key">Anthropic API Key</label>
+                    <input type="password" id="vision-api-key" placeholder="sk-ant-...">
+                    <small class="field-help">Your key is stored locally in this browser only. Never shared.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="vision-model-pref">Model</label>
+                    <select id="vision-model-pref">
+                        <option value="fast">Haiku (fastest, lowest cost)</option>
+                        <option value="balanced" selected>Sonnet (recommended balance)</option>
+                        <option value="best">Opus (highest accuracy)</option>
+                    </select>
+                </div>
+
+                <button id="btn-save-vision-settings" class="btn btn-primary">Save Settings</button>
+                <span id="vision-settings-status" class="vision-status-msg"></span>
+            </div>
+
+            <div class="card">
+                <h2>ML Sign Detection Model</h2>
+                <p class="settings-desc">
+                    The local ML model classifies sign categories when Vision AI is unavailable.
+                    The fine-tuned model (trained on safety sign data) provides significantly
+                    better accuracy than the default ImageNet fallback.
+                </p>
+
+                <div class="vision-status-row">
+                    <span>ML Model Status:</span>
+                    <span id="ml-model-indicator" class="vision-indicator inactive">Not loaded</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="ml-model-url">Custom Model URL (TF.js GraphModel)</label>
+                    <input type="url" id="ml-model-url" placeholder="https://cdn.example.com/models/as1319-v1/model.json">
+                    <small class="field-help">URL to model.json for a fine-tuned AS 1319 category classifier. Leave blank for default.</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="check-item">
+                        <input type="checkbox" id="ml-ab-toggle">
+                        Use legacy MobileNet (ImageNet) for A/B comparison
+                    </label>
+                    <small class="field-help">Enable to compare fine-tuned model vs legacy model accuracy side by side.</small>
+                </div>
+
+                <button id="btn-save-ml-settings" class="btn btn-primary">Save ML Settings</button>
+                <span id="ml-settings-status" class="vision-status-msg"></span>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/db.js"></script>
+    <script src="js/colour-analysis.js"></script>
+    <script src="js/shape-detection.js"></script>
+    <script src="js/sign-classifier.js"></script>
+    <script src="js/compliance-engine.js"></script>
+    <script src="js/ml-loader.js"></script>
+    <script src="js/vision-api.js"></script>
+    <script src="js/detection-pipeline.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>

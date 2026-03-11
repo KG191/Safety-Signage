@@ -1,0 +1,12 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+
+# Training data and artifacts (too large for git)
+training/ORP-SIG-2024/
+training/dataset/
+training/output/
+training/output_v2/
+training/output_v3/
+training/.venv/

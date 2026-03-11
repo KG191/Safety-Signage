@@ -1,0 +1,11 @@
+{
+    "name": "Safety Signage Audit",
+    "short_name": "Signage Audit",
+    "description": "Field audit tool for safety signage compliance with AS 1319-1994",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#f5f5f5",
+    "theme_color": "#004B87",
+    "orientation": "portrait",
+    "icons": []
+}

@@ -1,0 +1,808 @@
+/* === Reset & Base === */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /* AS 1319 Safety Colours (Table 3.2) */
+    --safety-red: #CC0000;       /* R13 Signal Red */
+    --safety-yellow: #FDB813;    /* Y15 Sunflower */
+    --safety-green: #006B3F;     /* G21 Jade */
+    --safety-blue: #004B87;      /* B23 Bright Blue */
+
+    /* App UI Colours */
+    --bg: #f5f5f5;
+    --card-bg: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --border: #ddd;
+    --primary: #004B87;
+    --primary-hover: #003966;
+    --success: #006B3F;
+    --danger: #CC0000;
+    --warning: #FDB813;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* === Header & Navigation === */
+#app-header {
+    background: var(--primary);
+    color: white;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#app-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+#app-header .subtitle {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-bottom: 0.75rem;
+}
+
+#main-nav {
+    display: flex;
+    gap: 0.25rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+#main-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nav-btn.active {
+    background: rgba(255,255,255,0.3);
+    font-weight: 600;
+}
+
+.nav-btn:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+/* === Views === */
+.view {
+    display: none;
+    padding: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.view.active {
+    display: block;
+}
+
+/* === Cards === */
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.card h3 {
+    font-size: 1rem;
+    margin: 1.25rem 0 0.5rem;
+    color: var(--text);
+}
+
+.card h4 {
+    font-size: 0.9rem;
+    margin: 0.75rem 0 0.25rem;
+    color: var(--text-muted);
+}
+
+/* === Forms === */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text);
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: white;
+    color: var(--text);
+    transition: border-color 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0,75,135,0.1);
+}
+
+/* === Buttons === */
+.btn {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    text-align: center;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: var(--border);
+    color: var(--text);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #ccc;
+}
+
+.btn-small {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+/* === Stats Grid === */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.stat-item {
+    background: var(--bg);
+    padding: 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* === Camera === */
+.camera-section {
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+#camera-preview {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+#captured-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    display: block;
+}
+
+.camera-controls {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #111;
+    justify-content: center;
+}
+
+.camera-controls .btn {
+    flex: 0 1 auto;
+}
+
+/* === GPS === */
+.gps-status {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+#gps-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* === Compliance Checklist === */
+.compliance-checklist {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.compliance-checklist legend {
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+    color: var(--primary);
+}
+
+.check-group {
+    margin-bottom: 0.75rem;
+}
+
+.check-group h3 {
+    font-size: 0.85rem;
+    margin: 0.5rem 0 0.25rem;
+    color: var(--text);
+}
+
+.check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.check-item input[type="checkbox"] {
+    margin-top: 0.15rem;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* === Audit List === */
+.audit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.audit-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.audit-list-item:hover {
+    background: #e8e8e8;
+}
+
+.audit-list-item .audit-info {
+    flex: 1;
+}
+
+.audit-list-item .audit-info strong {
+    display: block;
+    font-size: 0.95rem;
+}
+
+.audit-list-item .audit-info span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.audit-list-item .audit-count {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: var(--primary);
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
+}
+
+.audit-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: var(--bg);
+    border-radius: 6px;
+}
+
+/* === Reference Tables === */
+.reference-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.reference-table th,
+.reference-table td {
+    border: 1px solid var(--border);
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.reference-table th {
+    background: var(--bg);
+    font-weight: 600;
+}
+
+.reference-table tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* === Colour Swatches === */
+.colour-swatches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin: 0.5rem 0 1rem;
+}
+
+.swatch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.swatch-colour {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.swatch span {
+    font-size: 0.72rem;
+    line-height: 1.3;
+    color: var(--text-muted);
+}
+
+/* === Sign Index === */
+.sign-index ul {
+    list-style: none;
+    font-size: 0.8rem;
+    padding-left: 0;
+}
+
+.sign-index li {
+    padding: 0.2rem 0;
+}
+
+/* === Report Output === */
+#report-content {
+    font-size: 0.9rem;
+}
+
+#report-content h3 {
+    margin-top: 1.5rem;
+}
+
+#report-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0 1rem;
+    font-size: 0.8rem;
+}
+
+#report-content th,
+#report-content td {
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.5rem;
+    text-align: left;
+}
+
+#report-content th {
+    background: var(--bg);
+}
+
+.report-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.report-summary-item {
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: var(--bg);
+}
+
+.report-summary-item .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.report-summary-item .label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.compliance-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.compliance-tag.compliant {
+    background: #e6f4ea;
+    color: var(--success);
+}
+
+.compliance-tag.minor-nc {
+    background: #fff8e1;
+    color: #8B6914;
+}
+
+.compliance-tag.major-nc {
+    background: #fde8e8;
+    color: var(--danger);
+}
+
+.compliance-tag.missing {
+    background: #fde8e8;
+    color: var(--danger);
+}
+
+.compliance-tag.redundant {
+    background: #e8e8e8;
+    color: var(--text-muted);
+}
+
+/* === Report Actions === */
+#report-output .btn {
+    margin-right: 0.5rem;
+    margin-top: 1rem;
+    width: auto;
+}
+
+/* === Detection Status Bar === */
+.detection-status {
+    padding: 0.5rem 0.75rem;
+    background: #111;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.detection-progress {
+    flex: 1;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.detection-progress-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.detection-progress-bar.error {
+    background: var(--danger);
+}
+
+.detection-status-text {
+    font-size: 0.75rem;
+    color: #aaa;
+    white-space: nowrap;
+}
+
+/* === Detection Results Panel === */
+.detection-results-panel {
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background: #f0f6fc;
+}
+
+.detection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.detection-timing {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.detection-details {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.detection-details p {
+    margin: 0.15rem 0;
+}
+
+.detection-manual-msg {
+    color: var(--danger);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.detection-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn-accept {
+    background: var(--success);
+    color: white;
+}
+
+.btn-reject {
+    background: var(--danger);
+    color: white;
+}
+
+/* === Confidence Badges === */
+.confidence-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.confidence-badge.high {
+    background: #e6f4ea;
+    color: var(--success);
+}
+
+.confidence-badge.medium {
+    background: #fff8e1;
+    color: #8B6914;
+}
+
+.confidence-badge.low {
+    background: #fde8e8;
+    color: var(--danger);
+}
+
+/* === AI-Suggested Field Styling === */
+.ai-suggested.ai-high {
+    border-color: var(--success) !important;
+    box-shadow: 0 0 0 2px rgba(0, 107, 63, 0.15) !important;
+}
+
+.ai-suggested.ai-medium {
+    border-color: #d4a017 !important;
+    box-shadow: 0 0 0 2px rgba(253, 184, 19, 0.15) !important;
+}
+
+.ai-suggested.ai-low {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1) !important;
+}
+
+/* Check items with AI styling */
+.check-item.ai-suggested.ai-high {
+    background: #e6f4ea;
+    border-radius: 4px;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.check-item.ai-suggested.ai-medium {
+    background: #fff8e1;
+    border-radius: 4px;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* === Vision AI Settings === */
+.settings-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.vision-status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.vision-indicator {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.vision-indicator.active {
+    background: #e6f4ea;
+    color: var(--success);
+}
+
+.vision-indicator.inactive {
+    background: #f0f0f0;
+    color: var(--text-muted);
+}
+
+.vision-indicator.legacy {
+    background: #fff8e1;
+    color: #e65100;
+}
+
+.field-help {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.vision-status-msg {
+    display: inline-block;
+    margin-left: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.vision-status-msg.success {
+    color: var(--success);
+}
+
+.vision-status-msg.error {
+    color: var(--danger);
+}
+
+/* === Detection Source Badge === */
+.detection-source {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.detection-source.vision-source {
+    background: #e8d5f5;
+    color: #6b21a8;
+}
+
+.detection-source.cv-source {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.detection-reasoning {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
+.detection-condition {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* === Print Styles === */
+@media print {
+    #app-header { display: none; }
+    .view { display: none !important; }
+    #view-reports { display: block !important; }
+    #report-output { box-shadow: none; }
+    .btn { display: none; }
+}
+
+/* === Responsive === */
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .colour-swatches {
+        grid-template-columns: 1fr;
+    }
+
+    .report-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
