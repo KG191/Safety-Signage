@@ -17,6 +17,11 @@
     pointer-events: none;
 }
 
+/* Hide the app behind the cover */
+body:has(#cover-screen:not(.hidden)) #app {
+    visibility: hidden;
+}
+
 #cover-screen .cover-bg {
     position: absolute;
     inset: 0;
@@ -24,19 +29,21 @@
     height: 100%;
     object-fit: cover;
     object-position: center top;
+    pointer-events: none; /* Let taps pass through to the button */
 }
 
 #cover-enter-btn {
     position: relative;
-    z-index: 1;
+    z-index: 10;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
-    margin-bottom: max(8vh, 40px);
-    width: min(70%, 320px);
+    padding: 12px;
+    margin-bottom: max(3vh, 16px);
+    width: min(35%, 160px);
     transition: transform 0.15s ease;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 #cover-enter-btn:active {

@@ -9,11 +9,16 @@
     const enterBtn = document.getElementById('cover-enter-btn');
     if (!cover || !enterBtn) return;
 
-    enterBtn.addEventListener('click', () => {
+    function dismissCover(e) {
+        e.preventDefault();
+        if (cover.classList.contains('hidden')) return;
         cover.classList.add('hidden');
-        // Remove from DOM after transition completes
+        document.getElementById('app').style.visibility = 'visible';
         cover.addEventListener('transitionend', () => cover.remove(), { once: true });
-    });
+    }
+
+    enterBtn.addEventListener('click', dismissCover);
+    enterBtn.addEventListener('touchend', dismissCover);
 })();
 
 let currentAuditId = null;
