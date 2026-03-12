@@ -871,7 +871,7 @@ select:focus {
     .nav-btn {
         padding: 0.5rem 0.6rem;
         font-size: 0.75rem;
-        min-height: 36px;
+        min-height: 44px;
     }
 
     .view {
