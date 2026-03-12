@@ -9,11 +9,15 @@
     const enterBtn = document.getElementById('cover-enter-btn');
     if (!cover || !enterBtn) return;
 
+    // Hide app behind cover using body class (`:has()` not supported on all mobile browsers)
+    document.body.classList.add('cover-active');
+
     function dismissCover(e) {
         e.preventDefault();
+        e.stopPropagation();
         if (cover.classList.contains('hidden')) return;
         cover.classList.add('hidden');
-        document.getElementById('app').style.visibility = 'visible';
+        document.body.classList.remove('cover-active');
         cover.addEventListener('transitionend', () => cover.remove(), { once: true });
     }
 
