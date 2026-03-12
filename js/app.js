@@ -2,6 +2,20 @@
  * Main application logic — navigation, audit management, capture form handling.
  */
 
+// --- Cover Screen ---
+
+(function initCoverScreen() {
+    const cover = document.getElementById('cover-screen');
+    const enterBtn = document.getElementById('cover-enter-btn');
+    if (!cover || !enterBtn) return;
+
+    enterBtn.addEventListener('click', () => {
+        cover.classList.add('hidden');
+        // Remove from DOM after transition completes
+        cover.addEventListener('transitionend', () => cover.remove(), { once: true });
+    });
+})();
+
 let currentAuditId = null;
 
 // --- Navigation ---

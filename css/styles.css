@@ -1,3 +1,56 @@
+/* === Cover / Splash Screen === */
+#cover-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background: #0a1628;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#cover-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#cover-screen .cover-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+#cover-enter-btn {
+    position: relative;
+    z-index: 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: max(8vh, 40px);
+    width: min(70%, 320px);
+    transition: transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#cover-enter-btn:active {
+    transform: scale(0.95);
+}
+
+#cover-enter-btn img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
 /* === Reset & Base === */
 *, *::before, *::after {
     box-sizing: border-box;
