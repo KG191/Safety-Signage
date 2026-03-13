@@ -50,6 +50,7 @@ function switchView(viewName) {
     if (viewName === 'dashboard') refreshDashboard();
     if (viewName === 'capture') refreshCaptureView();
     if (viewName === 'reports') refreshReportSelector();
+    if (viewName === 'settings' && typeof refreshBackupStats === 'function') refreshBackupStats();
 }
 
 // --- Dashboard ---
