@@ -82,7 +82,18 @@ document.getElementById('report-audit-select').addEventListener('change', (e) =>
 document.getElementById('btn-generate-report').addEventListener('click', async () => {
     const auditId = document.getElementById('report-audit-select').value;
     if (!auditId) return;
-    await generateReport(auditId);
+    const btn = document.getElementById('btn-generate-report');
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    try {
+        await generateReport(auditId);
+    } catch (err) {
+        alert('Error generating report: ' + err.message);
+        console.error('Report generation error:', err);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate Report';
+    }
 });
 
 // --- Report Generation ---
@@ -91,7 +102,10 @@ async function generateReport(auditId) {
     const audit = await getAudit(auditId);
     const captures = await getCapturesByAudit(auditId);
 
-    if (!audit) return;
+    if (!audit) {
+        alert('Audit not found. It may have been deleted.');
+        return;
+    }
 
     const compliant = captures.filter(c => c.overall === 'compliant').length;
     const minorNC = captures.filter(c => c.overall === 'minor-nc').length;
