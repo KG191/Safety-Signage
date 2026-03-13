@@ -534,16 +534,62 @@ function acceptDetection() {
 }
 
 function editDetection() {
-    // Keep AI values in the form fields but remove AI styling so user can freely edit
-    document.querySelectorAll('.ai-suggested').forEach(el => {
-        removeAiStyling(el);
-    });
-    // Hide the action buttons — user will edit fields directly
+    const details = document.querySelector('.detection-details');
+    if (!details) return;
+
+    // Make the detection-details div contentEditable so user can edit findings text
+    details.contentEditable = 'true';
+    details.style.border = '2px solid var(--primary)';
+    details.style.borderRadius = '6px';
+    details.style.padding = '0.5rem';
+    details.style.background = '#fff';
+    details.style.outline = 'none';
+    details.focus();
+
+    // Replace Edit button with a Save button
+    const actions = document.querySelector('.detection-actions');
+    if (actions) {
+        actions.innerHTML = `
+            <button class="btn btn-small btn-primary" onclick="saveDetectionEdit()" style="width:auto">Save</button>
+            <button class="btn btn-small btn-secondary" onclick="cancelDetectionEdit()">Cancel</button>
+        `;
+    }
+}
+
+function saveDetectionEdit() {
+    const details = document.querySelector('.detection-details');
+    if (!details) return;
+
+    // Lock editing
+    details.contentEditable = 'false';
+    details.style.border = '';
+    details.style.padding = '';
+    details.style.background = '';
+
+    // Hide action buttons — edits are saved in the displayed text
     const actions = document.querySelector('.detection-actions');
     if (actions) actions.style.display = 'none';
-    // Scroll to the form fields so user can edit
-    const categoryField = document.getElementById('capture-sign-category');
-    if (categoryField) categoryField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function cancelDetectionEdit() {
+    const details = document.querySelector('.detection-details');
+    if (!details) return;
+
+    // Revert to original result by re-rendering
+    details.contentEditable = 'false';
+    details.style.border = '';
+    details.style.padding = '';
+    details.style.background = '';
+
+    // Restore original action buttons
+    const actions = document.querySelector('.detection-actions');
+    if (actions) {
+        actions.innerHTML = `
+            <button class="btn btn-small btn-secondary" onclick="editDetection()">Edit</button>
+            <button class="btn btn-small btn-accept" onclick="acceptDetection()">Accept</button>
+            <button class="btn btn-small btn-reject" onclick="rejectDetection()">Reject</button>
+        `;
+    }
 }
 
 function rejectDetection() {
