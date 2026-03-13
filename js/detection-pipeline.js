@@ -511,6 +511,7 @@ function showDetectionResults(result, confidenceLevel) {
     if (confidenceLevel !== 'low') {
         html += `
             <div class="detection-actions">
+                <button class="btn btn-small btn-secondary" onclick="editDetection()">Edit</button>
                 <button class="btn btn-small btn-accept" onclick="acceptDetection()">Accept</button>
                 <button class="btn btn-small btn-reject" onclick="rejectDetection()">Reject</button>
             </div>
@@ -530,6 +531,19 @@ function acceptDetection() {
     // Keep current values, hide action buttons
     const actions = document.querySelector('.detection-actions');
     if (actions) actions.style.display = 'none';
+}
+
+function editDetection() {
+    // Keep AI values in the form fields but remove AI styling so user can freely edit
+    document.querySelectorAll('.ai-suggested').forEach(el => {
+        removeAiStyling(el);
+    });
+    // Hide the action buttons — user will edit fields directly
+    const actions = document.querySelector('.detection-actions');
+    if (actions) actions.style.display = 'none';
+    // Scroll to the form fields so user can edit
+    const categoryField = document.getElementById('capture-sign-category');
+    if (categoryField) categoryField.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function rejectDetection() {

@@ -232,12 +232,14 @@ function resetCaptureForm() {
         cb.checked = false;
     });
 
-    // Reset photo
+    // Reset photo and camera — stop any existing stream so a fresh one can start
+    if (typeof stopCamera === 'function') stopCamera();
     const img = document.getElementById('captured-image');
     img.src = '';
     document.getElementById('captured-image-container').style.display = 'none';
-    document.getElementById('camera-preview').style.display = 'block';
-    document.getElementById('btn-take-photo').style.display = 'inline-block';
+    document.getElementById('camera-preview').style.display = 'none';
+    document.getElementById('btn-start-camera').style.display = 'inline-block';
+    document.getElementById('btn-take-photo').style.display = 'none';
     document.getElementById('btn-retake').style.display = 'none';
 
     // Hide detection results and clear AI styling
