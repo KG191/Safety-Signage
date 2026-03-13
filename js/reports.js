@@ -351,7 +351,7 @@ function generateDetectionAnalytics(captures) {
     `;
 }
 
-// --- CSV Export ---
+// --- CSV Export (Two Versions) ---
 
 document.getElementById('btn-export-csv').addEventListener('click', async () => {
     const auditId = document.getElementById('report-audit-select').value;
@@ -359,6 +359,7 @@ document.getElementById('btn-export-csv').addEventListener('click', async () => 
 
     const audit = await getAudit(auditId);
     const captures = await getCapturesByAudit(auditId);
+    const siteSlug = audit.siteName.replace(/\s+/g, '-');
 
     const headers = [
         'Item', 'Location', 'Latitude', 'Longitude', 'Category', 'Sign Number',
@@ -368,18 +369,56 @@ document.getElementById('btn-export-csv').addEventListener('click', async () => 
         'Visible', 'Location OK', 'Mounting Height', 'Not Moveable',
         'Condition OK', 'Construction Safe', 'Illumination OK',
         'No Hazard', 'Still Relevant', 'Not Cluttered', 'Tag Compliant',
-        'Notes', 'Captured At',
-        'AI Confidence', 'AI Category', 'AI Sign Number', 'AI Overall',
-        'Dominant Colour', 'Detected Shape', 'Auditor Override', 'Detection Time (ms)'
+        'Notes', 'Captured At'
     ];
 
     const checkVal = (ch, key) => ch[key] === true ? 'Yes' : ch[key] === false ? 'No' : 'N/A';
 
-    const rows = captures.map((c, i) => {
-        const ch = c.checks || {};
+    // --- Build ORIGINAL (AI) rows ---
+    const originalRows = captures.map((c, i) => {
         const d = c.detection || {};
-        const overridden = d.auditorOverrides ?
-            (d.auditorOverrides.category || d.auditorOverrides.signNumber || d.auditorOverrides.overall || (d.auditorOverrides.checks && d.auditorOverrides.checks.length > 0)) : false;
+        // Use AI-original values where available, fall back to saved values if no detection
+        const origCategory = d.aiCategory || c.category;
+        const origSignNumber = d.aiSignNumber || c.signNumber;
+        const origOverall = d.aiOverall || c.overall;
+        const origChecks = d.aiChecks || c.checks || {};
+        return [
+            i + 1,
+            c.locationDesc || '',
+            c.lat || '',
+            c.lng || '',
+            CATEGORY_LABELS[origCategory] || origCategory,
+            origSignNumber || '',
+            c.signText || '',
+            OVERALL_LABELS[origOverall] || origOverall,
+            checkVal(origChecks, 'correct-colour'),
+            checkVal(origChecks, 'correct-shape'),
+            checkVal(origChecks, 'correct-legend-colour'),
+            checkVal(origChecks, 'correct-enclosure'),
+            checkVal(origChecks, 'correct-layout'),
+            checkVal(origChecks, 'standard-symbol'),
+            checkVal(origChecks, 'adequate-size'),
+            checkVal(origChecks, 'legible'),
+            checkVal(origChecks, 'colour-fidelity'),
+            checkVal(origChecks, 'visible'),
+            checkVal(origChecks, 'location'),
+            checkVal(origChecks, 'mounting-height'),
+            checkVal(origChecks, 'not-moveable'),
+            checkVal(origChecks, 'condition'),
+            checkVal(origChecks, 'construction-safe'),
+            checkVal(origChecks, 'illumination'),
+            checkVal(origChecks, 'not-hazard'),
+            checkVal(origChecks, 'still-relevant'),
+            checkVal(origChecks, 'not-cluttered'),
+            checkVal(origChecks, 'tag-compliant'),
+            c.notes || '',
+            c.capturedAt || ''
+        ];
+    });
+
+    // --- Build FINAL (auditor-reviewed) rows ---
+    const finalRows = captures.map((c, i) => {
+        const ch = c.checks || {};
         return [
             i + 1,
             c.locationDesc || '',
@@ -410,18 +449,18 @@ document.getElementById('btn-export-csv').addEventListener('click', async () => 
             checkVal(ch, 'not-cluttered'),
             checkVal(ch, 'tag-compliant'),
             c.notes || '',
-            c.capturedAt || '',
-            d.confidence != null ? Math.round(d.confidence * 100) + '%' : '',
-            d.aiCategory || '',
-            d.aiSignNumber || '',
-            d.aiOverall || '',
-            d.dominantColour || '',
-            d.detectedShape || '',
-            overridden ? 'Yes' : (d.confidence != null ? 'No' : ''),
-            d.detectionDurationMs || ''
+            c.capturedAt || ''
         ];
     });
 
+    // Download both files
+    downloadCsv(headers, originalRows, `audit-${siteSlug}-${audit.date}-ORIGINAL.csv`);
+    setTimeout(() => {
+        downloadCsv(headers, finalRows, `audit-${siteSlug}-${audit.date}-FINAL.csv`);
+    }, 500);
+});
+
+function downloadCsv(headers, rows, filename) {
     const csvContent = [headers, ...rows]
         .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
         .join('\n');
@@ -430,10 +469,10 @@ document.getElementById('btn-export-csv').addEventListener('click', async () => 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `audit-${audit.siteName.replace(/\s+/g, '-')}-${audit.date}.csv`;
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-});
+}
 
 // --- Print ---
 
