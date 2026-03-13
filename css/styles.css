@@ -602,6 +602,16 @@ select:focus {
     color: var(--text-muted);
 }
 
+/* === Report Thumbnails === */
+.report-thumbnail {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+}
+
 /* === Report Actions === */
 #report-output .btn {
     margin-right: 0.5rem;
@@ -856,6 +866,12 @@ select:focus {
     #view-reports { display: block !important; }
     #report-output { box-shadow: none; }
     .btn { display: none; }
+    .report-thumbnail {
+        width: 48px;
+        height: 48px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
 }
 
 /* === Responsive === */

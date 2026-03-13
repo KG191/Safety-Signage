@@ -166,6 +166,7 @@ async function generateReport(auditId) {
         <table>
             <tr>
                 <th>#</th>
+                <th>Photo</th>
                 <th>Location</th>
                 <th>Category</th>
                 <th>Sign</th>
@@ -180,9 +181,13 @@ async function generateReport(auditId) {
                 const confLevel = d ? (d.confidence >= 0.7 ? 'high' : d.confidence >= 0.4 ? 'medium' : 'low') : '';
                 const overridden = d && d.auditorOverrides ?
                     (d.auditorOverrides.category || d.auditorOverrides.signNumber || d.auditorOverrides.overall || (d.auditorOverrides.checks && d.auditorOverrides.checks.length > 0)) : false;
+                const photoHtml = c.photo
+                    ? `<img src="${c.photo}" class="report-thumbnail" alt="Sign ${i + 1}" onclick="openPhotoModal(this.src)">`
+                    : '<small>No photo</small>';
                 return `
                 <tr>
                     <td>${i + 1}</td>
+                    <td>${photoHtml}</td>
                     <td>${escapeHtml(c.locationDesc || '—')}${c.lat ? `<br><small>${c.lat}, ${c.lng}</small>` : ''}</td>
                     <td>${CATEGORY_LABELS[c.category] || c.category}</td>
                     <td>${c.signNumber ? (SIGN_LABELS[c.signNumber] || c.signNumber) : '—'}${c.signText ? `<br><small>"${escapeHtml(c.signText)}"</small>` : ''}</td>
@@ -435,6 +440,21 @@ document.getElementById('btn-export-csv').addEventListener('click', async () => 
 document.getElementById('btn-print-report').addEventListener('click', () => {
     window.print();
 });
+
+// --- Photo Modal ---
+
+function openPhotoModal(src) {
+    // Remove existing modal if any
+    const existing = document.getElementById('photo-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'photo-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:1rem;cursor:pointer;';
+    modal.innerHTML = `<img src="${src}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;">`;
+    modal.addEventListener('click', () => modal.remove());
+    document.body.appendChild(modal);
+}
 
 // --- Helpers ---
 
