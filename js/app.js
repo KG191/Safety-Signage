@@ -101,6 +101,24 @@ async function refreshDashboard() {
     });
 }
 
+// --- Clear All Audits ---
+
+document.getElementById('btn-clear-audits').addEventListener('click', async () => {
+    if (!confirm('Delete ALL audits and their captures? This cannot be undone.')) return;
+
+    const audits = await getAllAudits();
+    for (const audit of audits) {
+        const captures = await getCapturesByAudit(audit.id);
+        for (const capture of captures) {
+            await deleteCapture(capture.id);
+        }
+        await deleteAudit(audit.id);
+    }
+
+    currentAuditId = null;
+    refreshDashboard();
+});
+
 // --- New Audit Form ---
 
 document.getElementById('audit-date').valueAsDate = new Date();
