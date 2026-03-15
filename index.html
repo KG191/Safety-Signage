@@ -102,6 +102,19 @@
 
                 <!-- Camera Section -->
                 <div id="camera-section" class="camera-section">
+                    <!-- Phase indicator -->
+                    <div id="camera-phase-label" class="camera-phase-label" style="display:none;">
+                        Step 1 of 2: Context Photo (wide-angle situation shot)
+                    </div>
+
+                    <!-- Context photo thumbnail (visible during step 2) -->
+                    <div id="context-thumb-container" class="context-thumb-container" style="display:none;">
+                        <img id="context-photo-thumb" class="context-thumb" alt="Context photo"
+                             onclick="openPhotoModal(this.src)">
+                        <button id="btn-retake-context" class="btn btn-tiny">Retake context</button>
+                        <span class="context-thumb-label">Context captured</span>
+                    </div>
+
                     <video id="camera-preview" autoplay playsinline></video>
                     <canvas id="camera-canvas" style="display:none;"></canvas>
                     <div id="captured-image-container" style="display:none;">
@@ -111,6 +124,7 @@
                         <button id="btn-start-camera" class="btn btn-secondary">Start Camera</button>
                         <button id="btn-take-photo" class="btn btn-primary" style="display:none;">Take Photo</button>
                         <button id="btn-retake" class="btn btn-secondary" style="display:none;">Retake</button>
+                        <button id="btn-skip-context" class="btn btn-secondary" style="display:none;">Skip</button>
                     </div>
 
                     <!-- Detection Status Bar -->

@@ -211,7 +211,8 @@ document.getElementById('btn-save-capture').addEventListener('click', async () =
         checks: checks,
         overall: overall,
         notes: document.getElementById('capture-notes').value.trim(),
-        detection: typeof lastDetectionResult !== 'undefined' ? lastDetectionResult : null
+        detection: typeof lastDetectionResult !== 'undefined' ? lastDetectionResult : null,
+        contextPhoto: typeof getContextPhoto === 'function' ? getContextPhoto() : null
     };
 
     await saveCapture(captureData);
@@ -242,6 +243,9 @@ function resetCaptureForm() {
     document.getElementById('btn-start-camera').style.display = 'inline-block';
     document.getElementById('btn-take-photo').style.display = 'none';
     document.getElementById('btn-retake').style.display = 'none';
+
+    // Reset context photo phase
+    if (typeof resetCameraPhase === 'function') resetCameraPhase();
 
     // Hide detection results and clear AI styling
     if (typeof hideDetectionResults === 'function') hideDetectionResults();

@@ -166,7 +166,7 @@ async function generateReport(auditId) {
         <table>
             <tr>
                 <th>#</th>
-                <th>Photo</th>
+                <th>Photos</th>
                 <th>Location</th>
                 <th>Category</th>
                 <th>Sign</th>
@@ -181,9 +181,13 @@ async function generateReport(auditId) {
                 const confLevel = d ? (d.confidence >= 0.7 ? 'high' : d.confidence >= 0.4 ? 'medium' : 'low') : '';
                 const overridden = d && d.auditorOverrides ?
                     (d.auditorOverrides.category || d.auditorOverrides.signNumber || d.auditorOverrides.overall || (d.auditorOverrides.checks && d.auditorOverrides.checks.length > 0)) : false;
-                const photoHtml = c.photo
+                const ctxHtml = c.contextPhoto
+                    ? `<img src="${c.contextPhoto}" class="report-thumbnail report-thumbnail-ctx" alt="Context ${i + 1}" onclick="openPhotoModal(this.src)">`
+                    : '';
+                const signHtml = c.photo
                     ? `<img src="${c.photo}" class="report-thumbnail" alt="Sign ${i + 1}" onclick="openPhotoModal(this.src)">`
                     : '<small>No photo</small>';
+                const photoHtml = `<div class="report-photo-pair">${ctxHtml}${signHtml}</div>`;
                 return `
                 <tr>
                     <td>${i + 1}</td>
