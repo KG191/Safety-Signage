@@ -106,17 +106,17 @@ async function refreshDashboard() {
 document.getElementById('btn-clear-audits').addEventListener('click', async () => {
     if (!confirm('Delete ALL audits and their captures? This cannot be undone.')) return;
 
-    const audits = await getAllAudits();
-    for (const audit of audits) {
-        const captures = await getCapturesByAudit(audit.id);
-        for (const capture of captures) {
-            await deleteCapture(capture.id);
+    try {
+        const audits = await getAllAudits();
+        for (const audit of audits) {
+            await deleteAudit(audit.id);
         }
-        await deleteAudit(audit.id);
+        currentAuditId = null;
+        refreshDashboard();
+    } catch (err) {
+        alert('Error clearing audits: ' + err.message);
+        console.error('Clear audits error:', err);
     }
-
-    currentAuditId = null;
-    refreshDashboard();
 });
 
 // --- New Audit Form ---
