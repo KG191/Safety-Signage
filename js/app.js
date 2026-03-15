@@ -81,43 +81,86 @@ async function refreshDashboard() {
     for (const audit of audits) {
         const captures = allCaptures.filter(c => c.auditId === audit.id);
         html += `
-            <div class="audit-list-item" data-audit-id="${audit.id}">
-                <div class="audit-info">
-                    <strong>${escapeHtml(audit.siteName)}</strong>
-                    <span>${audit.date} — ${escapeHtml(audit.auditor)}</span>
+            <div class="audit-swipe-wrapper" data-audit-id="${audit.id}">
+                <div class="audit-list-item">
+                    <div class="audit-info">
+                        <strong>${escapeHtml(audit.siteName)}</strong>
+                        <span>${audit.date} — ${escapeHtml(audit.auditor)}</span>
+                    </div>
+                    <span class="audit-count">${captures.length} signs</span>
                 </div>
-                <span class="audit-count">${captures.length} signs</span>
+                <button class="audit-delete-btn" aria-label="Delete audit">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                    </svg>
+                </button>
             </div>
         `;
     }
     listEl.innerHTML = html;
 
-    // Click to select audit and go to capture
-    listEl.querySelectorAll('.audit-list-item').forEach(item => {
+    // Wire up swipe-to-delete and tap-to-open
+    listEl.querySelectorAll('.audit-swipe-wrapper').forEach(wrapper => {
+        const item = wrapper.querySelector('.audit-list-item');
+        const deleteBtn = wrapper.querySelector('.audit-delete-btn');
+        let startX = 0, currentX = 0, swiping = false;
+
+        item.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            currentX = startX;
+            swiping = true;
+            item.style.transition = 'none';
+        }, { passive: true });
+
+        item.addEventListener('touchmove', (e) => {
+            if (!swiping) return;
+            currentX = e.touches[0].clientX;
+            const dx = Math.min(0, currentX - startX); // only swipe left
+            item.style.transform = `translateX(${dx}px)`;
+        }, { passive: true });
+
+        item.addEventListener('touchend', () => {
+            if (!swiping) return;
+            swiping = false;
+            item.style.transition = 'transform 0.25s ease';
+            const dx = currentX - startX;
+            if (dx < -60) {
+                // Reveal delete button
+                item.style.transform = 'translateX(-64px)';
+                wrapper.classList.add('swiped');
+            } else {
+                item.style.transform = 'translateX(0)';
+                wrapper.classList.remove('swiped');
+            }
+        });
+
+        // Tap on item navigates to capture (only if not swiped)
         item.addEventListener('click', () => {
-            currentAuditId = item.dataset.auditId;
+            if (wrapper.classList.contains('swiped')) {
+                // Close swipe
+                item.style.transition = 'transform 0.25s ease';
+                item.style.transform = 'translateX(0)';
+                wrapper.classList.remove('swiped');
+                return;
+            }
+            currentAuditId = wrapper.dataset.auditId;
             switchView('capture');
+        });
+
+        // Delete button
+        deleteBtn.addEventListener('click', async () => {
+            if (!confirm('Delete this audit and all its captures?')) return;
+            try {
+                await deleteAudit(wrapper.dataset.auditId);
+                if (currentAuditId === wrapper.dataset.auditId) currentAuditId = null;
+                refreshDashboard();
+            } catch (err) {
+                alert('Error deleting audit: ' + err.message);
+            }
         });
     });
 }
-
-// --- Clear All Audits ---
-
-document.getElementById('btn-clear-audits').addEventListener('click', async () => {
-    if (!confirm('Delete ALL audits and their captures? This cannot be undone.')) return;
-
-    try {
-        const audits = await getAllAudits();
-        for (const audit of audits) {
-            await deleteAudit(audit.id);
-        }
-        currentAuditId = null;
-        refreshDashboard();
-    } catch (err) {
-        alert('Error clearing audits: ' + err.message);
-        console.error('Clear audits error:', err);
-    }
-});
 
 // --- New Audit Form ---
 

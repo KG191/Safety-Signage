@@ -185,16 +185,6 @@ body {
     color: var(--primary);
 }
 
-.card-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.card-header-row h2 {
-    margin-bottom: 0;
-}
 
 .card h3 {
     font-size: 1rem;
@@ -413,7 +403,30 @@ select:focus {
     gap: 0.5rem;
 }
 
+/* === Swipe-to-Delete === */
+.audit-swipe-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.audit-delete-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 64px;
+    background: var(--danger);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .audit-list-item {
+    position: relative;
+    z-index: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -422,6 +435,7 @@ select:focus {
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.15s;
+    will-change: transform;
 }
 
 .audit-list-item:hover {
