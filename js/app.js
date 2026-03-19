@@ -17,12 +17,42 @@
         e.stopPropagation();
         if (cover.classList.contains('hidden')) return;
         cover.classList.add('hidden');
-        document.body.classList.remove('cover-active');
+
+        if (localStorage.getItem('eula-accepted')) {
+            // EULA already accepted — go straight to app
+            document.body.classList.remove('cover-active');
+        } else {
+            // Show EULA screen
+            document.getElementById('eula-screen').style.display = 'flex';
+        }
+
         cover.addEventListener('transitionend', () => cover.remove(), { once: true });
     }
 
     enterBtn.addEventListener('click', dismissCover);
     enterBtn.addEventListener('touchend', dismissCover);
+})();
+
+// --- EULA Screen ---
+
+(function initEulaScreen() {
+    const eulaScreen = document.getElementById('eula-screen');
+    const checkbox = document.getElementById('eula-checkbox');
+    const continueBtn = document.getElementById('eula-continue-btn');
+    if (!eulaScreen || !checkbox || !continueBtn) return;
+
+    checkbox.addEventListener('change', () => {
+        continueBtn.disabled = !checkbox.checked;
+    });
+
+    continueBtn.addEventListener('click', () => {
+        localStorage.setItem('eula-accepted', Date.now());
+        eulaScreen.classList.add('hidden');
+        document.body.classList.remove('cover-active');
+        eulaScreen.addEventListener('transitionend', () => {
+            eulaScreen.style.display = 'none';
+        }, { once: true });
+    });
 })();
 
 let currentAuditId = null;

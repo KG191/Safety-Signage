@@ -57,6 +57,103 @@ body.cover-active #app {
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
 }
 
+/* === EULA Screen === */
+#eula-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: var(--bg, #f5f5f5);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#eula-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.eula-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem 1.25rem 3rem;
+}
+
+.eula-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #004B87;
+    text-align: center;
+    margin-bottom: 0.15rem;
+}
+
+.eula-subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.eula-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.eula-card h2 {
+    font-size: 1.1rem;
+    color: #004B87;
+    margin-bottom: 0.75rem;
+}
+
+.eula-text {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #1a1a1a;
+    margin-bottom: 1.25rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.eula-text h3 {
+    font-size: 0.9rem;
+    margin: 1rem 0 0.35rem;
+    color: #1a1a1a;
+}
+
+.eula-text h3:first-child {
+    margin-top: 0;
+}
+
+.eula-text p {
+    margin-bottom: 0.5rem;
+}
+
+.eula-accept-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.eula-accept-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
 /* === Reset & Base === */
 *, *::before, *::after {
     box-sizing: border-box;
