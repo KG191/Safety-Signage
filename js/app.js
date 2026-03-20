@@ -18,13 +18,8 @@
         if (cover.classList.contains('hidden')) return;
         cover.classList.add('hidden');
 
-        if (localStorage.getItem('eula-accepted')) {
-            // EULA already accepted — go straight to app
-            document.body.classList.remove('cover-active');
-        } else {
-            // Show EULA screen
-            document.getElementById('eula-screen').style.display = 'flex';
-        }
+        // Always show EULA screen when entering the app
+        document.getElementById('eula-screen').style.display = 'flex';
 
         cover.addEventListener('transitionend', () => cover.remove(), { once: true });
     }

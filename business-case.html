@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safety Signage Audit App — Business Case for Adoption | WSP</title>
+<style>
+  :root {
+    --dark: #0a1628;
+    --dark-accent: #132240;
+    --white: #ffffff;
+    --light-bg: #f4f6f9;
+    --primary: #004B87;
+    --primary-light: #1a6bb5;
+    --red: #CC0000;
+    --green: #006B3F;
+    --yellow: #FDB813;
+    --text-dark: #1a1a2e;
+    --text-light: #e0e6ed;
+    --text-muted: #8899aa;
+    --border: #dde3ea;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background: var(--dark);
+  }
+
+  section {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+
+  .container {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Dark sections */
+  .dark { background: var(--dark); color: var(--text-light); }
+  .dark h2 { color: var(--white); }
+  .dark h3 { color: var(--yellow); }
+  .dark .subtitle { color: var(--text-muted); }
+
+  /* Light sections */
+  .light { background: var(--white); color: var(--text-dark); }
+  .light h2 { color: var(--primary); }
+  .light h3 { color: var(--dark); }
+
+  /* Alt light */
+  .light-alt { background: var(--light-bg); color: var(--text-dark); }
+  .light-alt h2 { color: var(--primary); }
+
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    margin-bottom: 0.3em;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5em;
+  }
+
+  p { margin-bottom: 1em; }
+
+  .section-subtitle {
+    font-size: 1.05rem;
+    margin-bottom: 2em;
+    opacity: 0.8;
+  }
+
+  .section-number {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.8em;
+    opacity: 0.5;
+  }
+
+  /* ---- Section 1: Title ---- */
+  .title-section {
+    text-align: center;
+    background: linear-gradient(160deg, var(--dark) 0%, var(--dark-accent) 100%);
+  }
+  .title-section h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--white);
+    margin-bottom: 0.4em;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .title-section .tagline {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5em;
+  }
+  .title-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+  .title-meta strong { color: var(--text-light); }
+  .title-badge {
+    display: inline-block;
+    margin-top: 2em;
+    padding: 0.5em 1.5em;
+    border: 1px solid var(--primary-light);
+    border-radius: 6px;
+    color: var(--primary-light);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ---- Tables ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 0.9rem;
+  }
+  .dark table { color: var(--text-light); }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .dark th, .dark td { border-color: rgba(255,255,255,0.1); }
+  th {
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .light th, .light-alt th { background: var(--light-bg); color: var(--primary); }
+  .dark th { background: rgba(255,255,255,0.05); color: var(--yellow); }
+  td.highlight { font-weight: 700; color: var(--green); }
+  .dark td.highlight { color: var(--yellow); }
+  td.saving { font-weight: 700; color: var(--green); }
+
+  /* ---- Two-column layout ---- */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+  }
+  @media (max-width: 680px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+  .col-card {
+    padding: 1.5em;
+    border-radius: 10px;
+  }
+  .dark .col-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+  .light .col-card, .light-alt .col-card { background: var(--white); border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+  /* ---- Grid cards ---- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.2em;
+    margin-top: 1.5em;
+  }
+  .card {
+    padding: 1.3em;
+    border-radius: 10px;
+    position: relative;
+  }
+  .dark .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+  .light .card, .light-alt .card { background: var(--white); border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .card-number {
+    display: inline-block;
+    width: 28px; height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.6em;
+  }
+  .dark .card-number { background: var(--primary); color: var(--white); }
+  .light .card-number, .light-alt .card-number { background: var(--primary); color: var(--white); }
+  .card h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.4em;
+  }
+  .card p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 0;
+  }
+
+  /* ---- Callout ---- */
+  .callout {
+    padding: 1.2em 1.5em;
+    border-radius: 10px;
+    margin: 1.5em 0;
+    font-size: 1rem;
+    text-align: center;
+  }
+  .callout-green { background: var(--green); color: var(--white); }
+  .callout-blue { background: var(--primary); color: var(--white); }
+  .callout-yellow { background: var(--yellow); color: var(--dark); }
+  .callout-red { background: var(--red); color: var(--white); }
+  .callout strong { font-size: 1.15em; }
+
+  /* ---- Bullet list ---- */
+  ul.clean {
+    list-style: none;
+    padding: 0;
+  }
+  ul.clean li {
+    padding: 0.5em 0 0.5em 1.5em;
+    position: relative;
+    font-size: 0.95rem;
+  }
+  ul.clean li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.85em;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dark ul.clean li::before { background: var(--primary-light); }
+  .light ul.clean li::before, .light-alt ul.clean li::before { background: var(--primary); }
+
+  /* ---- Exec summary stats ---- */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5em;
+    margin: 2em 0;
+  }
+  .stat {
+    text-align: center;
+    padding: 1.2em;
+    border-radius: 10px;
+  }
+  .dark .stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+  .stat .num {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.2em;
+  }
+  .stat .label {
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+  .num-green { color: var(--green); }
+  .num-yellow { color: var(--yellow); }
+  .num-blue { color: var(--primary-light); }
+
+  /* ---- Recommendation section ---- */
+  .rec-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2em;
+    margin: 2em 0;
+  }
+  .rec-step {
+    padding: 1.5em;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .dark .rec-step { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+  .rec-step .step-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    margin-bottom: 0.5em;
+  }
+  .rec-step h4 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5em;
+    color: var(--yellow);
+  }
+  .rec-step p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 0;
+  }
+
+  .closing-quote {
+    text-align: center;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    font-style: italic;
+    margin-top: 2em;
+    padding: 1.5em;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: var(--yellow);
+  }
+
+  /* ---- Readiness badges ---- */
+  .badge {
+    display: inline-block;
+    padding: 0.2em 0.7em;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .badge-green { background: var(--green); color: var(--white); }
+  .badge-yellow { background: var(--yellow); color: var(--dark); }
+  .badge-blue { background: var(--primary); color: var(--white); }
+
+  /* ---- Print styles ---- */
+  @media print {
+    html { scroll-snap-type: none; }
+    section {
+      min-height: auto;
+      page-break-after: always;
+      padding: 40px 20px;
+    }
+    .dark, .title-section { background: var(--white) !important; color: var(--text-dark) !important; }
+    .dark h2, .title-section h1 { color: var(--primary) !important; }
+    .dark h3 { color: var(--dark) !important; }
+    .dark .section-number, .dark .subtitle, .title-section .tagline,
+    .dark .stat .label, .dark ul.clean li::before { color: var(--text-dark) !important; opacity: 0.6; }
+    .dark .stat { border-color: var(--border) !important; }
+    .dark .card, .dark .col-card, .dark .rec-step { background: var(--light-bg) !important; border-color: var(--border) !important; color: var(--text-dark) !important; }
+    .dark .card-number { background: var(--primary) !important; }
+    .dark table { color: var(--text-dark) !important; }
+    .dark th { color: var(--primary) !important; background: var(--light-bg) !important; }
+    .dark td, .dark th { border-color: var(--border) !important; }
+    .stat .num { color: var(--primary) !important; }
+    .rec-step h4 { color: var(--primary) !important; }
+    .closing-quote { color: var(--primary) !important; border-color: var(--border) !important; }
+    .title-meta, .title-meta strong { color: var(--text-dark) !important; }
+    .title-badge { border-color: var(--primary) !important; color: var(--primary) !important; }
+    .callout-green, .callout-blue, .callout-red { color: var(--white) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--white); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- 1. TITLE SLIDE -->
+<!-- ============================================================ -->
+<section class="title-section dark">
+  <div class="container">
+    <p class="section-number">Business Case</p>
+    <h1>Safety Signage Audit App</h1>
+    <p class="tagline">Business Case for Adoption</p>
+    <div class="title-meta">
+      <span>Presented to the <strong>Board of WSP</strong></span>
+      <span>Prepared by <strong>Kiran Gokal</strong> | March 2026</span>
+      <span>App by <strong>SymbioTeK Pty Ltd</strong> (ACN 694 230 334)</span>
+    </div>
+    <div class="title-badge">AS 1319-1994 Compliance Platform</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. EXECUTIVE SUMMARY -->
+<!-- ============================================================ -->
+<section class="dark">
+  <div class="container">
+    <p class="section-number">01 / Executive Summary</p>
+    <h2>Transforming Safety Signage Auditing</h2>
+    <p class="section-subtitle">A purpose-built mobile app that replaces manual clipboard auditing with structured, AI-assisted, evidence-based compliance assessment against AS 1319-1994.</p>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="num num-yellow">80–85%</div>
+        <div class="label">Reduction in audit time per sign</div>
+      </div>
+      <div class="stat">
+        <div class="num num-yellow">$3,700–$3,900</div>
+        <div class="label">Saved per 200-sign site audit</div>
+      </div>
+      <div class="stat">
+        <div class="num num-yellow">~$75K–$78K</div>
+        <div class="label">Annual savings at 20 audits/year</div>
+      </div>
+    </div>
+
+    <ul class="clean">
+      <li>Zero office time for report writing — gap analysis auto-generated with AS 1319 clause references</li>
+      <li>Photo + GPS evidence trail for every sign assessed</li>
+      <li>AI-assisted detection with auditor override — dual audit trail preserved</li>
+      <li><strong>Free during limited licence period — zero capital outlay to begin</strong></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3. THE PROBLEM -->
+<!-- ============================================================ -->
+<section class="light">
+  <div class="container">
+    <p class="section-number">02 / The Problem</p>
+    <h2>The Status Quo Is Unsustainable</h2>
+    <p class="section-subtitle">Manual safety signage auditing is slow, inconsistent, and expensive.</p>
+
+    <div class="two-col">
+      <div class="col-card">
+        <h3>The Manual Process</h3>
+        <ul class="clean">
+          <li>Handwritten field notes on clipboards or generic forms</li>
+          <li>Manual GPS recording — often skipped or inaccurate</li>
+          <li>Photos taken separately, manually matched to notes later</li>
+          <li>15–30 minutes per sign including office write-up</li>
+          <li>Separate office session to compile the final report</li>
+          <li>AS 1319 clause references looked up manually — often inconsistent or missing</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h3>The Consequences</h3>
+        <ul class="clean">
+          <li>Audit reports take <strong>days</strong> to finalise after site visits</li>
+          <li>Junior officers produce inconsistent quality — senior review required</li>
+          <li>No standardised evidence trail — hard to defend in compliance disputes</li>
+          <li>Photo-to-finding linkage breaks down on large sites</li>
+          <li>Repeat audits cannot be reliably compared to previous results</li>
+          <li>High labour cost: a 200-sign site consumes <strong>67–133 hours</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4. THE SOLUTION -->
+<!-- ============================================================ -->
+<section class="dark">
+  <div class="container">
+    <p class="section-number">03 / The Solution</p>
+    <h2>Purpose-Built for AS 1319 Auditing</h2>
+    <p class="section-subtitle">A mobile-first app that captures, assesses, and reports — all in the field.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-number">1</div>
+        <h4>Two-Phase Camera</h4>
+        <p>Context photo (signage in environment) + close-up detail — both linked to the same record</p>
+      </div>
+      <div class="card">
+        <div class="card-number">2</div>
+        <h4>GPS Auto-Capture</h4>
+        <p>Automatic coordinates attached to every capture — no manual entry or separate device</p>
+      </div>
+      <div class="card">
+        <div class="card-number">3</div>
+        <h4>AI Sign Detection</h4>
+        <p>Claude Vision identifies sign type, number, and text — with local CV fallback for offline sites</p>
+      </div>
+      <div class="card">
+        <div class="card-number">4</div>
+        <h4>Structured 20-Check Compliance</h4>
+        <p>Every sign assessed against 20 AS 1319 criteria — 7 auto-assessed by AI, all auditor-reviewable</p>
+      </div>
+      <div class="card">
+        <div class="card-number">5</div>
+        <h4>Auto-Generated Reports</h4>
+        <p>Gap analysis reports with AS 1319 clause references generated instantly — zero office time</p>
+      </div>
+      <div class="card">
+        <div class="card-number">6</div>
+        <h4>Dual CSV Export</h4>
+        <p>AI original assessment + auditor final — full audit trail for quality assurance</p>
+      </div>
+      <div class="card">
+        <div class="card-number">7</div>
+        <h4>Offline-First PWA</h4>
+        <p>Works at remote mine sites and facilities without internet — syncs when connectivity returns</p>
+      </div>
+      <div class="card">
+        <div class="card-number">8</div>
+        <h4>Photo + GPS Evidence</h4>
+        <p>Every finding backed by timestamped photos and coordinates — legally defensible records</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5. EFFICIENCY ANALYSIS -->
+<!-- ============================================================ -->
+<section class="light">
+  <div class="container">
+    <p class="section-number">04 / Efficiency Analysis</p>
+    <h2>Time Savings Per Sign</h2>
+    <p class="section-subtitle">The app eliminates office time entirely and reduces field time through structured workflows and AI assistance.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Manual Senior</th>
+          <th>Manual Junior</th>
+          <th>App Senior</th>
+          <th>App Junior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Field time</td>
+          <td>5 min</td>
+          <td>10 min</td>
+          <td>4 min</td>
+          <td>6.5 min</td>
+        </tr>
+        <tr>
+          <td>Office time</td>
+          <td>15 min</td>
+          <td>30 min</td>
+          <td>0 min</td>
+          <td>0 min</td>
+        </tr>
+        <tr>
+          <td><strong>Total per sign</strong></td>
+          <td><strong>20 min</strong></td>
+          <td><strong>40 min</strong></td>
+          <td class="highlight"><strong>4 min</strong></td>
+          <td class="highlight"><strong>6.5 min</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Time reduction</strong></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="saving"><strong>80%</strong></td>
+          <td class="saving"><strong>84%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Scaled Impact: 200-Sign Mining Site</h3>
+    <div class="two-col">
+      <div class="col-card">
+        <h3>Senior Officer</h3>
+        <p><strong>Manual:</strong> 66.7 hours (8.3 days)</p>
+        <p><strong>With app:</strong> 13.3 hours (1.7 days)</p>
+        <p class="saving" style="font-size:1.1rem; margin-top:0.5em;">Saves 53.3 hours = 6.7 days</p>
+      </div>
+      <div class="col-card">
+        <h3>Junior Officer</h3>
+        <p><strong>Manual:</strong> 133.3 hours (16.7 days)</p>
+        <p><strong>With app:</strong> 21.7 hours (2.7 days)</p>
+        <p class="saving" style="font-size:1.1rem; margin-top:0.5em;">Saves 111.7 hours = 13.9 days</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6. COST SAVINGS -->
+<!-- ============================================================ -->
+<section class="dark">
+  <div class="container">
+    <p class="section-number">05 / Cost Savings</p>
+    <h2>Financial Impact</h2>
+    <p class="section-subtitle">Labour rates: Senior $70/hr ($560/day) &nbsp;|&nbsp; Junior $35/hr ($280/day)</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Manual Senior</th>
+          <th>Manual Junior</th>
+          <th>App Senior</th>
+          <th>App Junior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cost per sign</td>
+          <td>$23.33</td>
+          <td>$23.33</td>
+          <td class="highlight">$4.67</td>
+          <td class="highlight">$3.79</td>
+        </tr>
+        <tr>
+          <td>200-sign audit</td>
+          <td>$4,667</td>
+          <td>$4,667</td>
+          <td class="highlight">$933</td>
+          <td class="highlight">$758</td>
+        </tr>
+        <tr>
+          <td><strong>Saving per audit</strong></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="saving"><strong>$3,733</strong></td>
+          <td class="saving"><strong>$3,908</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-green">
+      <strong>20 audits/year = $74,660 – $78,167 annual savings</strong>
+    </div>
+
+    <div class="callout callout-blue">
+      Zero licence cost during the free period — <strong>no capital outlay required to start saving immediately</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7. QUALITY & COMPLIANCE -->
+<!-- ============================================================ -->
+<section class="light-alt">
+  <div class="container">
+    <p class="section-number">06 / Quality &amp; Compliance Benefits</p>
+    <h2>Better Audits, Not Just Faster Audits</h2>
+    <p class="section-subtitle">Structured workflows and AI assistance raise the quality floor across all seniority levels.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-number">1</div>
+        <h4>Structured AS 1319 Checks</h4>
+        <p>20 compliance criteria assessed for every sign — nothing missed, nothing skipped</p>
+      </div>
+      <div class="card">
+        <div class="card-number">2</div>
+        <h4>AI-Assisted Detection</h4>
+        <p>Claude Vision identifies sign category, number, and text — reduces human error and speeds classification</p>
+      </div>
+      <div class="card">
+        <div class="card-number">3</div>
+        <h4>Dual-Version Audit Trail</h4>
+        <p>AI assessment and auditor final decision both preserved — full transparency for QA review</p>
+      </div>
+      <div class="card">
+        <div class="card-number">4</div>
+        <h4>Photo + GPS Evidence</h4>
+        <p>Every finding linked to timestamped, geolocated photographs — legally defensible documentation</p>
+      </div>
+      <div class="card">
+        <div class="card-number">5</div>
+        <h4>Instant Report Generation</h4>
+        <p>Gap analysis reports with specific AS 1319 clause references generated on-site — no office write-up</p>
+      </div>
+      <div class="card">
+        <div class="card-number">6</div>
+        <h4>Consistency Across Levels</h4>
+        <p>Junior officers produce senior-quality work — the app enforces the same rigorous process for everyone</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 8. AUSTRALIAN MARKET OPPORTUNITY -->
+<!-- ============================================================ -->
+<section class="dark">
+  <div class="container">
+    <p class="section-number">07 / Australian Market Opportunity</p>
+    <h2>Addressable Market</h2>
+    <p class="section-subtitle">Target sectors governed by AS 1319-1994 (excludes buildings and hospitals — covered by different standards).</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sector</th>
+          <th>Facilities</th>
+          <th>Est. Signs/Facility</th>
+          <th>Audit Frequency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mining</strong></td>
+          <td>7,406</td>
+          <td>150–500</td>
+          <td>Annual</td>
+        </tr>
+        <tr>
+          <td><strong>Water / Wastewater</strong></td>
+          <td>~1,000</td>
+          <td>50–200</td>
+          <td>Biennial</td>
+        </tr>
+        <tr>
+          <td><strong>Manufacturing</strong></td>
+          <td>47,530</td>
+          <td>30–100</td>
+          <td>Annual</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Key Enterprise Targets</h3>
+    <ul class="clean">
+      <li><strong>Mining:</strong> BHP, Rio Tinto, Fortescue, South32, Newmont, Glencore</li>
+      <li><strong>Water:</strong> Sydney Water, Melbourne Water, QUU, SA Water, Water Corporation</li>
+      <li><strong>Manufacturing:</strong> BlueScope Steel, Boral, CSR, Orora, Amcor</li>
+    </ul>
+
+    <div class="callout callout-yellow">
+      WSP already services many of these clients — the app creates a <strong>new, scalable service offering</strong> within existing relationships
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 9. GLOBAL EXPANSION -->
+<!-- ============================================================ -->
+<section class="light">
+  <div class="container">
+    <p class="section-number">08 / Global Expansion</p>
+    <h2>International Roadmap</h2>
+    <p class="section-subtitle">Safety signage standards worldwide share common heritage — the app's architecture supports multi-standard deployment.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th>Standard</th>
+          <th>Readiness</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Australia</td>
+          <td>AS 1319-1994</td>
+          <td><span class="badge badge-green">Live Now</span></td>
+        </tr>
+        <tr>
+          <td>New Zealand</td>
+          <td>NZS/AS 1319:1994 (identical)</td>
+          <td><span class="badge badge-green">Immediate</span></td>
+        </tr>
+        <tr>
+          <td>International</td>
+          <td>ISO 7010 / ISO 3864</td>
+          <td><span class="badge badge-yellow">3–6 months</span></td>
+        </tr>
+        <tr>
+          <td>UK / Europe</td>
+          <td>BS EN ISO 7010</td>
+          <td><span class="badge badge-yellow">3–6 months</span></td>
+        </tr>
+        <tr>
+          <td>USA</td>
+          <td>ANSI Z535</td>
+          <td><span class="badge badge-blue">6–12 months</span></td>
+        </tr>
+        <tr>
+          <td>Canada</td>
+          <td>CAN/CSA-Z321-96</td>
+          <td><span class="badge badge-blue">6–12 months</span></td>
+        </tr>
+        <tr>
+          <td>South Africa</td>
+          <td>SANS (ISO 7010)</td>
+          <td><span class="badge badge-yellow">3–6 months</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-blue">
+      SymbioTeK is a multinational company. <strong>WSP operates in all of these markets.</strong> A partnership aligns naturally with WSP's global footprint.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 10. RISK & MITIGATION -->
+<!-- ============================================================ -->
+<section class="dark">
+  <div class="container">
+    <p class="section-number">09 / Risk &amp; Mitigation</p>
+    <h2>Risk Assessment</h2>
+    <p class="section-subtitle">Identified risks and their mitigations.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Risk</th>
+          <th>Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Data privacy</strong></td>
+          <td>All data stored locally on-device in IndexedDB — no cloud upload required. Photos and audit data remain under WSP control.</td>
+        </tr>
+        <tr>
+          <td><strong>Vendor dependency</strong></td>
+          <td>App works fully offline. All data exportable via CSV at any time. No vendor lock-in on audit records.</td>
+        </tr>
+        <tr>
+          <td><strong>AI accuracy</strong></td>
+          <td>AI provides initial assessment only — the auditor always reviews and can override every finding. Dual audit trail preserves both versions.</td>
+        </tr>
+        <tr>
+          <td><strong>App discontinuation</strong></td>
+          <td>All data is portable via CSV export. No proprietary formats. Audit records can be migrated to any system.</td>
+        </tr>
+        <tr>
+          <td><strong>Standard changes</strong></td>
+          <td>AS 1319-1994 has been unchanged since 1994 (reconfirmed 2018). Low probability of breaking changes. App updates can accommodate revisions.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 11. RECOMMENDATION -->
+<!-- ============================================================ -->
+<section class="dark" style="background: linear-gradient(160deg, var(--dark) 0%, var(--dark-accent) 100%);">
+  <div class="container">
+    <p class="section-number">10 / Recommendation</p>
+    <h2>Recommended Next Steps</h2>
+    <p class="section-subtitle">A phased approach to adoption with zero upfront cost.</p>
+
+    <div class="rec-steps">
+      <div class="rec-step">
+        <div class="step-label">Step 1</div>
+        <h4>Deploy Now</h4>
+        <p>Zero cost during free licence period. Begin realising savings immediately with no capital approval required.</p>
+      </div>
+      <div class="rec-step">
+        <div class="step-label">Step 2</div>
+        <h4>Pilot on 3 Sites</h4>
+        <p>1 mining site, 1 water facility, 1 manufacturing plant. Measure actual time and cost savings against manual baseline.</p>
+      </div>
+      <div class="rec-step">
+        <div class="step-label">Step 3</div>
+        <h4>Engage SymbioTeK</h4>
+        <p>Negotiate enterprise terms for post-pilot rollout and international standard support aligned with WSP's global operations.</p>
+      </div>
+    </div>
+
+    <div class="closing-quote">
+      "Every day of delay is a day of unnecessary manual effort."
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
