@@ -19,6 +19,10 @@
         cover.classList.add('hidden');
 
         // Always show EULA screen when entering the app
+        var eulaCheckbox = document.getElementById('eula-checkbox');
+        var eulaContinueBtn = document.getElementById('eula-continue-btn');
+        if (eulaCheckbox) { eulaCheckbox.checked = false; }
+        if (eulaContinueBtn) { eulaContinueBtn.disabled = true; }
         document.getElementById('eula-screen').style.display = 'flex';
 
         cover.addEventListener('transitionend', () => cover.remove(), { once: true });
