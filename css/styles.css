@@ -991,6 +991,28 @@ select:focus {
     margin-top: 0.25rem;
 }
 
+/* Location level inputs */
+.location-levels .field-help {
+    margin-bottom: 0.5rem;
+}
+.location-level-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+.location-level-label {
+    flex-shrink: 0;
+    width: 1.8rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: center;
+}
+.location-level-row input {
+    flex: 1;
+}
+
 .vision-status-msg {
     display: inline-block;
     margin-left: 0.75rem;

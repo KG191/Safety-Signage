@@ -294,7 +294,7 @@ document.getElementById('btn-save-capture').addEventListener('click', async () =
         photo: document.getElementById('captured-image').src || null,
         lat: document.getElementById('capture-lat').value || null,
         lng: document.getElementById('capture-lng').value || null,
-        locationDesc: document.getElementById('capture-location-desc').value.trim(),
+        locationDesc: [1,2,3,4].map(n => document.getElementById('capture-loc-' + n).value.trim()).filter(Boolean).join(' > '),
         category: category,
         signNumber: document.getElementById('capture-sign-number').value,
         signText: document.getElementById('capture-sign-text').value.trim(),
@@ -318,7 +318,7 @@ function resetCaptureForm() {
     document.getElementById('capture-sign-text').value = '';
     document.getElementById('capture-overall').value = '';
     document.getElementById('capture-notes').value = '';
-    document.getElementById('capture-location-desc').value = '';
+    [1,2,3,4].forEach(n => document.getElementById('capture-loc-' + n).value = '');
 
     document.querySelectorAll('.compliance-checklist input[type="checkbox"]').forEach(cb => {
         cb.checked = false;

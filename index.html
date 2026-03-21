@@ -186,9 +186,25 @@
                     </div>
                     <input type="hidden" id="capture-lat">
                     <input type="hidden" id="capture-lng">
-                    <div class="form-group">
-                        <label for="capture-location-desc">Location Description</label>
-                        <input type="text" id="capture-location-desc" placeholder="e.g. Main entrance, east wall">
+                    <div class="form-group location-levels">
+                        <label>Location Description</label>
+                        <small class="field-help">Enter up to 4 levels from broadest to most specific</small>
+                        <div class="location-level-row">
+                            <span class="location-level-label">L1</span>
+                            <input type="text" id="capture-loc-1" placeholder="e.g. Treatment Plant">
+                        </div>
+                        <div class="location-level-row">
+                            <span class="location-level-label">L2</span>
+                            <input type="text" id="capture-loc-2" placeholder="e.g. Chemical Building">
+                        </div>
+                        <div class="location-level-row">
+                            <span class="location-level-label">L3</span>
+                            <input type="text" id="capture-loc-3" placeholder="e.g. Chemical X Dosing Area">
+                        </div>
+                        <div class="location-level-row">
+                            <span class="location-level-label">L4</span>
+                            <input type="text" id="capture-loc-4" placeholder="e.g. East wall, near entrance">
+                        </div>
                     </div>
                 </div>
 
