@@ -478,7 +478,15 @@ function initLicense() {
                 switchView('settings');
                 return;
             }
-            startCheckout();
+            try {
+                paywallBuy.disabled = true;
+                paywallBuy.textContent = 'Redirecting to checkout...';
+                await startCheckout();
+            } catch (err) {
+                alert('Checkout error: ' + err.message);
+                paywallBuy.disabled = false;
+                paywallBuy.textContent = 'Purchase Licence';
+            }
         });
     }
 }
