@@ -299,7 +299,7 @@ async function handleSignUp() {
 
     try {
         await licenseSignUp(email, password);
-        msgEl.textContent = 'Check your email to confirm, then sign in.';
+        msgEl.innerHTML = 'Confirmation email sent. Check your inbox (and <strong>spam/junk folder</strong>), then sign in.';
         msgEl.className = 'vision-status-msg success';
     } catch (err) {
         msgEl.textContent = err.message;
