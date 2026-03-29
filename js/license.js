@@ -132,22 +132,13 @@ async function getLicenseUser() {
 // ── Checkout ───────────────────────────────────────────────────────
 
 async function startCheckout() {
-    const sb = getSupabase();
-    if (!sb) throw new Error('Supabase not available');
-
-    // Refresh session to ensure token is valid
-    const { data: refreshData, error: refreshError } = await sb.auth.refreshSession();
-    if (refreshError || !refreshData.session) {
-        throw new Error('Session expired. Please sign in again.');
-    }
-    const session = refreshData.session;
+    const user = await getLicenseUser();
+    if (!user) throw new Error('Please sign in first.');
 
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
         method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, userId: user.id }),
     });
 
     if (!res.ok) {
