@@ -231,6 +231,7 @@ async function refreshAuthUI() {
             <button class="btn btn-primary" onclick="handleSignIn()" style="flex:1;">Sign In</button>
             <button class="btn btn-secondary" onclick="handleSignUp()" style="flex:1;">Sign Up</button>
         </div>
+        <button class="btn-text" onclick="handleForgotPassword()" style="margin-top:0.5rem;">Forgot password?</button>
         <span id="auth-status-msg" class="vision-status-msg"></span>
     `;
 
@@ -312,6 +313,31 @@ async function handleSignOut() {
     await updateAuditCounter();
 }
 
+async function handleForgotPassword() {
+    const email = document.getElementById('license-email').value.trim();
+    const msgEl = document.getElementById('auth-status-msg');
+
+    if (!email) {
+        msgEl.textContent = 'Enter your email above, then tap "Forgot password?"';
+        msgEl.className = 'vision-status-msg error';
+        return;
+    }
+
+    try {
+        const sb = getSupabase();
+        if (!sb) throw new Error('Service unavailable');
+        const { error } = await sb.auth.resetPasswordForEmail(email, {
+            redirectTo: 'https://kg191.github.io/Safety-Signage/index.html?reset=true',
+        });
+        if (error) throw error;
+        msgEl.textContent = 'Password reset email sent. Check your inbox.';
+        msgEl.className = 'vision-status-msg success';
+    } catch (err) {
+        msgEl.textContent = err.message;
+        msgEl.className = 'vision-status-msg error';
+    }
+}
+
 // ── Payment Success Handler ────────────────────────────────────────
 
 function handlePaymentReturn() {
@@ -348,10 +374,70 @@ function showPaymentSuccessToast() {
     }, 4000);
 }
 
+// ── Password Reset Handler ─────────────────────────────────────────
+
+function handlePasswordReset() {
+    // Supabase sends the user back with a hash fragment containing the access token
+    const hash = window.location.hash;
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('reset') === 'true' || (hash && hash.includes('type=recovery'))) {
+        // Clean URL
+        history.replaceState(null, '', window.location.pathname);
+
+        // Show password reset modal after a brief delay for Supabase to process the token
+        setTimeout(() => {
+            switchView('settings');
+            showPasswordResetUI();
+        }, 500);
+    }
+}
+
+function showPasswordResetUI() {
+    const authSection = document.getElementById('license-auth-section');
+    if (!authSection) return;
+
+    authSection.innerHTML = `
+        <h3 style="margin-bottom:0.75rem; color: var(--primary);">Set New Password</h3>
+        <div class="form-group">
+            <label for="reset-new-password">New Password</label>
+            <input type="password" id="reset-new-password" placeholder="Min 6 characters">
+        </div>
+        <button class="btn btn-primary" onclick="handleSetNewPassword()">Update Password</button>
+        <span id="auth-status-msg" class="vision-status-msg"></span>
+    `;
+    window.scrollTo(0, 0);
+}
+
+async function handleSetNewPassword() {
+    const password = document.getElementById('reset-new-password').value;
+    const msgEl = document.getElementById('auth-status-msg');
+
+    if (!password || password.length < 6) {
+        msgEl.textContent = 'Password must be at least 6 characters.';
+        msgEl.className = 'vision-status-msg error';
+        return;
+    }
+
+    try {
+        const sb = getSupabase();
+        if (!sb) throw new Error('Service unavailable');
+        const { error } = await sb.auth.updateUser({ password });
+        if (error) throw error;
+        msgEl.textContent = 'Password updated. You are now signed in.';
+        msgEl.className = 'vision-status-msg success';
+        setTimeout(() => refreshAuthUI(), 2000);
+    } catch (err) {
+        msgEl.textContent = err.message;
+        msgEl.className = 'vision-status-msg error';
+    }
+}
+
 // ── Init ───────────────────────────────────────────────────────────
 
 function initLicense() {
     handlePaymentReturn();
+    handlePasswordReset();
     updateAuditCounter();
 
     // Paywall modal close button

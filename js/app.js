@@ -23,15 +23,11 @@
         // Fallback if transitionend doesn't fire (some mobile browsers)
         setTimeout(() => { if (cover.parentNode) cover.remove(); }, 1000);
 
-        // First launch: navigate to Settings for EULA acceptance
+        // First launch: navigate to Settings for EULA acceptance and sign-up
         if (!localStorage.getItem('eula-accepted')) {
             setTimeout(() => {
                 switchView('settings');
-                const eulaCard = document.getElementById('eula-card');
-                if (eulaCard) {
-                    eulaCard.classList.add('eula-highlight');
-                    eulaCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                window.scrollTo(0, 0);
             }, 100);
         }
     }
