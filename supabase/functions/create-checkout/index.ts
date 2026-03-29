@@ -4,7 +4,7 @@ import Stripe from "https://esm.sh/stripe@13?target=deno";
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2023-10-16" });
 const PRICE_ID = Deno.env.get("STRIPE_PRICE_ID")!;
-const APP_URL = Deno.env.get("APP_URL") || "https://app.mysafesigns.com.au";
+const APP_URL = Deno.env.get("APP_URL") || "https://kg191.github.io/Safety-Signage";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
