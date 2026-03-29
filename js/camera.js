@@ -28,6 +28,12 @@ btnSkipContext.addEventListener('click', skipContextPhoto);
 btnRetakeContext.addEventListener('click', retakeContextPhoto);
 
 async function startCamera() {
+    // License gate: check before starting camera
+    if (typeof checkLicenseForCamera === 'function') {
+        const allowed = await checkLicenseForCamera();
+        if (!allowed) return;
+    }
+
     try {
         const constraints = {
             video: {

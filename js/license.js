@@ -29,11 +29,11 @@ function getSupabase() {
  * Returns { status: 'free'|'trial_expired'|'licensed', auditCount }
  */
 async function getLicenseStatus() {
-    const audits = await getAllAudits();
-    const auditCount = audits.length;
+    const captures = await getAllCaptures();
+    const captureCount = captures.length;
 
-    if (auditCount < FREE_AUDIT_LIMIT) {
-        return { status: 'free', auditCount };
+    if (captureCount < FREE_AUDIT_LIMIT) {
+        return { status: 'free', captureCount };
     }
 
     // Check localStorage cache first (works offline)
@@ -55,7 +55,7 @@ async function getLicenseStatus() {
 
                 if (data && data.status === 'active') {
                     setLicenseCache(true);
-                    return { status: 'licensed', auditCount };
+                    return { status: 'licensed', captureCount };
                 }
             }
         } catch (e) {
@@ -65,7 +65,7 @@ async function getLicenseStatus() {
         }
     }
 
-    return { status: 'trial_expired', auditCount };
+    return { status: 'trial_expired', captureCount };
 }
 
 // ── License Cache ──────────────────────────────────────────────────
@@ -165,7 +165,22 @@ function hidePaywall() {
  * Check license before creating an audit. Returns true if allowed.
  */
 async function checkLicenseForNewAudit() {
-    const { status, auditCount } = await getLicenseStatus();
+    const { status } = await getLicenseStatus();
+
+    if (status === 'free' || status === 'licensed') {
+        return true;
+    }
+
+    // trial_expired — show paywall
+    showPaywall();
+    return false;
+}
+
+/**
+ * Check license before starting the camera. Returns true if allowed.
+ */
+async function checkLicenseForCamera() {
+    const { status } = await getLicenseStatus();
 
     if (status === 'free' || status === 'licensed') {
         return true;
@@ -182,14 +197,14 @@ async function updateAuditCounter() {
     const counterEl = document.getElementById('audit-counter');
     if (!counterEl) return;
 
-    const { status, auditCount } = await getLicenseStatus();
+    const { status, captureCount } = await getLicenseStatus();
 
     if (status === 'licensed') {
         counterEl.textContent = 'Unlimited';
         counterEl.className = 'audit-counter licensed';
     } else {
-        const remaining = Math.max(0, FREE_AUDIT_LIMIT - auditCount);
-        counterEl.textContent = `${auditCount} of ${FREE_AUDIT_LIMIT} free audits used`;
+        const remaining = Math.max(0, FREE_AUDIT_LIMIT - captureCount);
+        counterEl.textContent = `${captureCount} of ${FREE_AUDIT_LIMIT} free captures used`;
         counterEl.className = 'audit-counter' + (remaining === 0 ? ' exhausted' : '');
     }
 }
