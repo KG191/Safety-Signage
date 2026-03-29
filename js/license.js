@@ -135,8 +135,12 @@ async function startCheckout() {
     const sb = getSupabase();
     if (!sb) throw new Error('Supabase not available');
 
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) throw new Error('Please sign in first');
+    // Refresh session to ensure token is valid
+    const { data: refreshData, error: refreshError } = await sb.auth.refreshSession();
+    if (refreshError || !refreshData.session) {
+        throw new Error('Session expired. Please sign in again.');
+    }
+    const session = refreshData.session;
 
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
         method: 'POST',
@@ -145,6 +149,11 @@ async function startCheckout() {
             'Content-Type': 'application/json',
         },
     });
+
+    if (!res.ok) {
+        const errText = await res.text().catch(() => 'Unknown error');
+        throw new Error(`Checkout failed (${res.status}): ${errText}`);
+    }
 
     const result = await res.json();
     if (result.error) throw new Error(result.error);
