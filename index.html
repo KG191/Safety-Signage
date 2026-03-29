@@ -537,37 +537,40 @@
         </section>
         <!-- Settings View -->
         <section id="view-settings" class="view">
-            <!-- Vision AI is now server-side — no user configuration needed -->
-
             <div class="card">
-                <h2>ML Sign Detection Model</h2>
+                <h2>Vision AI Settings</h2>
                 <p class="settings-desc">
-                    The local ML model classifies sign categories when Vision AI is unavailable.
-                    The fine-tuned model (trained on safety sign data) provides significantly
-                    better accuracy than the default ImageNet fallback.
+                    Provide your own Anthropic API key to enable AI-powered sign detection.
+                    For best results, use the <strong>Opus</strong> model. Without an API key,
+                    the app uses local computer vision (lower accuracy, works offline).
+                </p>
+                <p class="settings-desc">
+                    Get your API key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>.
+                    You pay Anthropic directly for usage. Your key is stored locally on this device only.
                 </p>
 
                 <div class="vision-status-row">
-                    <span>ML Model Status:</span>
-                    <span id="ml-model-indicator" class="vision-indicator inactive">Not loaded</span>
+                    <span>Vision AI Status:</span>
+                    <span id="vision-api-indicator" class="vision-indicator inactive">Not configured</span>
                 </div>
 
                 <div class="form-group">
-                    <label for="ml-model-url">Custom Model URL (TF.js GraphModel)</label>
-                    <input type="url" id="ml-model-url" placeholder="https://cdn.example.com/models/as1319-v1/model.json">
-                    <small class="field-help">URL to model.json for a fine-tuned AS 1319 category classifier. Leave blank for default.</small>
+                    <label for="vision-api-key">Anthropic API Key</label>
+                    <input type="password" id="vision-api-key" placeholder="sk-ant-...">
+                    <small class="field-help">Your key is stored locally in this browser only. Never shared with us.</small>
                 </div>
 
                 <div class="form-group">
-                    <label class="check-item">
-                        <input type="checkbox" id="ml-ab-toggle">
-                        Use legacy MobileNet (ImageNet) for A/B comparison
-                    </label>
-                    <small class="field-help">Enable to compare fine-tuned model vs legacy model accuracy side by side.</small>
+                    <label for="vision-model-pref">Model</label>
+                    <select id="vision-model-pref">
+                        <option value="fast">Haiku — fastest, lowest cost (~$0.01/sign)</option>
+                        <option value="balanced">Sonnet — balanced accuracy & cost (~$0.05/sign)</option>
+                        <option value="best" selected>Opus — highest accuracy (~$0.25/sign, recommended)</option>
+                    </select>
                 </div>
 
-                <button id="btn-save-ml-settings" class="btn btn-primary">Save ML Settings</button>
-                <span id="ml-settings-status" class="vision-status-msg"></span>
+                <button id="btn-save-vision-settings" class="btn btn-primary">Save Settings</button>
+                <span id="vision-settings-status" class="vision-status-msg"></span>
             </div>
 
             <div class="card">
@@ -626,16 +629,19 @@
                     <h3>2. Licence</h3>
                     <p>SymbioTeK Pty Ltd grants you a non-exclusive, non-transferable, revocable licence to use the App. Free users may create up to 3 audits. A one-off payment of $149 AUD (inc. GST) unlocks unlimited lifetime access. SymbioTeK Pty Ltd reserves the right to terminate or restrict access at any time, without prior notice and at its sole discretion.</p>
 
-                    <h3>3. Data</h3>
-                    <p>All audit data — including photographs, GPS coordinates, and compliance records — is stored <strong>locally on your device</strong>. Account authentication (email and password) is processed by Supabase. Payment is processed by Stripe. SymbioTeK Pty Ltd does not access your audit data.</p>
+                    <h3>3. AI-Powered Detection (Bring Your Own Key)</h3>
+                    <p>The App offers optional AI-powered sign detection using Anthropic's Claude Vision API. To use this feature, you must provide <strong>your own Anthropic API key</strong>. API usage is billed directly by Anthropic to your account. SymbioTeK Pty Ltd is not responsible for any charges incurred through your use of the Anthropic API. Your API key is stored <strong>locally on your device only</strong> and is never transmitted to SymbioTeK Pty Ltd.</p>
 
-                    <h3>4. Disclaimer</h3>
-                    <p>The App is provided on an <strong>"as is" and "as available"</strong> basis, without warranties of any kind, whether express or implied. The App is intended as a field auditing aid only and is <strong>not a substitute for professional compliance assessment</strong> by a qualified person. Users should verify all compliance findings independently against AS 1319-1994 and any applicable legislation.</p>
+                    <h3>4. Data</h3>
+                    <p>All audit data — including photographs, GPS coordinates, and compliance records — is stored <strong>locally on your device</strong>. When AI detection is used, sign images are sent directly from your device to Anthropic's API using your API key. Account authentication (email and password) is processed by Supabase. Payment is processed by Stripe. SymbioTeK Pty Ltd does not access your audit data.</p>
 
-                    <h3>5. Limitation of Liability</h3>
-                    <p>To the maximum extent permitted by law, SymbioTeK Pty Ltd shall not be liable for any loss, damage, or injury arising from the use of, or reliance on, the App or its output. This includes, without limitation, any decisions made based on compliance assessments generated by the App.</p>
+                    <h3>5. Disclaimer</h3>
+                    <p>The App is provided on an <strong>"as is" and "as available"</strong> basis, without warranties of any kind, whether express or implied. The App is intended as a field auditing aid only and is <strong>not a substitute for professional compliance assessment</strong> by a qualified person. Users should verify all compliance findings independently against AS 1319-1994 and any applicable legislation. AI detection results are indicative only and must be reviewed by the auditor.</p>
 
-                    <h3>6. Governing Law</h3>
+                    <h3>6. Limitation of Liability</h3>
+                    <p>To the maximum extent permitted by law, SymbioTeK Pty Ltd shall not be liable for any loss, damage, or injury arising from the use of, or reliance on, the App or its output. This includes, without limitation, any decisions made based on compliance assessments generated by the App or its AI detection features.</p>
+
+                    <h3>7. Governing Law</h3>
                     <p>This agreement is governed by and construed in accordance with the laws of Australia. Any disputes arising under this agreement shall be subject to the exclusive jurisdiction of the courts of Australia.</p>
                 </div>
                 <label class="eula-accept-row">
