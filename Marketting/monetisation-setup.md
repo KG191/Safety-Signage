@@ -33,6 +33,45 @@ Supabase provides the authentication (email/password sign-up) and licence storag
 2. Ensure **Email** provider is enabled (it is by default).
 3. Optionally disable "Confirm email" for testing (re-enable for production).
 
+### Configure Custom SMTP (Required Before Launch)
+
+Supabase's built-in email service has a strict rate limit on the free tier (~4 emails/hour across all users). This **will** block real users from signing up in production. You must configure a custom SMTP provider to remove this limit.
+
+**Option A: Resend (Recommended — simplest setup)**
+
+1. Go to [resend.com](https://resend.com) and create a free account (3,000 emails/month free).
+2. Add and verify your sending domain (e.g. `mysafesigns.com.au` or `symbio-tek.com`):
+   - Go to **Domains > Add Domain**.
+   - Add the DNS records Resend provides (MX, SPF, DKIM) to your domain's DNS settings.
+   - Wait for verification (usually < 5 minutes).
+3. Go to **API Keys > Create API Key** and copy the key.
+4. In Supabase, go to **Authentication > SMTP Settings > Enable Custom SMTP**.
+5. Fill in:
+   - **Host**: `smtp.resend.com`
+   - **Port**: `465`
+   - **Username**: `resend`
+   - **Password**: your Resend API key
+   - **Sender email**: `noreply@yourdomain.com` (must match the verified domain)
+   - **Sender name**: `Safety Signage Audit`
+6. Save and test by signing up a new user.
+
+**Option B: SendGrid (100 emails/day free)**
+
+1. Go to [sendgrid.com](https://sendgrid.com) and create a free account.
+2. Complete sender verification (single sender or domain authentication).
+3. Go to **Settings > API Keys > Create API Key** (Full Access).
+4. In Supabase, go to **Authentication > SMTP Settings > Enable Custom SMTP**.
+5. Fill in:
+   - **Host**: `smtp.sendgrid.net`
+   - **Port**: `465`
+   - **Username**: `apikey` (literally the word "apikey")
+   - **Password**: your SendGrid API key
+   - **Sender email**: your verified sender email
+   - **Sender name**: `Safety Signage Audit`
+6. Save and test.
+
+> Once custom SMTP is configured, re-enable "Confirm email" in **Authentication > Providers > Email**. The rate limit is removed — emails are now sent through your SMTP provider, not Supabase's built-in service.
+
 ---
 
 ## Step 2: Create a Stripe Account, Sandbox, and Product
@@ -260,7 +299,9 @@ When all sandbox testing passes, switch to your main Stripe account (not the san
   - `STRIPE_PRICE_ID` → live price ID
   - `STRIPE_WEBHOOK_SECRET` → live webhook signing secret
 - [ ] Update `APP_URL` to the production domain
-- [ ] Ensure "Confirm email" is enabled in Supabase Authentication settings
+- [ ] Configure custom SMTP (Resend or SendGrid) in Supabase Authentication > SMTP Settings
+- [ ] Re-enable "Confirm email" in Supabase Authentication settings
+- [ ] Set `ANTHROPIC_API_KEY` in Supabase secrets with your production Anthropic key
 - [ ] Deploy the app to production hosting (e.g. Vercel, Netlify, or your own server)
 - [ ] Test one real $149 payment end-to-end, then refund it
 - [ ] The sandbox remains available for future development and testing
