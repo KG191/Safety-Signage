@@ -17,40 +17,46 @@
         e.stopPropagation();
         if (cover.classList.contains('hidden')) return;
         cover.classList.add('hidden');
-
-        // Always show EULA screen when entering the app
-        var eulaCheckbox = document.getElementById('eula-checkbox');
-        var eulaContinueBtn = document.getElementById('eula-continue-btn');
-        if (eulaCheckbox) { eulaCheckbox.checked = false; }
-        if (eulaContinueBtn) { eulaContinueBtn.disabled = true; }
-        document.getElementById('eula-screen').style.display = 'flex';
+        document.body.classList.remove('cover-active');
 
         cover.addEventListener('transitionend', () => cover.remove(), { once: true });
+
+        // First launch: navigate to Settings for EULA acceptance
+        if (!localStorage.getItem('eula-accepted')) {
+            setTimeout(() => {
+                switchView('settings');
+                const eulaCard = document.getElementById('eula-card');
+                if (eulaCard) {
+                    eulaCard.classList.add('eula-highlight');
+                    eulaCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+        }
     }
 
     enterBtn.addEventListener('click', dismissCover);
     enterBtn.addEventListener('touchend', dismissCover);
 })();
 
-// --- EULA Screen ---
+// --- EULA (in Settings) ---
 
-(function initEulaScreen() {
-    const eulaScreen = document.getElementById('eula-screen');
+(function initEulaSettings() {
     const checkbox = document.getElementById('eula-checkbox');
-    const continueBtn = document.getElementById('eula-continue-btn');
-    if (!eulaScreen || !checkbox || !continueBtn) return;
+    if (!checkbox) return;
+
+    // Restore previous acceptance state
+    if (localStorage.getItem('eula-accepted')) {
+        checkbox.checked = true;
+    }
 
     checkbox.addEventListener('change', () => {
-        continueBtn.disabled = !checkbox.checked;
-    });
-
-    continueBtn.addEventListener('click', () => {
-        localStorage.setItem('eula-accepted', Date.now());
-        eulaScreen.classList.add('hidden');
-        document.body.classList.remove('cover-active');
-        eulaScreen.addEventListener('transitionend', () => {
-            eulaScreen.style.display = 'none';
-        }, { once: true });
+        if (checkbox.checked) {
+            localStorage.setItem('eula-accepted', Date.now());
+            const eulaCard = document.getElementById('eula-card');
+            if (eulaCard) eulaCard.classList.remove('eula-highlight');
+        } else {
+            localStorage.removeItem('eula-accepted');
+        }
     });
 })();
 
@@ -76,10 +82,16 @@ function switchView(viewName) {
     if (navBtn) navBtn.classList.add('active');
 
     // Refresh data when switching views
-    if (viewName === 'dashboard') refreshDashboard();
+    if (viewName === 'dashboard') {
+        refreshDashboard();
+        if (typeof updateAuditCounter === 'function') updateAuditCounter();
+    }
     if (viewName === 'capture') refreshCaptureView();
     if (viewName === 'reports') refreshReportSelector();
-    if (viewName === 'settings' && typeof refreshBackupStats === 'function') refreshBackupStats();
+    if (viewName === 'settings') {
+        if (typeof refreshBackupStats === 'function') refreshBackupStats();
+        if (typeof refreshAuthUI === 'function') refreshAuthUI();
+    }
 }
 
 // --- Dashboard ---
@@ -197,6 +209,12 @@ document.getElementById('audit-date').valueAsDate = new Date();
 
 document.getElementById('new-audit-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // License gate: check before creating a new audit
+    if (typeof checkLicenseForNewAudit === 'function') {
+        const allowed = await checkLicenseForNewAudit();
+        if (!allowed) return;
+    }
 
     const auditData = {
         siteName: document.getElementById('audit-site-name').value.trim(),

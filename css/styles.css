@@ -154,6 +154,125 @@ body.cover-active #app {
     flex-shrink: 0;
 }
 
+/* === Paywall Modal === */
+.paywall-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.paywall-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.paywall-content h2 {
+    font-size: 1.3rem;
+    color: #004B87;
+    margin-bottom: 0.75rem;
+}
+
+.paywall-msg {
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+}
+
+.paywall-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #004B87;
+    margin-bottom: 0.25rem;
+}
+
+.paywall-price span {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #666;
+}
+
+.paywall-value {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0.5rem;
+}
+
+/* === Audit Counter Badge === */
+.audit-counter {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    padding: 0.5rem 0.75rem;
+    background: #e8f0fe;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.audit-counter.licensed {
+    background: #e6f4ea;
+    color: #006B3F;
+}
+
+.audit-counter.exhausted {
+    background: #fde8e8;
+    color: #CC0000;
+}
+
+/* === EULA in Settings (highlight on first launch) === */
+.eula-highlight {
+    border: 2px solid #004B87;
+    animation: eula-pulse 1.5s ease-in-out 3;
+}
+
+@keyframes eula-pulse {
+    0%, 100% { border-color: #004B87; }
+    50% { border-color: #FDB813; }
+}
+
+/* === Payment Success Toast === */
+.payment-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    background: #006B3F;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    transition: transform 0.4s ease;
+    white-space: nowrap;
+}
+
+.payment-toast.visible {
+    transform: translateX(-50%) translateY(0);
+}
+
 /* === Reset & Base === */
 *, *::before, *::after {
     box-sizing: border-box;
