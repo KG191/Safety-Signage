@@ -42,6 +42,12 @@ async function runDetectionPipeline(dataUrl) {
             await Promise.race([visionPromise, timeoutPromise]);
             return; // Vision API succeeded
         } catch (err) {
+            // Trial expired — show paywall, don't fall back to CV
+            if (err.message === 'TRIAL_EXPIRED') {
+                showDetectionStatus('Trial expired', -1);
+                if (typeof showPaywall === 'function') showPaywall();
+                return;
+            }
             console.warn('[Detection] Vision API failed, falling back to CV:', err.message);
             showDetectionStatus('Vision AI unavailable — running local analysis...', 10);
         }

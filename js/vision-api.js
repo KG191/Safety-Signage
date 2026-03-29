@@ -6,14 +6,12 @@
  * API key is stored in localStorage and provided by the user.
  */
 
-const VISION_API_URL = 'https://api.anthropic.com/v1/messages';
-const VISION_API_VERSION = '2023-06-01';
+const VISION_PROXY_URL = SUPABASE_URL + '/functions/v1/vision-proxy';
 const VISION_MODEL_OPTIONS = {
     fast:     'claude-haiku-4-5-20251001',
     balanced: 'claude-sonnet-4-6',
     best:     'claude-opus-4-6'
 };
-const VISION_STORAGE_KEY = 'signageAudit_apiKey';
 const VISION_MODEL_PREF_KEY = 'signageAudit_modelPref';
 
 /** The structured prompt sent with every image analysis */
@@ -90,31 +88,11 @@ Do NOT be conservative — if the sign is clearly identifiable, return 0.9+.
 Return ONLY the JSON object.`;
 
 /**
- * Get the stored API key.
- * @returns {string|null}
- */
-function getVisionApiKey() {
-    return localStorage.getItem(VISION_STORAGE_KEY);
-}
-
-/**
- * Store the API key.
- * @param {string} key
- */
-function setVisionApiKey(key) {
-    if (key) {
-        localStorage.setItem(VISION_STORAGE_KEY, key.trim());
-    } else {
-        localStorage.removeItem(VISION_STORAGE_KEY);
-    }
-}
-
-/**
  * Get the preferred model tier.
  * @returns {string} 'fast'|'balanced'|'best'
  */
 function getVisionModelPref() {
-    return localStorage.getItem(VISION_MODEL_PREF_KEY) || 'balanced';
+    return localStorage.getItem(VISION_MODEL_PREF_KEY) || 'fast';
 }
 
 /**
@@ -126,11 +104,13 @@ function setVisionModelPref(pref) {
 }
 
 /**
- * Check if the Vision API is configured and available.
+ * Check if the Vision API is available.
+ * Always available — proxied through Supabase Edge Function.
+ * The proxy handles licence gating server-side.
  * @returns {boolean}
  */
 function isVisionApiAvailable() {
-    return !!getVisionApiKey();
+    return true;
 }
 
 /**
@@ -140,19 +120,33 @@ function isVisionApiAvailable() {
  * @returns {Promise<object>} Structured detection result or null on failure
  */
 async function analyseWithVisionAPI(dataUrl) {
-    const apiKey = getVisionApiKey();
-    if (!apiKey) return null;
-
     const modelPref = getVisionModelPref();
-    const model = VISION_MODEL_OPTIONS[modelPref] || VISION_MODEL_OPTIONS.balanced;
+    const model = VISION_MODEL_OPTIONS[modelPref] || VISION_MODEL_OPTIONS.fast;
 
     // Strip data URL prefix to get raw base64
     const base64Data = dataUrl.split(',')[1];
     if (!base64Data) return null;
 
+    // Get audit count for server-side gating
+    const audits = await getAllAudits();
+    const auditCount = audits.length;
+
+    // Get auth token if signed in
+    const headers = { 'Content-Type': 'application/json' };
+    const sb = typeof getSupabase === 'function' ? getSupabase() : null;
+    if (sb) {
+        try {
+            const { data: { session } } = await sb.auth.getSession();
+            if (session) {
+                headers['Authorization'] = `Bearer ${session.access_token}`;
+            }
+        } catch (e) { /* not signed in */ }
+    }
+
     const requestBody = {
         model: model,
         max_tokens: 1024,
+        auditCount: auditCount,
         messages: [{
             role: 'user',
             content: [
@@ -172,22 +166,17 @@ async function analyseWithVisionAPI(dataUrl) {
         }]
     };
 
-    const response = await fetch(VISION_API_URL, {
+    const response = await fetch(VISION_PROXY_URL, {
         method: 'POST',
-        headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': VISION_API_VERSION,
-            'content-type': 'application/json',
-            'anthropic-dangerous-direct-browser-access': 'true'
-        },
+        headers: headers,
         body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
         const errBody = await response.text().catch(() => '');
         console.error(`[Vision API] Error ${response.status}: ${errBody}`);
-        if (response.status === 401) {
-            throw new Error('Invalid API key. Check your key in Settings.');
+        if (response.status === 403) {
+            throw new Error('TRIAL_EXPIRED');
         }
         throw new Error(`Vision API error: ${response.status}`);
     }
@@ -274,58 +263,5 @@ function visionResultToDetection(visionResult, durationMs) {
     };
 }
 
-// --- Settings Panel Logic ---
-
-function initVisionSettings() {
-    const apiKeyInput = document.getElementById('vision-api-key');
-    const modelSelect = document.getElementById('vision-model-pref');
-    const saveBtn = document.getElementById('btn-save-vision-settings');
-    const statusEl = document.getElementById('vision-settings-status');
-
-    if (!apiKeyInput) return;
-
-    // Load current values
-    const currentKey = getVisionApiKey();
-    if (currentKey) {
-        apiKeyInput.value = currentKey;
-    }
-    if (modelSelect) {
-        modelSelect.value = getVisionModelPref();
-    }
-
-    // Update status indicator
-    updateVisionStatus();
-
-    // Save button
-    if (saveBtn) {
-        saveBtn.addEventListener('click', () => {
-            setVisionApiKey(apiKeyInput.value);
-            if (modelSelect) setVisionModelPref(modelSelect.value);
-            updateVisionStatus();
-            if (statusEl) {
-                statusEl.textContent = 'Settings saved.';
-                statusEl.className = 'vision-status-msg success';
-                setTimeout(() => { statusEl.textContent = ''; }, 2000);
-            }
-        });
-    }
-}
-
-function updateVisionStatus() {
-    const indicator = document.getElementById('vision-api-indicator');
-    if (!indicator) return;
-    if (isVisionApiAvailable()) {
-        indicator.textContent = 'Active';
-        indicator.className = 'vision-indicator active';
-    } else {
-        indicator.textContent = 'Not configured';
-        indicator.className = 'vision-indicator inactive';
-    }
-}
-
-// Initialise settings when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initVisionSettings);
-} else {
-    initVisionSettings();
-}
+// Vision AI settings init removed — API key is now server-side.
+// Model preference is stored in localStorage and defaults to 'fast' (Haiku).
