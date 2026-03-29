@@ -20,6 +20,8 @@
         document.body.classList.remove('cover-active');
 
         cover.addEventListener('transitionend', () => cover.remove(), { once: true });
+        // Fallback if transitionend doesn't fire (some mobile browsers)
+        setTimeout(() => { if (cover.parentNode) cover.remove(); }, 1000);
 
         // First launch: navigate to Settings for EULA acceptance
         if (!localStorage.getItem('eula-accepted')) {

@@ -235,6 +235,27 @@ async function refreshAuthUI() {
     `;
 
     authSection.innerHTML = user ? signedInHTML : signedOutHTML;
+
+    // Reorder cards: show licence & EULA at top until payment is made
+    reorderSettingsCards(status);
+}
+
+function reorderSettingsCards(status) {
+    const settingsView = document.getElementById('view-settings');
+    const licenseCard = document.getElementById('license-card');
+    const eulaCard = document.getElementById('eula-card');
+    if (!settingsView || !licenseCard || !eulaCard) return;
+
+    if (status === 'licensed') {
+        // Licensed: move to bottom (append)
+        settingsView.appendChild(licenseCard);
+        settingsView.appendChild(eulaCard);
+    } else {
+        // Not licensed: move to top (before first child)
+        const firstChild = settingsView.firstElementChild;
+        settingsView.insertBefore(eulaCard, firstChild);
+        settingsView.insertBefore(licenseCard, eulaCard);
+    }
 }
 
 async function handleSignIn() {
