@@ -39,7 +39,7 @@ async function getLicenseStatus() {
     // Check localStorage cache first (works offline)
     const cache = getLicenseCache();
     if (cache && cache.licensed) {
-        return { status: 'licensed', auditCount };
+        return { status: 'licensed', captureCount };
     }
 
     // Try server validation if online
