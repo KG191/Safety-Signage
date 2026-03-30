@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 950" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#333"/></marker>
+    <marker id="aR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#C0392B"/></marker>
+    <filter id="s" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.08"/></filter>
+  </defs>
+
+  <text x="375" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a">Figure 3: Three-Tier Detection Pipeline</text>
+
+  <!-- Input -->
+  <rect x="250" y="48" width="250" height="38" rx="19" fill="#004B87" filter="url(#s)"/>
+  <text x="375" y="72" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Sign Photo Captured (JPEG)</text>
+
+  <line x1="375" y1="86" x2="375" y2="110" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Decision: API key? -->
+  <polygon points="375,110 480,145 375,180 270,145" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5"/>
+  <text x="375" y="148" text-anchor="middle" font-size="10" font-weight="600" fill="#B7950B">API key</text>
+  <text x="375" y="162" text-anchor="middle" font-size="10" font-weight="600" fill="#B7950B">available?</text>
+
+  <!-- Yes branch -->
+  <text x="280" y="178" font-size="9" font-weight="600" fill="#27AE60">Yes</text>
+  <line x1="375" y1="180" x2="375" y2="210" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- No branch -->
+  <text x="488" y="142" font-size="9" font-weight="600" fill="#E74C3C">No</text>
+  <line x1="480" y1="145" x2="620" y2="145" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="620" y1="145" x2="620" y2="470" stroke="#E74C3C" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- TIER 1 -->
+  <rect x="150" y="210" width="450" height="150" rx="10" fill="#F5EEF8" stroke="#8E44AD" stroke-width="2" filter="url(#s)"/>
+  <rect x="160" y="215" width="110" height="22" rx="4" fill="#8E44AD"/>
+  <text x="215" y="231" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">TIER 1</text>
+  <text x="280" y="231" font-size="11" font-weight="600" fill="#6C3483">Vision API (Claude)</text>
+
+  <text x="170" y="255" font-size="9" fill="#555">Send: JPEG image + AS 1319 system prompt</text>
+  <text x="170" y="270" font-size="9" fill="#555">Receive: Structured JSON response</text>
+  <text x="185" y="286" font-size="8" fill="#777">- Sign category (7 types)</text>
+  <text x="185" y="299" font-size="8" fill="#777">- Sign number (Appendix B)</text>
+  <text x="185" y="312" font-size="8" fill="#777">- 20 compliance checks (pass/fail/null)</text>
+  <text x="185" y="325" font-size="8" fill="#777">- Confidence score (0.0 - 1.0, calibrated)</text>
+  <text x="185" y="338" font-size="8" fill="#777">- Reasoning + condition notes</text>
+
+  <rect x="430" y="245" width="155" height="40" rx="6" fill="#fff" stroke="#8E44AD" stroke-width="1"/>
+  <text x="507" y="262" text-anchor="middle" font-size="9" font-weight="600" fill="#6C3483">Timeout: 15 seconds</text>
+  <text x="507" y="276" text-anchor="middle" font-size="8" fill="#999">Haiku / Sonnet / Opus</text>
+
+  <rect x="430" y="295" width="155" height="48" rx="6" fill="#E8DAEF" stroke="#8E44AD" stroke-width="0.5"/>
+  <text x="507" y="312" text-anchor="middle" font-size="9" font-weight="600" fill="#6C3483">Highest accuracy</text>
+  <text x="507" y="326" text-anchor="middle" font-size="8" fill="#999">Domain-aware AS 1319</text>
+  <text x="507" y="338" text-anchor="middle" font-size="8" fill="#999">Requires internet + key</text>
+
+  <!-- Success/Fail from Tier 1 -->
+  <text x="280" y="375" font-size="9" font-weight="600" fill="#27AE60">Success</text>
+  <line x1="300" y1="360" x2="300" y2="740" stroke="#27AE60" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <text x="448" y="375" font-size="9" font-weight="600" fill="#E74C3C">Fail / Timeout</text>
+  <line x1="480" y1="360" x2="480" y2="400" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#aR)"/>
+
+  <!-- TIER 2 -->
+  <rect x="150" y="400" width="450" height="120" rx="10" fill="#FEF5E7" stroke="#E67E22" stroke-width="2" filter="url(#s)"/>
+  <rect x="160" y="405" width="110" height="22" rx="4" fill="#E67E22"/>
+  <text x="215" y="421" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">TIER 2</text>
+  <text x="280" y="421" font-size="11" font-weight="600" fill="#A04000">ML Model (TensorFlow.js)</text>
+
+  <text x="170" y="445" font-size="9" fill="#555">Fine-tuned MobileNet v3 Small</text>
+  <text x="170" y="460" font-size="9" fill="#555">Trained on ORP-SIG-2024 (94K images, 299 ISO 7010 pictograms)</text>
+  <text x="170" y="475" font-size="9" fill="#555">Maps ISO 7010 → 7 AS 1319 categories</text>
+  <text x="170" y="490" font-size="9" fill="#555">In-browser inference (~500ms), works offline</text>
+
+  <rect x="430" y="440" width="155" height="35" rx="6" fill="#fff" stroke="#E67E22" stroke-width="1"/>
+  <text x="507" y="455" text-anchor="middle" font-size="9" font-weight="600" fill="#A04000">Category only</text>
+  <text x="507" y="468" text-anchor="middle" font-size="8" fill="#999">No sign number</text>
+
+  <!-- Fail from Tier 2 -->
+  <text x="448" y="535" font-size="9" font-weight="600" fill="#E74C3C">Not loaded</text>
+  <line x1="480" y1="520" x2="480" y2="560" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#aR)"/>
+
+  <!-- Success from Tier 2 -->
+  <text x="348" y="535" font-size="9" font-weight="600" fill="#27AE60">Loaded</text>
+  <line x1="370" y1="520" x2="370" y2="740" stroke="#27AE60" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- No branch joins -->
+  <line x1="620" y1="470" x2="620" y2="580" stroke="#E74C3C" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="620" y1="580" x2="600" y2="580" stroke="#E74C3C" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#aR)"/>
+
+  <!-- TIER 3 -->
+  <rect x="150" y="560" width="450" height="155" rx="10" fill="#EAFAF1" stroke="#27AE60" stroke-width="2" filter="url(#s)"/>
+  <rect x="160" y="565" width="110" height="22" rx="4" fill="#27AE60"/>
+  <text x="215" y="581" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">TIER 3</text>
+  <text x="280" y="581" font-size="11" font-weight="600" fill="#1E8449">CV Pipeline (Pure JavaScript)</text>
+
+  <text x="170" y="605" font-size="9" fill="#555">1. Preprocess (resize to 640px)</text>
+  <text x="170" y="620" font-size="9" fill="#555">2. White-balance correction</text>
+  <text x="170" y="635" font-size="9" fill="#555">3. Histogram equalisation (V-channel)</text>
+  <text x="170" y="650" font-size="9" fill="#555">4. Colour analysis (K-means + grid hybrid)</text>
+  <text x="170" y="665" font-size="9" fill="#555">5. Shape detection (3-method ensemble)</text>
+  <text x="170" y="680" font-size="9" fill="#555">6. Sign classification (adaptive scoring)</text>
+  <text x="170" y="695" font-size="9" fill="#555">7. Compliance auto-assessment (7 of 20 checks)</text>
+
+  <rect x="430" y="600" width="155" height="50" rx="6" fill="#fff" stroke="#27AE60" stroke-width="1"/>
+  <text x="507" y="617" text-anchor="middle" font-size="9" font-weight="600" fill="#1E8449">Timeout: 5 seconds</text>
+  <text x="507" y="632" text-anchor="middle" font-size="8" fill="#999">Fully offline</text>
+  <text x="507" y="645" text-anchor="middle" font-size="8" fill="#999">No external dependencies</text>
+
+  <!-- Success from Tier 3 -->
+  <line x1="440" y1="715" x2="440" y2="740" stroke="#27AE60" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Standardised Output -->
+  <rect x="180" y="740" width="390" height="60" rx="10" fill="#004B87" filter="url(#s)"/>
+  <text x="375" y="762" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Standardised Detection Result</text>
+  <text x="375" y="780" text-anchor="middle" font-size="9" fill="#D6EAF8">All 3 tiers produce identical output format</text>
+  <text x="375" y="793" text-anchor="middle" font-size="9" fill="#D6EAF8">category • signNumber • checks • confidence • reasoning</text>
+
+  <!-- Arrow to form -->
+  <line x1="375" y1="800" x2="375" y2="830" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Form population -->
+  <rect x="200" y="830" width="350" height="55" rx="8" fill="#D5F5E3" stroke="#27AE60" stroke-width="1.5" filter="url(#s)"/>
+  <text x="375" y="852" text-anchor="middle" font-size="11" font-weight="600" fill="#1E8449">Auto-Populate Capture Form</text>
+  <text x="375" y="868" text-anchor="middle" font-size="9" fill="#27AE60">High (≥0.7): auto-fill   Medium (0.4-0.69): verify   Low (&lt;0.4): manual</text>
+  <text x="375" y="880" text-anchor="middle" font-size="8" fill="#999">AI confidence styling: green / amber / red highlights</text>
+
+  <!-- Copyright -->
+  <text x="375" y="940" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
+</svg>

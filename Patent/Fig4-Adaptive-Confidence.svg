@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 700" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#333"/></marker>
+    <filter id="sh" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.08"/></filter>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a">Figure 4: Adaptive Confidence Weighting Algorithm</text>
+
+  <!-- Three Inputs -->
+  <rect x="50" y="55" width="170" height="55" rx="8" fill="#E8DAEF" stroke="#8E44AD" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="135" y="78" text-anchor="middle" font-size="11" font-weight="600" fill="#6C3483">Colour Confidence</text>
+  <text x="135" y="96" text-anchor="middle" font-size="10" fill="#8E44AD">cConf (0.0 – 1.0)</text>
+
+  <rect x="310" y="55" width="170" height="55" rx="8" fill="#D4E6F1" stroke="#2980B9" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="395" y="78" text-anchor="middle" font-size="11" font-weight="600" fill="#2471A3">Shape Confidence</text>
+  <text x="395" y="96" text-anchor="middle" font-size="10" fill="#2980B9">sConf (0.0 – 1.0)</text>
+
+  <rect x="570" y="55" width="170" height="55" rx="8" fill="#FDEBD0" stroke="#E67E22" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="655" y="78" text-anchor="middle" font-size="11" font-weight="600" fill="#A04000">ML Confidence</text>
+  <text x="655" y="96" text-anchor="middle" font-size="10" fill="#E67E22">mlConf (0.0 – 1.0)</text>
+
+  <!-- Arrows down from inputs -->
+  <line x1="135" y1="110" x2="135" y2="145" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="395" y1="110" x2="395" y2="145" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- STEP 1 -->
+  <rect x="50" y="145" width="490" height="130" rx="10" fill="#F5F5F5" stroke="#555" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="60" y="150" width="100" height="20" rx="4" fill="#555"/>
+  <text x="110" y="164" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">STEP 1</text>
+  <text x="175" y="164" font-size="11" font-weight="600" fill="#333">Adaptive Weighting</text>
+
+  <text x="70" y="190" font-size="10" fill="#333">gap = |cConf − sConf|</text>
+
+  <!-- Two paths -->
+  <rect x="70" y="205" width="210" height="55" rx="6" fill="#D5F5E3" stroke="#27AE60" stroke-width="1"/>
+  <text x="175" y="222" text-anchor="middle" font-size="9" font-weight="600" fill="#1E8449">IF gap ≤ 0.3 (signals agree)</text>
+  <text x="175" y="238" text-anchor="middle" font-size="10" fill="#333">cW = 0.50, sW = 0.50</text>
+  <text x="175" y="252" text-anchor="middle" font-size="9" fill="#666">Equal weighting</text>
+
+  <rect x="310" y="205" width="220" height="55" rx="6" fill="#FADBD8" stroke="#E74C3C" stroke-width="1"/>
+  <text x="420" y="222" text-anchor="middle" font-size="9" font-weight="600" fill="#C0392B">IF gap > 0.3 (signals disagree)</text>
+  <text x="420" y="238" text-anchor="middle" font-size="10" fill="#333">Stronger: 0.75, Weaker: 0.25</text>
+  <text x="420" y="252" text-anchor="middle" font-size="9" fill="#666">Trust stronger signal</text>
+
+  <!-- Formula -->
+  <rect x="135" y="270" width="280" height="24" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="275" y="287" text-anchor="middle" font-size="10" font-weight="600" fill="#004B87">base = cConf × cW + sConf × sW</text>
+
+  <!-- Arrow to Step 2 -->
+  <line x1="275" y1="294" x2="275" y2="330" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- STEP 2 -->
+  <rect x="100" y="330" width="400" height="70" rx="10" fill="#F5F5F5" stroke="#555" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="110" y="335" width="100" height="20" rx="4" fill="#555"/>
+  <text x="160" y="349" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">STEP 2</text>
+  <text x="225" y="349" font-size="11" font-weight="600" fill="#333">Agreement Bonus</text>
+
+  <text x="120" y="375" font-size="10" fill="#333">IF colour AND shape both match expected category:</text>
+  <text x="120" y="392" font-size="11" font-weight="700" fill="#27AE60">    base += 0.10</text>
+
+  <!-- Arrow to Step 3 -->
+  <line x1="300" y1="400" x2="300" y2="435" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- ML arrow joins -->
+  <line x1="655" y1="110" x2="655" y2="435" stroke="#E67E22" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="655" y1="435" x2="560" y2="460" stroke="#E67E22" stroke-width="1" marker-end="url(#ar)"/>
+
+  <!-- STEP 3 -->
+  <rect x="100" y="435" width="460" height="100" rx="10" fill="#F5F5F5" stroke="#555" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="110" y="440" width="100" height="20" rx="4" fill="#555"/>
+  <text x="160" y="454" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">STEP 3</text>
+  <text x="225" y="454" font-size="11" font-weight="600" fill="#333">ML Blending</text>
+
+  <text x="120" y="478" font-size="10" fill="#333">IF ML model available:</text>
+  <text x="135" y="495" font-size="9" fill="#E67E22">mlWeight = 0.4 (fine-tuned) or 0.2 (generic MobileNet)</text>
+  <text x="135" y="510" font-size="10" font-weight="600" fill="#333">base = base × (1 − mlW) + mlConf × mlW</text>
+  <text x="120" y="527" font-size="9" fill="#27AE60">IF fine-tuned ML category matches CV category: base += 0.05</text>
+
+  <!-- Arrow to Output -->
+  <line x1="330" y1="535" x2="330" y2="570" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- OUTPUT -->
+  <rect x="150" y="570" width="360" height="80" rx="10" fill="#004B87" filter="url(#sh)"/>
+  <text x="330" y="595" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Composite Confidence (0.0 – 1.0)</text>
+
+  <rect x="170" y="610" width="100" height="28" rx="6" fill="#27AE60"/>
+  <text x="220" y="629" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">≥ 0.70 HIGH</text>
+
+  <rect x="280" y="610" width="100" height="28" rx="6" fill="#F39C12"/>
+  <text x="330" y="629" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">0.40–0.69</text>
+
+  <rect x="390" y="610" width="100" height="28" rx="6" fill="#E74C3C"/>
+  <text x="440" y="629" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">&lt; 0.40 LOW</text>
+
+  <!-- Worked Example -->
+  <rect x="560" y="330" width="210" height="120" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1" filter="url(#sh)"/>
+  <text x="665" y="350" text-anchor="middle" font-size="10" font-weight="700" fill="#B7950B">Worked Example</text>
+  <text x="570" y="370" font-size="8" fill="#555">cConf = 0.85 (blue detected)</text>
+  <text x="570" y="385" font-size="8" fill="#555">sConf = 0.40 (ambiguous shape)</text>
+  <text x="570" y="400" font-size="8" fill="#555">gap = 0.45 > 0.3</text>
+  <text x="570" y="415" font-size="8" fill="#555">→ cW=0.75, sW=0.25</text>
+  <text x="570" y="430" font-size="8" font-weight="600" fill="#333">base = 0.85×0.75 + 0.40×0.25</text>
+  <text x="570" y="445" font-size="9" font-weight="700" fill="#004B87">= 0.74 (HIGH)</text>
+
+  <text x="400" y="690" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
+</svg>
