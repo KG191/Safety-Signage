@@ -38,7 +38,8 @@
   <!-- 1:N relationship -->
   <line x1="240" y1="240" x2="305" y2="240" stroke="#2980B9" stroke-width="2" marker-end="url(#arrowRelation)"/>
   <defs><marker id="arrowRelation" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#2980B9"/></marker></defs>
-  <text x="270" y="232" text-anchor="middle" font-size="8" font-weight="600" fill="#2980B9">one audit → many captures</text>
+  <text x="270" y="220" text-anchor="middle" font-size="8" font-weight="600" fill="#2980B9">one audit →</text>
+  <text x="270" y="232" text-anchor="middle" font-size="8" font-weight="600" fill="#2980B9">many captures</text>
 
   <!-- CAPTURES table -->
   <rect x="305" y="140" width="265" height="315" rx="8" fill="#F8F9FA" stroke="#2980B9" stroke-width="1"/>
