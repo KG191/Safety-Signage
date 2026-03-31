@@ -31,9 +31,9 @@
 
   <!-- User notification box for offline/no credits (right of Tier 1, no overlap) -->
   <rect x="635" y="160" width="135" height="45" rx="6" fill="#FADBD8" stroke="#E74C3C" stroke-width="1"/>
-  <text x="685" y="177" font-size="8" font-weight="600" fill="#C0392B">User notified:</text>
-  <text x="685" y="190" font-size="7" fill="#C0392B">"Using local analysis</text>
-  <text x="685" y="201" font-size="7" fill="#C0392B">(lower accuracy, offline)"</text>
+  <text x="702" y="177" text-anchor="middle" font-size="8" font-weight="600" fill="#C0392B">User notified:</text>
+  <text x="702" y="190" text-anchor="middle" font-size="7" fill="#C0392B">"Using local analysis</text>
+  <text x="702" y="201" text-anchor="middle" font-size="7" fill="#C0392B">(lower accuracy, offline)"</text>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- TIER 1: Vision API (Sonnet / Opus) -->
