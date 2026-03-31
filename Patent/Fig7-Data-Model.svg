@@ -44,36 +44,36 @@
   <circle cx="293" cy="244" r="2" fill="#333"/>
 
   <!-- CAPTURES table -->
-  <rect x="305" y="140" width="255" height="315" rx="8" fill="#F8F9FA" stroke="#2980B9" stroke-width="1"/>
-  <rect x="305" y="140" width="255" height="28" rx="8" fill="#2980B9"/>
-  <text x="432" y="159" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CAPTURES</text>
+  <rect x="305" y="140" width="265" height="315" rx="8" fill="#F8F9FA" stroke="#2980B9" stroke-width="1"/>
+  <rect x="305" y="140" width="265" height="28" rx="8" fill="#2980B9"/>
+  <text x="437" y="159" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CAPTURES</text>
 
   <text x="315" y="185" font-size="9" fill="#333">id</text>
-  <text x="500" y="185" font-size="8" fill="#999">PK</text>
+  <text x="510" y="185" font-size="8" fill="#999">PK</text>
   <text x="315" y="200" font-size="9" fill="#333">auditId</text>
-  <text x="500" y="200" font-size="8" fill="#999">FK, IX</text>
+  <text x="510" y="200" font-size="8" fill="#999">FK, IX</text>
   <text x="315" y="215" font-size="9" fill="#333">photo</text>
-  <text x="500" y="215" font-size="8" fill="#999">JPEG dataURL</text>
+  <text x="510" y="215" font-size="8" fill="#999">JPEG dataURL</text>
   <text x="315" y="230" font-size="9" fill="#333">contextPhoto</text>
-  <text x="500" y="230" font-size="8" fill="#999">JPEG dataURL</text>
+  <text x="510" y="230" font-size="8" fill="#999">JPEG dataURL</text>
   <text x="315" y="245" font-size="9" fill="#333">lat, lng</text>
-  <text x="500" y="245" font-size="8" fill="#999">GPS coords</text>
+  <text x="510" y="245" font-size="8" fill="#999">GPS coords</text>
   <text x="315" y="260" font-size="9" fill="#333">locationDesc</text>
-  <text x="500" y="260" font-size="8" fill="#999">L1 > L2 > L3 > L4</text>
+  <text x="510" y="260" font-size="8" fill="#999">4-level hierarchy</text>
   <text x="315" y="275" font-size="9" fill="#333">category</text>
-  <text x="500" y="275" font-size="8" fill="#999">IX (7 types)</text>
+  <text x="510" y="275" font-size="8" fill="#999">IX (7 types)</text>
   <text x="315" y="290" font-size="9" fill="#333">signNumber</text>
-  <text x="500" y="290" font-size="8" fill="#999">Appendix B</text>
+  <text x="510" y="290" font-size="8" fill="#999">Appendix B</text>
   <text x="315" y="305" font-size="9" fill="#333">signText</text>
-  <text x="500" y="305" font-size="8" fill="#999">string</text>
+  <text x="510" y="305" font-size="8" fill="#999">string</text>
   <text x="315" y="320" font-size="9" fill="#333">checks</text>
-  <text x="500" y="320" font-size="8" fill="#999">object (20 bools)</text>
+  <text x="510" y="320" font-size="8" fill="#999">object (20 bools)</text>
   <text x="315" y="335" font-size="9" fill="#333">overall</text>
-  <text x="500" y="335" font-size="8" fill="#999">IX</text>
+  <text x="510" y="335" font-size="8" fill="#999">IX</text>
   <text x="315" y="350" font-size="9" fill="#333">notes</text>
-  <text x="500" y="350" font-size="8" fill="#999">string</text>
+  <text x="510" y="350" font-size="8" fill="#999">string</text>
   <text x="315" y="365" font-size="9" font-weight="600" fill="#8E44AD">detection</text>
-  <text x="500" y="365" font-size="8" fill="#8E44AD">nested object</text>
+  <text x="510" y="365" font-size="8" fill="#8E44AD">nested object</text>
 
   <!-- Detection subfields -->
   <rect x="320" y="372" width="230" height="75" rx="4" fill="#F5EEF8" stroke="#8E44AD" stroke-width="0.5"/>
@@ -133,19 +133,19 @@
   <text x="742" y="329" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">LICENSES</text>
 
   <text x="625" y="355" font-size="9" fill="#333">id</text>
-  <text x="810" y="355" font-size="8" fill="#999">UUID, PK</text>
+  <text x="800" y="355" font-size="8" fill="#999">UUID, PK</text>
   <text x="625" y="372" font-size="9" fill="#333">user_id</text>
-  <text x="810" y="372" font-size="8" fill="#999">FK, UNIQUE</text>
-  <text x="625" y="389" font-size="9" fill="#333">stripe_checkout_session_id</text>
-  <text x="810" y="389" font-size="8" fill="#999">UNIQUE</text>
+  <text x="800" y="372" font-size="8" fill="#999">FK, UNIQUE</text>
+  <text x="625" y="389" font-size="9" fill="#333">stripe_checkout_id</text>
+  <text x="800" y="389" font-size="8" fill="#999">UNIQUE</text>
   <text x="625" y="406" font-size="9" fill="#333">stripe_customer_id</text>
-  <text x="810" y="406" font-size="8" fill="#999">string</text>
+  <text x="800" y="406" font-size="8" fill="#999">string</text>
   <text x="625" y="423" font-size="9" fill="#333">status</text>
-  <text x="810" y="423" font-size="8" fill="#999">"active" | "revoked"</text>
+  <text x="800" y="423" font-size="8" fill="#999">active | revoked</text>
   <text x="625" y="440" font-size="9" fill="#333">purchased_at</text>
-  <text x="810" y="440" font-size="8" fill="#999">timestamp</text>
+  <text x="800" y="440" font-size="8" fill="#999">timestamp</text>
   <text x="625" y="457" font-size="9" fill="#333">amount_aud</text>
-  <text x="810" y="457" font-size="8" fill="#999">14900 ($149.00)</text>
+  <text x="800" y="457" font-size="8" fill="#999">14900</text>
 
   <text x="625" y="485" font-size="8" fill="#1ABC9C">RLS: users read own row only</text>
   <text x="625" y="498" font-size="8" fill="#1ABC9C">Writes via service_role (webhook only)</text>
@@ -160,10 +160,10 @@
   <text x="750" y="523" font-size="8" fill="#B7950B">upsert</text>
 
   <!-- Privacy note -->
-  <rect x="15" y="600" width="870" height="50" rx="8" fill="#FADBD8" stroke="#C0392B" stroke-width="1"/>
+  <rect x="15" y="600" width="870" height="65" rx="8" fill="#FADBD8" stroke="#C0392B" stroke-width="1"/>
   <text x="450" y="622" text-anchor="middle" font-size="11" font-weight="700" fill="#C0392B">PRIVACY BY DESIGN</text>
   <text x="450" y="640" text-anchor="middle" font-size="10" fill="#555">Audit data (photos, GPS, compliance records) is stored exclusively on the user's device.</text>
-  <text x="450" y="654" text-anchor="middle" font-size="10" fill="#555">Cloud storage is limited to authentication credentials and licence status. No audit data is transmitted.</text>
+  <text x="450" y="657" text-anchor="middle" font-size="10" fill="#555">Cloud storage is limited to authentication credentials and licence status. No audit data is transmitted.</text>
 
   <!-- Legend -->
   <text x="40" y="690" font-size="9" font-weight="600" fill="#333">Legend:</text>

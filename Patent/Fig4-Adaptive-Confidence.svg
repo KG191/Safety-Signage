@@ -93,14 +93,20 @@
   <text x="440" y="629" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">&lt; 0.40 LOW</text>
 
   <!-- Worked Example -->
-  <rect x="560" y="330" width="210" height="120" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1" filter="url(#sh)"/>
-  <text x="665" y="350" text-anchor="middle" font-size="10" font-weight="700" fill="#B7950B">Worked Example</text>
-  <text x="570" y="370" font-size="8" fill="#555">cConf = 0.85 (blue detected)</text>
-  <text x="570" y="385" font-size="8" fill="#555">sConf = 0.40 (ambiguous shape)</text>
-  <text x="570" y="400" font-size="8" fill="#555">gap = 0.45 > 0.3</text>
-  <text x="570" y="415" font-size="8" fill="#555">→ cW=0.75, sW=0.25</text>
-  <text x="570" y="430" font-size="8" font-weight="600" fill="#333">base = 0.85×0.75 + 0.40×0.25</text>
-  <text x="570" y="445" font-size="9" font-weight="700" fill="#004B87">= 0.74 (HIGH)</text>
+  <rect x="555" y="295" width="230" height="230" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1" filter="url(#sh)"/>
+  <text x="670" y="315" text-anchor="middle" font-size="10" font-weight="700" fill="#B7950B">Worked Example</text>
+  <text x="565" y="338" font-size="8" fill="#555">cConf = 0.85 (strong blue detected)</text>
+  <text x="565" y="353" font-size="8" fill="#555">sConf = 0.40 (shape unclear in photo)</text>
+  <text x="565" y="373" font-size="8" font-weight="600" fill="#333">gap = 0.45 > 0.3</text>
+  <text x="565" y="390" font-size="8" fill="#555">The gap is large, meaning one signal</text>
+  <text x="565" y="403" font-size="8" fill="#555">is much more certain than the other.</text>
+  <text x="565" y="416" font-size="8" fill="#555">Colour is reliable → gets 75% weight.</text>
+  <text x="565" y="429" font-size="8" fill="#555">Shape is uncertain → gets 25% weight.</text>
+  <text x="565" y="449" font-size="8" font-weight="600" fill="#333">Adaptive:  0.85×0.75 + 0.40×0.25</text>
+  <text x="565" y="465" font-size="9" font-weight="700" fill="#27AE60">= 0.74 (HIGH — auto-fill form)</text>
+  <text x="565" y="485" font-size="8" fill="#999">Without adaptive weighting:</text>
+  <text x="565" y="498" font-size="8" fill="#999">0.85×0.50 + 0.40×0.50 = 0.625</text>
+  <text x="565" y="511" font-size="8" fill="#E74C3C">(MEDIUM — unnecessary manual review)</text>
 
   <text x="400" y="690" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
 </svg>
