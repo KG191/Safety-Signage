@@ -20,8 +20,8 @@
   <text x="390" y="159" text-anchor="middle" font-size="10" font-weight="600" fill="#B7950B">credits available?</text>
 
   <!-- Yes branch -->
-  <text x="295" y="185" font-size="9" font-weight="600" fill="#27AE60">Yes</text>
   <line x1="390" y1="186" x2="390" y2="216" stroke="#27AE60" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="398" y="205" font-size="9" font-weight="600" fill="#27AE60">Yes</text>
 
   <!-- No branch: continuous red dashed line from diamond to Tier 3 -->
   <text x="518" y="145" font-size="9" font-weight="600" fill="#E74C3C">No</text>
