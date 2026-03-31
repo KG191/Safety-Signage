@@ -60,7 +60,7 @@ SWIM LANE 3: "Server-Side"                            │
 - Colour-code: blue for user device, green for external services, grey for server-side
 - Label each arrow with the data that flows (e.g., "JPEG image + prompt", "JSON detection result", "JWT token")
 - Show that audit data (photos, GPS, compliance) stays on device — draw a dotted boundary around IndexedDB labelled "Data stays on device"
-- Show the Anthropic API connection labelled "User's own API key (BYOK)"
+- Show the Anthropic API connection labelled "Server-side API key (proxied)" via the vision-proxy Edge Function
 
 ---
 
@@ -126,9 +126,9 @@ SWIM LANE 3: "Server-Side"                            │
 
 ## Figure 3: Detection Pipeline Flowchart
 
-**Purpose:** Show the three-tier detection hierarchy with timeouts and fallbacks. This is the core novel architecture.
+**Purpose:** Show the three-tier detection hierarchy with timeouts, fallbacks, and user notifications. This is the core novel architecture.
 
-**Layout:** Vertical flowchart with three parallel branches converging.
+**Layout:** Vertical flowchart with three tiers, decision diamond, and user notification callouts.
 
 **Content:**
 
@@ -136,83 +136,104 @@ SWIM LANE 3: "Server-Side"                            │
 [Sign Photo Captured (JPEG)]
           │
           ▼
-  ┌───────────────────┐
-  │ API Key available? │
-  └───┬───────────┬───┘
-      │ Yes       │ No
-      ▼           │
-┌─────────────────────────┐
-│ TIER 1: Vision API      │
-│ (Claude Haiku/Sonnet/   │
-│  Opus)                  │
-│                         │
-│ Send: base64 image +    │
-│   AS 1319 prompt        │
-│ Receive: structured     │
-│   JSON (category, sign  │
-│   number, 20 checks,    │
-│   confidence, reasoning)│
-│                         │
-│ Timeout: 15 seconds     │
-└───┬──────────────┬──────┘
+  ┌────────────────────────┐
+  │ Online + credits       │
+  │ available?             │
+  └───┬────────────────┬───┘
+      │ Yes            │ No
+      │                │
+      │         [User notified:
+      │          "Using local analysis
+      │          (lower accuracy, offline)"]
+      ▼                │
+┌──────────────────────────────────┐
+│ TIER 1: Vision API (Cloud AI)   │
+│ Highest accuracy                │
+│                                 │
+│ User selects model at purchase: │
+│ ┌──────────┐  ┌──────────────┐  │
+│ │ Sonnet   │  │ Opus         │  │
+│ │ Well-    │  │ Faded/       │  │
+│ │ maintained│  │ damaged signs│  │
+│ └──────────┘  └──────────────┘  │
+│                                 │
+│ Send: image via server proxy    │
+│ Receive: category, sign number, │
+│   20 checks, confidence,        │
+│   reasoning, condition notes    │
+│ Timeout: 15 seconds             │
+│ Credit deducted on success      │
+└───┬──────────────┬──────────────┘
     │ Success      │ Fail/Timeout
+    │              │
+    │    [User notified: "AI unavailable
+    │     — running local analysis"]
     │              ▼
-    │    ┌─────────────────────────┐
-    │    │ TIER 2: ML Model       │
-    │    │ (TensorFlow.js,        │
-    │    │  MobileNet v3,         │
-    │    │  fine-tuned AS 1319)   │
-    │    │                        │
-    │    │ In-browser inference   │
-    │    │ ~500ms, offline OK     │
-    │    │ Output: category only  │
-    │    └───┬──────────────┬─────┘
+    │    ┌──────────────────────────────┐
+    │    │ TIER 2: ML Model            │
+    │    │ (In-Browser, Offline)       │
+    │    │ Moderate accuracy           │
+    │    │                             │
+    │    │ Fine-tuned MobileNet v3     │
+    │    │ ~500ms, no credits needed   │
+    │    │ Output: category only       │
+    │    │ (auditor completes rest)    │
+    │    └───┬──────────────┬──────────┘
     │        │ Loaded       │ Not available
     │        │              ▼
-    │        │    ┌─────────────────────────┐
-    │        │    │ TIER 3: CV Pipeline     │
-    │        │    │ (Pure JavaScript)       │
-    │        │    │                         │
-    │        │    │ 1. Preprocess (640px)   │
-    │        │    │ 2. White-balance        │
-    │        │    │ 3. Histogram equalise   │
-    │        │    │ 4. Colour analysis      │
-    │        │    │    (K-means + grid)     │
-    │        │    │ 5. Shape detection      │
-    │        │    │    (3-method ensemble)  │
-    │        │    │ 6. Classification       │
-    │        │    │ 7. Compliance assess    │
-    │        │    │                         │
-    │        │    │ Timeout: 5 seconds      │
-    │        │    │ Fully offline           │
-    │        │    └───┬────────────────────┘
+    │        │    ┌──────────────────────────┐
+    │        │    │ TIER 3: Computer Vision  │
+    │        │    │ (Pure JS, Offline)       │
+    │        │    │ Baseline accuracy        │
+    │        │    │                          │
+    │        │    │ 1. Preprocess (640px)    │
+    │        │    │ 2. White-balance         │
+    │        │    │ 3. Histogram equalise    │
+    │        │    │ 4. K-means + grid colour │
+    │        │    │ 5. 3-method shape detect │
+    │        │    │ 6. Classification        │
+    │        │    │ 7. 7/20 compliance checks│
+    │        │    │                          │
+    │        │    │ Timeout: 5 seconds       │
+    │        │    │ No credits required      │
+    │        │    └───┬─────────────────────┘
     │        │        │
     ▼        ▼        ▼
-┌─────────────────────────────────┐
+┌──────────────────────────────────┐
 │ Standardised Detection Result   │
+│ (identical format from all tiers)│
 │                                 │
 │ • category, signNumber          │
-│ • 20 compliance checks          │
+│ • compliance checks             │
 │ • confidence (0.0 - 1.0)        │
 │ • reasoning text                │
-│ • auditor override tracking     │
+│ • source badge shown to user    │
 └───────────────┬─────────────────┘
                 │
                 ▼
-┌─────────────────────────────────┐
+┌──────────────────────────────────┐
 │ Auto-Populate Capture Form      │
 │                                 │
 │ High (≥0.7): auto-fill + green │
 │ Medium (0.4-0.69): fill + warn │
 │ Low (<0.4): show only, manual  │
+│                                 │
+│ Source: "Vision AI (Opus)" |    │
+│  "Vision AI (Sonnet)" |         │
+│  "Local ML" | "Local CV"       │
 └─────────────────────────────────┘
+
+Accuracy: Opus > Sonnet > ML > CV
 ```
 
 **Notes:**
 - Colour-code each tier: Tier 1 purple, Tier 2 orange, Tier 3 teal
 - Use dashed arrows for fallback paths, solid arrows for success paths
-- Label the timeout values prominently
-- Show that all three tiers produce the same standardised output format
+- Include user notification callouts (red boxes) at each fallback point
+- Decision diamond: "Online + credits available?" (not "API key available?")
+- Tier 1 shows Sonnet and Opus as two boxes side by side
+- Label the timeout values and credit deduction prominently
+- Bottom: accuracy ranking bar (Opus > Sonnet > ML > CV)
 - This is the most patent-relevant diagram — make it clear and detailed
 
 ---

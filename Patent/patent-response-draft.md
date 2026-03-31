@@ -43,9 +43,15 @@
 ### 2.2 Hybrid Three-Tier Detection Pipeline with Adaptive Fallback
 
 - No competitor offers a tiered AI → ML → CV fallback architecture
-- System automatically degrades gracefully: Vision API (highest accuracy, requires internet) → fine-tuned ML model (good accuracy, in-browser) → pure computer vision (baseline accuracy, fully offline)
-- Each tier produces a standardised detection result, enabling seamless fallback without user awareness
-- 15-second timeout on Vision API automatically triggers next tier
+- System automatically degrades gracefully through three tiers:
+  - **Tier 1 — Vision API (Sonnet or Opus)**: Highest accuracy. Requires internet and credits. User selects model when purchasing: Sonnet for well-maintained sites, Opus for faded/damaged signs. 15-second timeout triggers fallback.
+  - **Tier 2 — ML Model (TensorFlow.js)**: Moderate accuracy. Fine-tuned MobileNet v3 running in-browser. Provides category classification only (no sign number, no compliance checks). Works offline, no credits required.
+  - **Tier 3 — Computer Vision (Canvas API)**: Baseline accuracy. Pure JavaScript colour and shape analysis. Provides category, 7 of 20 auto-assessed compliance checks. Works fully offline with no external dependencies, no credits required.
+- Each tier produces a standardised detection result format, enabling seamless fallback
+- **User is always informed** which tier is active: detection results show a source badge ("Vision AI (Opus)", "Vision AI (Sonnet)", "Local ML", or "Local CV") and confidence scores are calibrated to reflect the tier's accuracy
+- When falling back from Tier 1, user sees: "AI unavailable — running local analysis (lower accuracy)"
+- Accuracy ranking: Opus (highest) > Sonnet (high) > ML Model (moderate) > CV Pipeline (baseline)
+- Tiers 2 and 3 ensure the app remains functional at remote sites (mines, utilities) with no internet — the auditor simply reviews and completes more fields manually
 
 ### 2.3 Adaptive Confidence Weighting Algorithm
 
