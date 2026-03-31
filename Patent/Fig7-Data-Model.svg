@@ -36,12 +36,9 @@
   <text x="180" y="275" font-size="8" fill="#999">ISO8601</text>
 
   <!-- 1:N relationship -->
-  <line x1="240" y1="240" x2="300" y2="240" stroke="#333" stroke-width="2"/>
-  <text x="255" y="233" font-size="9" font-weight="700" fill="#333">1</text>
-  <text x="290" y="233" font-size="9" font-weight="700" fill="#333">N</text>
-  <circle cx="297" cy="240" r="4" fill="#333"/>
-  <circle cx="293" cy="236" r="2" fill="#333"/>
-  <circle cx="293" cy="244" r="2" fill="#333"/>
+  <line x1="240" y1="240" x2="305" y2="240" stroke="#2980B9" stroke-width="2" marker-end="url(#arrowRelation)"/>
+  <defs><marker id="arrowRelation" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#2980B9"/></marker></defs>
+  <text x="270" y="232" text-anchor="middle" font-size="8" font-weight="600" fill="#2980B9">one audit → many captures</text>
 
   <!-- CAPTURES table -->
   <rect x="305" y="140" width="265" height="315" rx="8" fill="#F8F9FA" stroke="#2980B9" stroke-width="1"/>
@@ -123,9 +120,8 @@
   <text x="625" y="245" font-size="8" fill="#1ABC9C">Email/password auth via Resend SMTP</text>
 
   <!-- 1:1 relationship -->
-  <line x1="742" y1="260" x2="742" y2="310" stroke="#333" stroke-width="2"/>
-  <text x="750" y="278" font-size="9" font-weight="700" fill="#333">1</text>
-  <text x="750" y="303" font-size="9" font-weight="700" fill="#333">1</text>
+  <line x1="742" y1="260" x2="742" y2="310" stroke="#1ABC9C" stroke-width="2"/>
+  <text x="760" y="288" font-size="8" font-weight="600" fill="#1ABC9C">one user → one licence</text>
 
   <!-- licenses -->
   <rect x="615" y="310" width="255" height="200" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1.5" filter="url(#sh)"/>
