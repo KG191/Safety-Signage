@@ -63,8 +63,8 @@
   <text x="522" y="368" text-anchor="middle" font-size="8" fill="#999">Credit deducted on success</text>
 
   <!-- Success from Tier 1: route left around Tier 2 and Tier 3 boxes -->
-  <text x="140" y="396" font-size="9" font-weight="600" fill="#27AE60">Success</text>
-  <path d="M150,381 L150,395 L80,395 L80,855 L190,855" stroke="#27AE60" stroke-width="1.5" fill="none" marker-end="url(#aG)"/>
+  <text x="105" y="390" font-size="9" font-weight="600" fill="#27AE60">Success</text>
+  <path d="M150,381 L150,400 L80,400 L80,855 L190,855" stroke="#27AE60" stroke-width="1.5" fill="none" marker-end="url(#aG)"/>
   <text x="65" y="620" font-size="8" fill="#27AE60" transform="rotate(-90,65,620)">Tier 1 result (highest accuracy)</text>
 
   <text x="460" y="396" font-size="9" font-weight="600" fill="#E74C3C">Fail / Timeout</text>
@@ -96,8 +96,8 @@
   <line x1="540" y1="545" x2="540" y2="580" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#aR)"/>
 
   <!-- Success from Tier 2: route left around Tier 3 box -->
-  <text x="178" y="560" font-size="9" font-weight="600" fill="#27AE60">Loaded</text>
-  <path d="M200,545 L200,565 L120,565 L120,855 L190,855" stroke="#27AE60" stroke-width="1.5" fill="none" marker-end="url(#aG)"/>
+  <text x="145" y="558" font-size="9" font-weight="600" fill="#27AE60">Loaded</text>
+  <path d="M200,545 L200,570 L120,570 L120,855 L190,855" stroke="#27AE60" stroke-width="1.5" fill="none" marker-end="url(#aG)"/>
   <text x="105" y="720" font-size="8" fill="#27AE60" transform="rotate(-90,105,720)">Tier 2 result (moderate)</text>
 
   <!-- No branch joins to Tier 3 -->
