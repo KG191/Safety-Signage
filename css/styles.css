@@ -273,6 +273,101 @@ body.cover-active #app {
     transform: translateX(-50%) translateY(0);
 }
 
+/* === BYOK Guide === */
+.byok-guide {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #444;
+}
+
+.byok-guide h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 1rem 0 0.3rem;
+}
+
+.byok-guide h3:first-child {
+    margin-top: 0;
+}
+
+.byok-guide p {
+    margin-bottom: 0.5rem;
+}
+
+.byok-guide ol {
+    padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.byok-guide ol li {
+    margin-bottom: 0.35rem;
+}
+
+.byok-guide code {
+    background: #e8e8e8;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.byok-guide a {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.byok-cost-table {
+    margin: 0.5rem 0 0.75rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.byok-cost-row {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+}
+
+.byok-cost-row:last-child {
+    border-bottom: none;
+}
+
+.byok-cost-row.byok-recommended {
+    background: #E8F8F5;
+}
+
+.byok-model {
+    font-weight: 700;
+    width: 60px;
+    flex-shrink: 0;
+}
+
+.byok-cost {
+    font-weight: 600;
+    color: var(--primary);
+    width: 90px;
+    flex-shrink: 0;
+}
+
+.byok-note {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.byok-example {
+    font-size: 0.8rem;
+    color: #888;
+    font-style: italic;
+}
+
 /* === Auth Form (Apple-style) === */
 #license-auth-section .form-group {
     margin-bottom: 0.75rem;

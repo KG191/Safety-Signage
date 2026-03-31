@@ -539,33 +539,63 @@
         <section id="view-settings" class="view">
             <div class="card">
                 <h2>Vision AI Settings</h2>
-                <p class="settings-desc">
-                    Provide your own Anthropic API key to enable AI-powered sign detection.
-                    For best results, use the <strong>Opus</strong> model. Without an API key,
-                    the app uses local computer vision (lower accuracy, works offline).
-                </p>
-                <p class="settings-desc">
-                    Get your API key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>.
-                    You pay Anthropic directly for usage. Your key is stored locally on this device only.
-                </p>
 
                 <div class="vision-status-row">
                     <span>Vision AI Status:</span>
                     <span id="vision-api-indicator" class="vision-indicator inactive">Not configured</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="vision-api-key">Anthropic API Key</label>
+                <div class="byok-guide">
+                    <h3>What is this?</h3>
+                    <p>This app uses AI to automatically detect and classify safety signs from your photos. To enable this, you need your own API key from Anthropic (the company behind Claude AI).</p>
+
+                    <h3>How to get your API key</h3>
+                    <ol>
+                        <li>Go to <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a></li>
+                        <li>Create a free account (or sign in)</li>
+                        <li>Go to <strong>API Keys</strong> and click <strong>Create Key</strong></li>
+                        <li>Copy the key (starts with <code>sk-ant-...</code>) and paste it below</li>
+                    </ol>
+
+                    <h3>How much does it cost?</h3>
+                    <p>You pay Anthropic directly based on usage. Typical costs per sign photographed:</p>
+                    <div class="byok-cost-table">
+                        <div class="byok-cost-row">
+                            <span class="byok-model">Haiku</span>
+                            <span class="byok-cost">~$0.01/sign</span>
+                            <span class="byok-note">Fastest, good accuracy</span>
+                        </div>
+                        <div class="byok-cost-row">
+                            <span class="byok-model">Sonnet</span>
+                            <span class="byok-cost">~$0.05/sign</span>
+                            <span class="byok-note">Balanced</span>
+                        </div>
+                        <div class="byok-cost-row byok-recommended">
+                            <span class="byok-model">Opus</span>
+                            <span class="byok-cost">~$0.25/sign</span>
+                            <span class="byok-note">Best accuracy (recommended)</span>
+                        </div>
+                    </div>
+                    <p class="byok-example">Example: Auditing 100 signs with Opus costs ~$25.</p>
+
+                    <h3>Is it safe?</h3>
+                    <p>Your API key is stored <strong>locally on this device only</strong>. It is never sent to us or any third party. Sign images are sent directly from your device to Anthropic for analysis.</p>
+
+                    <h3>Do I need this?</h3>
+                    <p>No — the app works without it using local detection (lower accuracy, fully offline). The AI simply provides faster, more accurate results.</p>
+                </div>
+
+                <div class="form-group" style="margin-top:1rem;">
+                    <label for="vision-api-key">Your Anthropic API Key</label>
                     <input type="password" id="vision-api-key" placeholder="sk-ant-...">
-                    <small class="field-help">Your key is stored locally in this browser only. Never shared with us.</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="vision-model-pref">Model</label>
+                    <label for="vision-model-pref">AI Model</label>
                     <select id="vision-model-pref">
-                        <option value="fast">Haiku — fastest, lowest cost (~$0.01/sign)</option>
-                        <option value="balanced">Sonnet — balanced accuracy & cost (~$0.05/sign)</option>
-                        <option value="best" selected>Opus — highest accuracy (~$0.25/sign, recommended)</option>
+                        <option value="fast">Haiku — fastest, lowest cost</option>
+                        <option value="balanced">Sonnet — balanced accuracy & cost</option>
+                        <option value="best" selected>Opus — highest accuracy (recommended)</option>
                     </select>
                 </div>
 
