@@ -1,9 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 750" font-family="'Segoe UI', Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 880" font-family="'Segoe UI', Arial, sans-serif">
   <defs>
     <filter id="sh" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.08"/></filter>
+    <marker id="arrowRel" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#2980B9"/></marker>
   </defs>
 
-  <text x="450" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a">Figure 7: Data Model — Storage Architecture</text>
+  <text x="480" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a">Figure 7: Data Model — Storage Architecture</text>
 
   <!-- ON DEVICE boundary -->
   <rect x="15" y="50" width="570" height="530" rx="12" fill="#EBF5FB" stroke="#2980B9" stroke-width="2" stroke-dasharray="8,4"/>
@@ -19,7 +20,6 @@
   <rect x="40" y="140" width="200" height="200" rx="8" fill="#F8F9FA" stroke="#2980B9" stroke-width="1"/>
   <rect x="40" y="140" width="200" height="28" rx="8" fill="#2980B9"/>
   <text x="140" y="159" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">AUDITS</text>
-
   <text x="50" y="185" font-size="9" fill="#333">id</text>
   <text x="180" y="185" font-size="8" fill="#999">PK</text>
   <text x="50" y="200" font-size="9" fill="#333">siteName</text>
@@ -36,16 +36,14 @@
   <text x="180" y="275" font-size="8" fill="#999">ISO8601</text>
 
   <!-- 1:N relationship -->
-  <line x1="240" y1="240" x2="305" y2="240" stroke="#2980B9" stroke-width="2" marker-end="url(#arrowRelation)"/>
-  <defs><marker id="arrowRelation" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#2980B9"/></marker></defs>
+  <line x1="240" y1="240" x2="305" y2="240" stroke="#2980B9" stroke-width="2" marker-end="url(#arrowRel)"/>
   <text x="270" y="220" text-anchor="middle" font-size="8" font-weight="600" fill="#2980B9">one audit →</text>
   <text x="270" y="232" text-anchor="middle" font-size="8" font-weight="600" fill="#2980B9">many captures</text>
 
   <!-- CAPTURES table -->
-  <rect x="305" y="140" width="265" height="315" rx="8" fill="#F8F9FA" stroke="#2980B9" stroke-width="1"/>
-  <rect x="305" y="140" width="265" height="28" rx="8" fill="#2980B9"/>
-  <text x="437" y="159" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CAPTURES</text>
-
+  <rect x="305" y="140" width="260" height="315" rx="8" fill="#F8F9FA" stroke="#2980B9" stroke-width="1"/>
+  <rect x="305" y="140" width="260" height="28" rx="8" fill="#2980B9"/>
+  <text x="435" y="159" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CAPTURES</text>
   <text x="315" y="185" font-size="9" fill="#333">id</text>
   <text x="510" y="185" font-size="8" fill="#999">PK</text>
   <text x="315" y="200" font-size="9" fill="#333">auditId</text>
@@ -74,97 +72,103 @@
   <text x="510" y="365" font-size="8" fill="#8E44AD">nested object</text>
 
   <!-- Detection subfields -->
-  <rect x="320" y="372" width="230" height="75" rx="4" fill="#F5EEF8" stroke="#8E44AD" stroke-width="0.5"/>
-  <text x="330" y="386" font-size="8" fill="#6C3483">├ confidence (0.0-1.0)</text>
-  <text x="330" y="398" font-size="8" fill="#6C3483">├ colourConf, shapeConf, mlConf</text>
-  <text x="330" y="410" font-size="8" fill="#6C3483">├ dominantColour, detectedShape</text>
-  <text x="330" y="422" font-size="8" fill="#6C3483">├ auditorOverrides {cat, num, checks[]}</text>
-  <text x="330" y="434" font-size="8" fill="#6C3483">├ reasoning, conditionNotes</text>
-  <text x="330" y="446" font-size="8" fill="#6C3483">└ visionApiUsed, mlIsFineTuned</text>
+  <rect x="320" y="372" width="235" height="75" rx="4" fill="#F5EEF8" stroke="#8E44AD" stroke-width="0.5"/>
+  <text x="330" y="386" font-size="8" fill="#6C3483">confidence, colourConf, shapeConf</text>
+  <text x="330" y="398" font-size="8" fill="#6C3483">dominantColour, detectedShape</text>
+  <text x="330" y="410" font-size="8" fill="#6C3483">auditorOverrides {cat, num, checks[]}</text>
+  <text x="330" y="422" font-size="8" fill="#6C3483">reasoning, conditionNotes</text>
+  <text x="330" y="434" font-size="8" fill="#6C3483">visionApiUsed, mlIsFineTuned</text>
 
   <!-- localStorage -->
   <rect x="25" y="475" width="550" height="95" rx="10" fill="#fff" stroke="#F39C12" stroke-width="1.5" filter="url(#sh)"/>
   <text x="40" y="498" font-size="12" font-weight="700" fill="#B7950B">localStorage</text>
-
-  <text x="40" y="520" font-size="9" fill="#333">signageAudit_apiKey</text>
-  <text x="250" y="520" font-size="8" fill="#999">User's Anthropic API key (BYOK)</text>
-
-  <text x="40" y="536" font-size="9" fill="#333">signageAudit_modelPref</text>
-  <text x="250" y="536" font-size="8" fill="#999">"fast" | "balanced" | "best"</text>
-
-  <text x="40" y="552" font-size="9" fill="#333">license_cache</text>
-  <text x="250" y="552" font-size="8" fill="#999">{ licensed: bool, until: timestamp } — 7-day TTL</text>
-
-  <text x="40" y="568" font-size="9" fill="#333">eula-accepted</text>
-  <text x="250" y="568" font-size="8" fill="#999">timestamp</text>
+  <text x="40" y="520" font-size="9" fill="#333">signageAudit_modelPref</text>
+  <text x="280" y="520" font-size="8" fill="#999">"sonnet" | "opus" (user's model choice)</text>
+  <text x="40" y="536" font-size="9" fill="#333">credit_cache</text>
+  <text x="280" y="536" font-size="8" fill="#999">{ sonnet: N, opus: N, until: ts } — short TTL</text>
+  <text x="40" y="552" font-size="9" fill="#333">eula-accepted</text>
+  <text x="280" y="552" font-size="8" fill="#999">timestamp</text>
 
   <!-- CLOUD boundary -->
-  <rect x="600" y="50" width="285" height="530" rx="12" fill="#E8F8F5" stroke="#1ABC9C" stroke-width="2" stroke-dasharray="8,4"/>
+  <rect x="600" y="50" width="345" height="680" rx="12" fill="#E8F8F5" stroke="#1ABC9C" stroke-width="2" stroke-dasharray="8,4"/>
   <text x="615" y="72" font-size="13" font-weight="700" fill="#148F77">CLOUD (Supabase)</text>
-  <text x="615" y="90" font-size="9" fill="#1ABC9C">Auth + Licensing only</text>
+  <text x="615" y="90" font-size="9" fill="#1ABC9C">Auth, Credits, and Licensing</text>
 
   <!-- auth.users -->
-  <rect x="615" y="110" width="255" height="150" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1.5" filter="url(#sh)"/>
-  <rect x="615" y="110" width="255" height="28" rx="8" fill="#1ABC9C"/>
-  <text x="742" y="129" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">auth.users (Supabase managed)</text>
+  <rect x="615" y="105" width="315" height="130" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="615" y="105" width="315" height="28" rx="8" fill="#1ABC9C"/>
+  <text x="772" y="124" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">auth.users (Supabase managed)</text>
+  <text x="625" y="150" font-size="9" fill="#333">id</text>
+  <text x="870" y="150" font-size="8" fill="#999">UUID, PK</text>
+  <text x="625" y="167" font-size="9" fill="#333">email</text>
+  <text x="870" y="167" font-size="8" fill="#999">string</text>
+  <text x="625" y="184" font-size="9" fill="#333">encrypted_password</text>
+  <text x="870" y="184" font-size="8" fill="#999">hash</text>
+  <text x="625" y="201" font-size="9" fill="#333">confirmed_at</text>
+  <text x="870" y="201" font-size="8" fill="#999">timestamp</text>
+  <text x="625" y="225" font-size="8" fill="#1ABC9C">Email/password auth via Resend SMTP</text>
 
-  <text x="625" y="155" font-size="9" fill="#333">id</text>
-  <text x="810" y="155" font-size="8" fill="#999">UUID, PK</text>
-  <text x="625" y="172" font-size="9" fill="#333">email</text>
-  <text x="810" y="172" font-size="8" fill="#999">string</text>
-  <text x="625" y="189" font-size="9" fill="#333">encrypted_password</text>
-  <text x="810" y="189" font-size="8" fill="#999">hash</text>
-  <text x="625" y="206" font-size="9" fill="#333">confirmed_at</text>
-  <text x="810" y="206" font-size="8" fill="#999">timestamp</text>
-  <text x="625" y="223" font-size="9" fill="#333">created_at</text>
-  <text x="810" y="223" font-size="8" fill="#999">timestamp</text>
-  <text x="625" y="245" font-size="8" fill="#1ABC9C">Email/password auth via Resend SMTP</text>
+  <!-- Relationship lines from auth.users -->
+  <line x1="710" y1="235" x2="710" y2="270" stroke="#1ABC9C" stroke-width="2"/>
+  <text x="718" y="255" font-size="8" font-weight="600" fill="#1ABC9C">one user →</text>
 
-  <!-- 1:1 relationship -->
-  <line x1="742" y1="260" x2="742" y2="310" stroke="#1ABC9C" stroke-width="2"/>
-  <text x="760" y="288" font-size="8" font-weight="600" fill="#1ABC9C">one user → one licence</text>
+  <!-- CREDITS table -->
+  <rect x="615" y="270" width="315" height="145" rx="8" fill="#fff" stroke="#8E44AD" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="615" y="270" width="315" height="28" rx="8" fill="#8E44AD"/>
+  <text x="772" y="289" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CREDITS</text>
+  <text x="625" y="315" font-size="9" fill="#333">user_id</text>
+  <text x="870" y="315" font-size="8" fill="#999">PK, FK → auth.users</text>
+  <text x="625" y="332" font-size="9" font-weight="600" fill="#8E44AD">sonnet_balance</text>
+  <text x="870" y="332" font-size="8" fill="#999">integer (default 0)</text>
+  <text x="625" y="349" font-size="9" font-weight="600" fill="#8E44AD">opus_balance</text>
+  <text x="870" y="349" font-size="8" fill="#999">integer (default 0)</text>
+  <text x="625" y="366" font-size="9" fill="#333">updated_at</text>
+  <text x="870" y="366" font-size="8" fill="#999">timestamp</text>
+  <text x="625" y="393" font-size="8" fill="#8E44AD">Separate pools — Sonnet credits cannot be</text>
+  <text x="625" y="405" font-size="8" fill="#8E44AD">spent on Opus calls (and vice versa)</text>
 
-  <!-- licenses -->
-  <rect x="615" y="310" width="255" height="200" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1.5" filter="url(#sh)"/>
-  <rect x="615" y="310" width="255" height="28" rx="8" fill="#1ABC9C"/>
-  <text x="742" y="329" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">LICENSES</text>
+  <!-- Relationship to transactions -->
+  <line x1="772" y1="415" x2="772" y2="445" stroke="#1ABC9C" stroke-width="2"/>
+  <text x="780" y="435" font-size="8" font-weight="600" fill="#1ABC9C">one user → many transactions</text>
 
-  <text x="625" y="355" font-size="9" fill="#333">id</text>
-  <text x="800" y="355" font-size="8" fill="#999">UUID, PK</text>
-  <text x="625" y="372" font-size="9" fill="#333">user_id</text>
-  <text x="800" y="372" font-size="8" fill="#999">FK, UNIQUE</text>
-  <text x="625" y="389" font-size="9" fill="#333">stripe_checkout_id</text>
-  <text x="800" y="389" font-size="8" fill="#999">UNIQUE</text>
-  <text x="625" y="406" font-size="9" fill="#333">stripe_customer_id</text>
-  <text x="800" y="406" font-size="8" fill="#999">string</text>
-  <text x="625" y="423" font-size="9" fill="#333">status</text>
-  <text x="800" y="423" font-size="8" fill="#999">active | revoked</text>
-  <text x="625" y="440" font-size="9" fill="#333">purchased_at</text>
-  <text x="800" y="440" font-size="8" fill="#999">timestamp</text>
-  <text x="625" y="457" font-size="9" fill="#333">amount_aud</text>
-  <text x="800" y="457" font-size="8" fill="#999">14900</text>
+  <!-- CREDIT_TRANSACTIONS table -->
+  <rect x="615" y="445" width="315" height="170" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="615" y="445" width="315" height="28" rx="8" fill="#1ABC9C"/>
+  <text x="772" y="464" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CREDIT_TRANSACTIONS</text>
+  <text x="625" y="490" font-size="9" fill="#333">id</text>
+  <text x="870" y="490" font-size="8" fill="#999">UUID, PK</text>
+  <text x="625" y="507" font-size="9" fill="#333">user_id</text>
+  <text x="870" y="507" font-size="8" fill="#999">FK → auth.users</text>
+  <text x="625" y="524" font-size="9" fill="#333">model</text>
+  <text x="870" y="524" font-size="8" fill="#999">sonnet | opus</text>
+  <text x="625" y="541" font-size="9" fill="#333">amount</text>
+  <text x="870" y="541" font-size="8" fill="#999">+N (purchase) / -1 (use)</text>
+  <text x="625" y="558" font-size="9" fill="#333">balance_after</text>
+  <text x="870" y="558" font-size="8" fill="#999">integer</text>
+  <text x="625" y="575" font-size="9" fill="#333">reason</text>
+  <text x="870" y="575" font-size="8" fill="#999">purchase:100 | capture | free</text>
+  <text x="625" y="592" font-size="9" fill="#333">stripe_session_id</text>
+  <text x="870" y="592" font-size="8" fill="#999">nullable</text>
+  <text x="625" y="609" font-size="9" fill="#333">created_at</text>
+  <text x="870" y="609" font-size="8" fill="#999">timestamp</text>
 
-  <text x="625" y="485" font-size="8" fill="#1ABC9C">RLS: users read own row only</text>
-  <text x="625" y="498" font-size="8" fill="#1ABC9C">Writes via service_role (webhook only)</text>
-
-  <!-- Stripe connection -->
-  <rect x="615" y="530" width="255" height="40" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1" filter="url(#sh)"/>
-  <text x="742" y="548" text-anchor="middle" font-size="10" font-weight="600" fill="#B7950B">Stripe Webhook</text>
-  <text x="742" y="562" text-anchor="middle" font-size="8" fill="#999">checkout.session.completed → insert licence</text>
-
-  <!-- Arrow webhook to licenses -->
-  <line x1="742" y1="530" x2="742" y2="510" stroke="#F39C12" stroke-width="1.5"/>
-  <text x="750" y="523" font-size="8" fill="#B7950B">upsert</text>
+  <!-- LICENSES table (grandfathered) -->
+  <rect x="615" y="630" width="315" height="85" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1" filter="url(#sh)"/>
+  <rect x="615" y="630" width="315" height="28" rx="8" fill="#95A5A6"/>
+  <text x="772" y="649" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">LICENSES (grandfathered)</text>
+  <text x="625" y="675" font-size="9" fill="#333">user_id, status, stripe_ids</text>
+  <text x="625" y="692" font-size="9" fill="#333">purchased_at, amount_aud</text>
+  <text x="625" y="709" font-size="8" fill="#95A5A6">Users who paid $149 → unlimited credits</text>
 
   <!-- Privacy note -->
-  <rect x="15" y="600" width="870" height="65" rx="8" fill="#FADBD8" stroke="#C0392B" stroke-width="1"/>
-  <text x="450" y="622" text-anchor="middle" font-size="11" font-weight="700" fill="#C0392B">PRIVACY BY DESIGN</text>
-  <text x="450" y="640" text-anchor="middle" font-size="10" fill="#555">Audit data (photos, GPS, compliance records) is stored exclusively on the user's device.</text>
-  <text x="450" y="657" text-anchor="middle" font-size="10" fill="#555">Cloud storage is limited to authentication credentials and licence status. No audit data is transmitted.</text>
+  <rect x="15" y="745" width="930" height="70" rx="8" fill="#FADBD8" stroke="#C0392B" stroke-width="1"/>
+  <text x="480" y="768" text-anchor="middle" font-size="11" font-weight="700" fill="#C0392B">PRIVACY BY DESIGN</text>
+  <text x="480" y="786" text-anchor="middle" font-size="10" fill="#555">Audit data (photos, GPS, compliance records) is stored exclusively on the user's device.</text>
+  <text x="480" y="803" text-anchor="middle" font-size="10" fill="#555">Cloud storage is limited to authentication, credit balances, and transaction logs.</text>
 
   <!-- Legend -->
-  <text x="40" y="690" font-size="9" font-weight="600" fill="#333">Legend:</text>
-  <text x="100" y="690" font-size="8" fill="#999">PK = Primary Key  |  FK = Foreign Key  |  IX = Index  |  UNIQUE = Unique constraint  |  RLS = Row-Level Security</text>
+  <text x="40" y="840" font-size="9" font-weight="600" fill="#333">Legend:</text>
+  <text x="100" y="840" font-size="8" fill="#999">PK = Primary Key  |  FK = Foreign Key  |  IX = Index  |  RLS = Row-Level Security (users read own rows only)</text>
 
-  <text x="450" y="740" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
+  <text x="480" y="870" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
 </svg>

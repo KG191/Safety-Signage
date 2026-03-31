@@ -17,8 +17,9 @@
 ### What it does
 
 - **Two-phase camera capture**: captures a wide-angle context photo (site/location evidence) followed by a close-up of the sign (fed into AI detection pipeline)
+- **Batch credit system**: users purchase AI detection credits in batches (100–1,000 signs), choosing between Sonnet (fast, cost-effective) and Opus (highest accuracy for faded/damaged signs). Credits are managed server-side with atomic deduction per capture. 3 free captures with Opus for new users.
 - **Three-tier AI detection pipeline**:
-  - **Tier 1 (Primary)**: Cloud-based Vision AI (Claude API) — sends sign image, receives structured compliance assessment as JSON, including sign category, sign number, 20 compliance checks, confidence score, and reasoning
+  - **Tier 1 (Primary)**: Cloud-based Vision AI (Claude API) proxied through a server-side Edge Function — sends sign image, receives structured compliance assessment as JSON, including sign category, sign number, 20 compliance checks, confidence score, and reasoning. User's credit balance is atomically decremented per capture.
   - **Tier 2 (Secondary)**: Fine-tuned MobileNet v3 machine learning model running in-browser via TensorFlow.js — classifies sign category from image without internet
   - **Tier 3 (Fallback)**: Pure computer vision pipeline using colour analysis, shape detection, and sign classification — works fully offline with no external dependencies
 - **Automated compliance assessment**: evaluates signs against 20 AS 1319 compliance checks (7 auto-assessed from image, 2 semi-auto, 11 requiring manual auditor judgment)
@@ -93,7 +94,7 @@
 - Photos stored as embedded JPEG data URLs directly in the database
 - Full CV detection pipeline runs entirely in-browser using HTML5 Canvas (no external libraries)
 - Fine-tuned ML model cached locally after first download
-- Licence validation cached for 7 days to support extended offline field work
+- Credit balance cached locally with short TTL for responsiveness; validated server-side on each AI call
 - Critical for target market: mining sites, water treatment plants, remote infrastructure
 
 ### 2.9 Auditor Override Tracking
@@ -111,6 +112,17 @@
 - Prioritises remediation work by failure frequency
 - No competitor auto-generates AS 1319-specific gap analysis
 
+### 2.11 Batch Credit System with Dual-Model Selection
+
+- Users purchase AI detection credits in pre-defined batches, selecting between two AI models based on site conditions:
+  - **Sonnet** — fast, cost-effective, recommended for well-maintained sites with clear signage
+  - **Opus** — highest accuracy, recommended for older sites, mines, outdoor installations with faded or damaged signage
+- Separate credit pools per model prevent cross-spending (Sonnet credits cannot be used for Opus calls)
+- Credits are deducted atomically server-side via a vision proxy Edge Function, preventing overdraw under concurrent usage
+- Immutable transaction ledger tracks every credit purchase and usage for auditability
+- 3 free captures with Opus for new users — lets them experience the best accuracy before purchasing
+- No competitor offers a pay-per-analysis model with user-selectable AI model tiers for safety signage
+
 ---
 
 ## 3. Competitor Publications and Differentiation
@@ -123,7 +135,7 @@
   - SafetyCulture is generic — users manually create checklists. MySafeSigns has AS 1319 compliance checks built in
   - No AI-powered sign detection or classification — SafetyCulture requires manual data entry for each finding
   - No computer vision, no automated compliance assessment, no colour/shape analysis
-  - Subscription model ($24-49/user/month) vs MySafeSigns one-off $149 licence
+  - Subscription model ($24-49/user/month) vs MySafeSigns batch credit pricing ($49–$499 per batch)
   - SafetyCulture captures 15-20 signs/day vs MySafeSigns 100-150+/day
 
 ### 3.2 Safety Champion
@@ -161,21 +173,26 @@
 | Offline-first with full CV | Yes (no internet needed) | Limited (draft mode only) |
 | Two-phase camera capture | Yes (context + close-up) | No (single photo) |
 | Automated gap analysis | Yes (AS 1319 clause-mapped) | No |
-| One-off pricing | Yes ($149 lifetime) | No (monthly subscription) |
+| Pay-per-batch pricing | Yes ($49–$499 per batch) | No (monthly subscription) |
+| Dual AI model selection | Yes (Sonnet / Opus) | No |
 | Throughput | 100-150 signs/day | 15-24 signs/day |
 
 ---
 
 ## 4. Figures and Drawings
 
-The following can be provided:
+The following figures are provided as SVG vector diagrams (in the `Patent/` folder):
 
-1. **System architecture diagram** — showing the three-tier detection pipeline (Vision API → ML → CV) with data flow
-2. **Two-phase camera capture flow** — context photo → sign close-up → detection → form population
-3. **Detection pipeline flowchart** — detailed step-by-step: image preprocessing → colour analysis (K-means + grid) → shape detection (3-method ensemble) → classification → compliance assessment → confidence scoring
-4. **Adaptive confidence weighting algorithm** — visual representation of the signal-aware weighting logic
-5. **Compliance check framework** — the 20 AS 1319 checks categorised as auto/semi-auto/manual
-6. **App screenshots** — cover screen, dashboard, camera capture, detection results, compliance checklist, report output, settings
-7. **Data model diagram** — IndexedDB stores (audits, captures) with field definitions
+1. **Fig 1: System Architecture** (`Fig1-System-Architecture.svg`) — Full system architecture showing user device (PWA), server-side vision proxy with credit-based gating, Supabase (auth + credits), Stripe (batch purchases), and Anthropic API. Three swim lanes: device, external services, server-side Edge Functions.
 
-*Note: Screenshots and app recordings are available at `assets/Screenshots/`. Architecture and algorithm diagrams can be prepared on request.*
+2. **Fig 2: Two-Phase Camera Capture** (`Fig2-Two-Phase-Camera.svg`) — Step-by-step flow: licence check → Phase 1 context photo (low quality, audit evidence) → Phase 2 sign close-up (high quality, AI analysis) → detection pipeline → form auto-population.
+
+3. **Fig 3: Three-Tier Detection Pipeline** (`Fig3-Detection-Pipeline.svg`) — Detailed flowchart of the hybrid AI → ML → CV fallback architecture with timeout values, standardised output format, and confidence-based form population thresholds.
+
+4. **Fig 4: Adaptive Confidence Algorithm** (`Fig4-Adaptive-Confidence.svg`) — Visual representation of the signal-aware weighting algorithm with three steps (adaptive weighting, agreement bonus, ML blending) and a worked example demonstrating how the algorithm prevents unnecessary manual review.
+
+5. **Fig 5: Compliance Check Framework** (`Fig5-Compliance-Framework.svg`) — The 20 AS 1319 compliance checks categorised as auto-assessed (7), semi-auto (2), and manual (11), with detection methods listed for each auto-assessed check and the overall assessment formula.
+
+6. **Fig 6: App Screenshots** (`Fig6-Screenshots-Guide.md`) — Guide for capturing 10 annotated screenshots covering the full audit workflow: cover screen, account sign-in, EULA, pricing tab, dashboard, new audit, camera phases, AI detection results, compliance checklist, and paywall.
+
+7. **Fig 7: Data Model** (`Fig7-Data-Model.svg`) — Entity-relationship diagram across three storage layers: IndexedDB (on-device audit data), localStorage (preferences and cache), and Supabase (auth.users, credits, credit_transactions, and grandfathered licenses). Privacy by design: audit data never leaves the device.

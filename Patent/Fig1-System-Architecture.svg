@@ -1,8 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 720" font-family="'Segoe UI', Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780" font-family="'Segoe UI', Arial, sans-serif">
   <defs>
     <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
       <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/>
     </filter>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#2980B9"/></marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#8E44AD"/></marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#1ABC9C"/></marker>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#F39C12"/></marker>
   </defs>
 
   <!-- Title -->
@@ -20,13 +24,12 @@
 
   <!-- Arrow Camera to Pipeline -->
   <line x1="220" y1="125" x2="260" y2="125" stroke="#2980B9" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
-  <defs><marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#2980B9"/></marker></defs>
 
   <!-- Detection Pipeline -->
   <rect x="260" y="90" width="280" height="120" rx="8" fill="#fff" stroke="#2980B9" stroke-width="1"/>
   <text x="400" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">Detection Pipeline</text>
   <rect x="275" y="120" width="250" height="22" rx="4" fill="#E8DAEF" stroke="#8E44AD" stroke-width="0.5"/>
-  <text x="400" y="135" text-anchor="middle" font-size="9" fill="#6C3483">Tier 1: Vision API (Claude) — Online</text>
+  <text x="400" y="135" text-anchor="middle" font-size="9" fill="#6C3483">Tier 1: Vision API (via server proxy)</text>
   <rect x="275" y="146" width="250" height="22" rx="4" fill="#FDEBD0" stroke="#E67E22" stroke-width="0.5"/>
   <text x="400" y="161" text-anchor="middle" font-size="9" fill="#A04000">Tier 2: ML Model (TensorFlow.js) — Offline</text>
   <rect x="275" y="172" width="250" height="22" rx="4" fill="#D5F5E3" stroke="#27AE60" stroke-width="0.5"/>
@@ -58,19 +61,20 @@
   <text x="130" y="315" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">Report Generator</text>
   <text x="130" y="332" text-anchor="middle" font-size="9" fill="#666">Gap analysis, HTML, CSV</text>
 
-  <!-- Licence Module -->
+  <!-- Credits Module -->
   <rect x="560" y="235" width="190" height="55" rx="8" fill="#fff" stroke="#2980B9" stroke-width="1"/>
-  <text x="655" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">Licence Module</text>
-  <text x="655" y="275" text-anchor="middle" font-size="9" fill="#666">Auth, paywall, cache (7 days)</text>
+  <text x="655" y="255" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">Credits Module</text>
+  <text x="655" y="272" text-anchor="middle" font-size="9" fill="#666">Auth, credit balance, paywall</text>
+  <text x="655" y="286" text-anchor="middle" font-size="8" fill="#666">Sonnet + Opus credit pools</text>
 
   <!-- localStorage -->
   <rect x="780" y="90" width="180" height="80" rx="8" fill="#fff" stroke="#2980B9" stroke-width="1"/>
   <text x="870" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">localStorage</text>
-  <text x="870" y="130" text-anchor="middle" font-size="9" fill="#666">API key (user's own)</text>
-  <text x="870" y="144" text-anchor="middle" font-size="9" fill="#666">Model preference</text>
-  <text x="870" y="158" text-anchor="middle" font-size="9" fill="#666">Licence cache</text>
+  <text x="870" y="130" text-anchor="middle" font-size="9" fill="#666">Model preference</text>
+  <text x="870" y="144" text-anchor="middle" font-size="9" fill="#666">Credit cache</text>
+  <text x="870" y="158" text-anchor="middle" font-size="9" fill="#666">EULA acceptance</text>
 
-  <!-- Arrow Licence to localStorage -->
+  <!-- Arrow Credits to localStorage -->
   <line x1="750" y1="260" x2="870" y2="170" stroke="#2980B9" stroke-width="1" marker-end="url(#arrowBlue)"/>
 
   <!-- SWIM LANE 2: External Services -->
@@ -79,58 +83,80 @@
   <!-- Anthropic API -->
   <rect x="40" y="415" width="200" height="70" rx="8" fill="#F5EEF8" stroke="#8E44AD" stroke-width="1.5" filter="url(#shadow)"/>
   <text x="140" y="440" text-anchor="middle" font-size="12" font-weight="600" fill="#6C3483">Anthropic API</text>
-  <text x="140" y="458" text-anchor="middle" font-size="9" fill="#666">Claude Vision (Haiku/Sonnet/Opus)</text>
-  <text x="140" y="472" text-anchor="middle" font-size="8" font-weight="600" fill="#8E44AD">User's own API key (BYOK)</text>
+  <text x="140" y="458" text-anchor="middle" font-size="9" fill="#666">Claude Vision (Sonnet / Opus)</text>
+  <text x="140" y="472" text-anchor="middle" font-size="8" font-weight="600" fill="#8E44AD">Server-side API key (proxied)</text>
 
-  <!-- Arrow Device to Anthropic -->
-  <line x1="140" y1="370" x2="140" y2="415" stroke="#8E44AD" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
-  <text x="148" y="395" font-size="8" fill="#8E44AD">JPEG + prompt</text>
-  <defs><marker id="arrowPurple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#8E44AD"/></marker></defs>
+  <!-- Arrow: no direct connection from device to Anthropic anymore -->
 
   <!-- Supabase -->
   <rect x="400" y="415" width="200" height="70" rx="8" fill="#E8F8F5" stroke="#1ABC9C" stroke-width="1.5" filter="url(#shadow)"/>
-  <text x="500" y="440" text-anchor="middle" font-size="12" font-weight="600" fill="#148F77">Supabase</text>
-  <text x="500" y="458" text-anchor="middle" font-size="9" fill="#666">Auth (email/password)</text>
-  <text x="500" y="472" text-anchor="middle" font-size="9" fill="#666">Licenses table</text>
+  <text x="500" y="437" text-anchor="middle" font-size="12" font-weight="600" fill="#148F77">Supabase</text>
+  <text x="500" y="455" text-anchor="middle" font-size="9" fill="#666">Auth (email/password)</text>
+  <text x="500" y="469" text-anchor="middle" font-size="9" fill="#666">Credits + Transactions tables</text>
+  <text x="500" y="483" text-anchor="middle" font-size="8" fill="#666">Licenses table (grandfathered)</text>
 
   <!-- Arrow Device to Supabase -->
   <line x1="655" y1="290" x2="500" y2="415" stroke="#1ABC9C" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
-  <text x="590" y="345" font-size="8" fill="#1ABC9C">Auth + licence check</text>
-  <defs><marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#1ABC9C"/></marker></defs>
+  <text x="590" y="345" font-size="8" fill="#1ABC9C">Auth + credit check</text>
 
   <!-- Stripe -->
   <rect x="760" y="415" width="200" height="70" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" filter="url(#shadow)"/>
-  <text x="860" y="440" text-anchor="middle" font-size="12" font-weight="600" fill="#B7950B">Stripe</text>
-  <text x="860" y="458" text-anchor="middle" font-size="9" fill="#666">Checkout ($149 AUD)</text>
-  <text x="860" y="472" text-anchor="middle" font-size="9" fill="#666">Payment processing</text>
+  <text x="860" y="437" text-anchor="middle" font-size="12" font-weight="600" fill="#B7950B">Stripe</text>
+  <text x="860" y="455" text-anchor="middle" font-size="9" fill="#666">Batch credit purchases</text>
+  <text x="860" y="469" text-anchor="middle" font-size="9" fill="#666">$49 – $499 AUD per batch</text>
+  <text x="860" y="483" text-anchor="middle" font-size="8" fill="#666">8 products (4 Sonnet + 4 Opus)</text>
 
   <!-- SWIM LANE 3: Server-Side -->
-  <rect x="300" y="520" width="500" height="180" rx="12" fill="#F2F3F4" stroke="#95A5A6" stroke-width="1.5" filter="url(#shadow)"/>
-  <text x="550" y="545" text-anchor="middle" font-size="13" font-weight="700" fill="#717D7E">SERVER-SIDE (Supabase Edge Functions)</text>
+  <rect x="20" y="520" width="960" height="200" rx="12" fill="#F2F3F4" stroke="#95A5A6" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="500" y="545" text-anchor="middle" font-size="13" font-weight="700" fill="#717D7E">SERVER-SIDE (Supabase Edge Functions)</text>
+
+  <!-- vision-proxy -->
+  <rect x="40" y="560" width="250" height="65" rx="8" fill="#fff" stroke="#8E44AD" stroke-width="1.5"/>
+  <text x="165" y="582" text-anchor="middle" font-size="10" font-weight="600" fill="#6C3483">vision-proxy</text>
+  <text x="165" y="597" text-anchor="middle" font-size="8" fill="#666">Credit check → deduct → proxy to</text>
+  <text x="165" y="611" text-anchor="middle" font-size="8" fill="#666">Anthropic API → return result</text>
+
+  <!-- Arrow vision-proxy to Anthropic -->
+  <line x1="140" y1="560" x2="140" y2="485" stroke="#8E44AD" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+  <text x="85" y="525" font-size="8" fill="#8E44AD">JPEG + prompt</text>
+
+  <!-- Arrow Device to vision-proxy -->
+  <line x1="400" y1="210" x2="400" y2="370" stroke="#8E44AD" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="400" y1="370" x2="165" y2="560" stroke="#8E44AD" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowPurple)"/>
+  <text x="260" y="470" font-size="8" fill="#8E44AD">Sign image + model pref</text>
 
   <!-- create-checkout -->
-  <rect x="320" y="560" width="210" height="55" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
-  <text x="425" y="582" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">create-checkout</text>
-  <text x="425" y="600" text-anchor="middle" font-size="9" fill="#666">User info → Stripe Checkout URL</text>
+  <rect x="380" y="560" width="210" height="65" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
+  <text x="485" y="582" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">create-checkout</text>
+  <text x="485" y="597" text-anchor="middle" font-size="8" fill="#666">Product key → Stripe Checkout URL</text>
+  <text x="485" y="611" text-anchor="middle" font-size="8" fill="#666">(sonnet_100, opus_250, etc.)</text>
 
   <!-- stripe-webhook -->
-  <rect x="570" y="560" width="210" height="55" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
-  <text x="675" y="582" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">stripe-webhook</text>
-  <text x="675" y="600" text-anchor="middle" font-size="9" fill="#666">Payment confirmed → Insert licence</text>
+  <rect x="680" y="560" width="250" height="65" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
+  <text x="805" y="582" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">stripe-webhook</text>
+  <text x="805" y="597" text-anchor="middle" font-size="8" fill="#666">Payment confirmed → add credits</text>
+  <text x="805" y="611" text-anchor="middle" font-size="8" fill="#666">to user's Sonnet or Opus pool</text>
 
   <!-- Arrow Stripe to webhook -->
-  <line x1="860" y1="485" x2="675" y2="560" stroke="#F39C12" stroke-width="1.5" marker-end="url(#arrowOrange)"/>
-  <text x="785" y="520" font-size="8" fill="#B7950B">Webhook event</text>
-  <defs><marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#F39C12"/></marker></defs>
+  <line x1="860" y1="485" x2="805" y2="560" stroke="#F39C12" stroke-width="1.5" marker-end="url(#arrowOrange)"/>
+  <text x="850" y="525" font-size="8" fill="#B7950B">Webhook</text>
 
   <!-- Arrow webhook to Supabase -->
-  <line x1="675" y1="560" x2="550" y2="485" stroke="#1ABC9C" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
-  <text x="625" y="515" font-size="8" fill="#148F77">Insert licence row</text>
+  <line x1="740" y1="560" x2="550" y2="485" stroke="#1ABC9C" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <text x="660" y="515" font-size="8" fill="#148F77">Upsert credits</text>
+
+  <!-- Arrow vision-proxy to Supabase (credit deduct) -->
+  <line x1="290" y1="580" x2="400" y2="480" stroke="#1ABC9C" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowGreen)"/>
+  <text x="330" y="520" font-size="8" fill="#148F77">Deduct credit</text>
 
   <!-- Arrow Device to Stripe via create-checkout -->
-  <path d="M870,170 L870,350 L860,415" stroke="#F39C12" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowOrange)"/>
-  <text x="878" y="300" font-size="8" fill="#B7950B">Redirect</text>
+  <path d="M870,170 L920,170 L920,560 L930,560" stroke="#F39C12" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowOrange)"/>
+  <text x="928" y="370" font-size="8" fill="#B7950B" transform="rotate(90,928,370)">Redirect to Stripe</text>
+
+  <!-- Free tier note -->
+  <rect x="40" y="640" width="940" height="35" rx="6" fill="#E8DAEF" stroke="#8E44AD" stroke-width="0.5"/>
+  <text x="500" y="662" text-anchor="middle" font-size="10" font-weight="600" fill="#6C3483">FREE TIER: 3 captures with Opus (no payment required) — proxied server-side, tracked via credit_transactions</text>
 
   <!-- Copyright -->
-  <text x="500" y="715" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
+  <text x="500" y="770" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
 </svg>
