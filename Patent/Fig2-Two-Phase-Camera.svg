@@ -1,105 +1,97 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 850" font-family="'Segoe UI', Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 860" font-family="'Segoe UI', Arial, sans-serif">
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#333"/></marker>
-    <marker id="arrG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#27AE60"/></marker>
+    <marker id="arrR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#E74C3C"/></marker>
     <filter id="sh" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.08"/></filter>
   </defs>
 
   <!-- Title -->
   <text x="300" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a">Figure 2: Two-Phase Camera Capture Flow</text>
 
-  <!-- Step 1: Start Camera -->
-  <rect x="200" y="50" width="200" height="40" rx="20" fill="#004B87" filter="url(#sh)"/>
+  <!-- Start Camera -->
+  <rect x="185" y="50" width="230" height="40" rx="20" fill="#004B87" filter="url(#sh)"/>
   <text x="300" y="75" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Start Camera</text>
 
-  <!-- Arrow -->
   <line x1="300" y1="90" x2="300" y2="115" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <!-- Licence Check -->
-  <rect x="185" y="115" width="230" height="36" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1"/>
-  <text x="300" y="138" text-anchor="middle" font-size="10" fill="#B7950B">Licence check (free captures remaining?)</text>
+  <!-- Credit Check -->
+  <rect x="170" y="115" width="260" height="36" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1"/>
+  <text x="300" y="138" text-anchor="middle" font-size="10" fill="#B7950B">Credit check (free captures remaining?)</text>
 
-  <!-- Arrow -->
-  <line x1="300" y1="151" x2="300" y2="175" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="151" x2="300" y2="178" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <!-- PHASE 1 Box -->
-  <rect x="100" y="175" width="400" height="130" rx="10" fill="#E8F8F5" stroke="#1ABC9C" stroke-width="2" filter="url(#sh)"/>
-  <text x="120" y="198" font-size="12" font-weight="700" fill="#148F77">PHASE 1: Context Photo</text>
-  <text x="120" y="216" font-size="10" fill="#555">Wide-angle situation shot of the sign's environment</text>
+  <!-- ═══ PHASE 1 ═══ -->
+  <rect x="80" y="178" width="420" height="135" rx="10" fill="#E8F8F5" stroke="#1ABC9C" stroke-width="2" filter="url(#sh)"/>
+  <text x="100" y="200" font-size="12" font-weight="700" fill="#148F77">PHASE 1: Context Photo</text>
+  <text x="100" y="218" font-size="10" fill="#555">Wide-angle situation shot of the sign's environment</text>
 
-  <rect x="120" y="228" width="160" height="55" rx="6" fill="#fff" stroke="#1ABC9C" stroke-width="1"/>
-  <text x="200" y="250" text-anchor="middle" font-size="9" fill="#666">Low quality (50% JPEG)</text>
-  <text x="200" y="264" text-anchor="middle" font-size="9" fill="#666">Max 800px width</text>
-  <text x="200" y="278" text-anchor="middle" font-size="9" fill="#666">Audit evidence only</text>
+  <rect x="100" y="230" width="165" height="60" rx="6" fill="#fff" stroke="#1ABC9C" stroke-width="1"/>
+  <text x="182" y="252" text-anchor="middle" font-size="9" fill="#666">Low quality (50% JPEG)</text>
+  <text x="182" y="266" text-anchor="middle" font-size="9" fill="#666">Max 800px width</text>
+  <text x="182" y="280" text-anchor="middle" font-size="9" fill="#666">Audit evidence only</text>
 
-  <rect x="310" y="228" width="170" height="55" rx="6" fill="#fff" stroke="#ccc" stroke-width="1"/>
-  <text x="395" y="248" text-anchor="middle" font-size="9" font-weight="600" fill="#333">Why separate?</text>
-  <text x="395" y="263" text-anchor="middle" font-size="8" fill="#666">Preserves site context</text>
-  <text x="395" y="276" text-anchor="middle" font-size="8" fill="#666">Not fed to AI (saves cost)</text>
+  <rect x="285" y="230" width="195" height="60" rx="6" fill="#fff" stroke="#ccc" stroke-width="1"/>
+  <text x="382" y="250" text-anchor="middle" font-size="9" font-weight="600" fill="#333">Why separate?</text>
+  <text x="382" y="265" text-anchor="middle" font-size="8" fill="#666">Preserves site context</text>
+  <text x="382" y="278" text-anchor="middle" font-size="8" fill="#666">Not fed to AI (saves cost)</text>
 
-  <!-- Skip branch -->
-  <line x1="500" y1="240" x2="545" y2="240" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="4,3"/>
-  <text x="555" y="236" font-size="9" font-weight="600" fill="#E74C3C">Skip</text>
-  <text x="555" y="248" font-size="8" fill="#999">(optional)</text>
-  <line x1="560" y1="252" x2="560" y2="450" stroke="#E74C3C" stroke-width="1" stroke-dasharray="4,3"/>
-  <line x1="560" y1="450" x2="500" y2="450" stroke="#E74C3C" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <!-- Skip branch: right from Phase 1, down along right margin, left into Phase 2 top -->
+  <text x="515" y="200" font-size="9" font-weight="600" fill="#E74C3C">Skip</text>
+  <text x="515" y="212" font-size="8" fill="#999">(optional)</text>
+  <path d="M500,245 L540,245 L540,400 L500,400" stroke="#E74C3C" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arrR)"/>
 
-  <!-- Arrow Phase 1 to transition -->
-  <line x1="300" y1="305" x2="300" y2="330" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Arrow Phase 1 → Transition -->
+  <line x1="300" y1="313" x2="300" y2="338" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Transition -->
-  <rect x="160" y="330" width="280" height="36" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1"/>
-  <text x="300" y="348" text-anchor="middle" font-size="10" fill="#148F77">Thumbnail shown — camera stays live</text>
-  <text x="300" y="360" text-anchor="middle" font-size="9" fill="#999">Phase transitions to sign close-up</text>
+  <rect x="145" y="338" width="310" height="36" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1"/>
+  <text x="300" y="356" text-anchor="middle" font-size="10" fill="#148F77">Thumbnail shown — camera stays live</text>
+  <text x="300" y="368" text-anchor="middle" font-size="9" fill="#999">Phase transitions to sign close-up</text>
 
-  <!-- Arrow -->
-  <line x1="300" y1="366" x2="300" y2="395" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="374" x2="300" y2="400" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <!-- PHASE 2 Box -->
-  <rect x="100" y="395" width="400" height="130" rx="10" fill="#EBF5FB" stroke="#2980B9" stroke-width="2" filter="url(#sh)"/>
-  <text x="120" y="418" font-size="12" font-weight="700" fill="#2471A3">PHASE 2: Sign Close-Up</text>
-  <text x="120" y="436" font-size="10" fill="#555">Focused capture of the safety sign</text>
+  <!-- ═══ PHASE 2 ═══ -->
+  <rect x="80" y="400" width="420" height="135" rx="10" fill="#EBF5FB" stroke="#2980B9" stroke-width="2" filter="url(#sh)"/>
+  <text x="100" y="422" font-size="12" font-weight="700" fill="#2471A3">PHASE 2: Sign Close-Up</text>
+  <text x="100" y="440" font-size="10" fill="#555">Focused capture of the safety sign</text>
 
-  <rect x="120" y="448" width="160" height="55" rx="6" fill="#fff" stroke="#2980B9" stroke-width="1"/>
-  <text x="200" y="470" text-anchor="middle" font-size="9" fill="#666">High quality (75% JPEG)</text>
-  <text x="200" y="484" text-anchor="middle" font-size="9" fill="#666">Full camera resolution</text>
-  <text x="200" y="498" text-anchor="middle" font-size="9" fill="#666">Fed to AI pipeline</text>
+  <rect x="100" y="452" width="165" height="60" rx="6" fill="#fff" stroke="#2980B9" stroke-width="1"/>
+  <text x="182" y="474" text-anchor="middle" font-size="9" fill="#666">High quality (75% JPEG)</text>
+  <text x="182" y="488" text-anchor="middle" font-size="9" fill="#666">Full camera resolution</text>
+  <text x="182" y="502" text-anchor="middle" font-size="9" fill="#666">Fed to AI pipeline</text>
 
-  <rect x="310" y="448" width="170" height="55" rx="6" fill="#fff" stroke="#ccc" stroke-width="1"/>
-  <text x="395" y="468" text-anchor="middle" font-size="9" font-weight="600" fill="#333">Why separate?</text>
-  <text x="395" y="483" text-anchor="middle" font-size="8" fill="#666">Optimised for detection</text>
-  <text x="395" y="496" text-anchor="middle" font-size="8" fill="#666">Sign fills frame = accuracy</text>
+  <rect x="285" y="452" width="195" height="60" rx="6" fill="#fff" stroke="#ccc" stroke-width="1"/>
+  <text x="382" y="472" text-anchor="middle" font-size="9" font-weight="600" fill="#333">Why separate?</text>
+  <text x="382" y="487" text-anchor="middle" font-size="8" fill="#666">Optimised for detection</text>
+  <text x="382" y="500" text-anchor="middle" font-size="8" fill="#666">Sign fills frame = accuracy</text>
 
-  <!-- Arrow Phase 2 to actions -->
-  <line x1="300" y1="525" x2="300" y2="555" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- Arrow Phase 2 → Camera Stops -->
+  <line x1="300" y1="535" x2="300" y2="562" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <!-- Camera stops -->
-  <rect x="185" y="555" width="230" height="32" rx="8" fill="#FADBD8" stroke="#E74C3C" stroke-width="1"/>
-  <text x="300" y="576" text-anchor="middle" font-size="10" fill="#C0392B">Camera stops (save battery)</text>
+  <!-- Camera Stops -->
+  <rect x="170" y="562" width="260" height="32" rx="8" fill="#FADBD8" stroke="#E74C3C" stroke-width="1"/>
+  <text x="300" y="583" text-anchor="middle" font-size="10" fill="#C0392B">Camera stops (save battery)</text>
 
-  <!-- Arrow -->
-  <line x1="300" y1="587" x2="300" y2="615" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="594" x2="300" y2="622" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Detection Pipeline -->
-  <rect x="140" y="615" width="320" height="45" rx="8" fill="#E8DAEF" stroke="#8E44AD" stroke-width="1.5" filter="url(#sh)"/>
-  <text x="300" y="635" text-anchor="middle" font-size="11" font-weight="600" fill="#6C3483">Image → Detection Pipeline</text>
-  <text x="300" y="651" text-anchor="middle" font-size="9" fill="#8E44AD">Vision API → ML Model → CV (3-tier fallback)</text>
+  <rect x="120" y="622" width="360" height="48" rx="8" fill="#E8DAEF" stroke="#8E44AD" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="300" y="643" text-anchor="middle" font-size="11" font-weight="600" fill="#6C3483">Image → Detection Pipeline</text>
+  <text x="300" y="660" text-anchor="middle" font-size="9" fill="#8E44AD">Sonnet / Opus → ML Model → CV (3-tier fallback)</text>
 
-  <!-- Arrow -->
-  <line x1="300" y1="660" x2="300" y2="690" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="670" x2="300" y2="698" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Form Population -->
-  <rect x="140" y="690" width="320" height="45" rx="8" fill="#D5F5E3" stroke="#27AE60" stroke-width="1.5" filter="url(#sh)"/>
-  <text x="300" y="710" text-anchor="middle" font-size="11" font-weight="600" fill="#1E8449">Auto-populate compliance form</text>
-  <text x="300" y="726" text-anchor="middle" font-size="9" fill="#27AE60">Category, sign number, 20 checks, overall</text>
+  <rect x="120" y="698" width="360" height="48" rx="8" fill="#D5F5E3" stroke="#27AE60" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="300" y="718" text-anchor="middle" font-size="11" font-weight="600" fill="#1E8449">Auto-populate compliance form</text>
+  <text x="300" y="736" text-anchor="middle" font-size="9" fill="#27AE60">Category, sign number, 20 checks, overall</text>
 
-  <!-- Arrow -->
-  <line x1="300" y1="735" x2="300" y2="765" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="746" x2="300" y2="774" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Save -->
-  <rect x="140" y="765" width="320" height="40" rx="8" fill="#fff" stroke="#333" stroke-width="1.5"/>
-  <text x="300" y="788" text-anchor="middle" font-size="10" fill="#333">Both photos + detection + checks saved to IndexedDB</text>
+  <rect x="120" y="774" width="360" height="40" rx="8" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="300" y="798" text-anchor="middle" font-size="10" fill="#333">Both photos + detection + checks saved to IndexedDB</text>
 
   <!-- Copyright -->
-  <text x="300" y="840" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
+  <text x="300" y="848" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
 </svg>
