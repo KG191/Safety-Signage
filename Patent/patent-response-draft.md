@@ -199,6 +199,6 @@ The following figures are provided as SVG vector diagrams (in the `Patent/` fold
 
 5. **Fig 5: Compliance Check Framework** (`Fig5-Compliance-Framework.svg`) — The 20 AS 1319 compliance checks categorised as auto-assessed (7), semi-auto (2), and manual (11), with detection methods listed for each auto-assessed check and the overall assessment formula.
 
-6. **Fig 6: App Screenshots** (`Fig6-Screenshots-Guide.md`) — Guide for capturing 10 annotated screenshots covering the full audit workflow: cover screen, account sign-in, EULA, pricing tab, dashboard, new audit, camera phases, AI detection results, compliance checklist, and paywall.
+6. **Fig 6: Data Model** (`Fig6-Data-Model.svg`) — Entity-relationship diagram across three storage layers: IndexedDB (on-device audit data), localStorage (preferences and cache), and Supabase (auth.users, credits, credit_transactions, and grandfathered licenses). Privacy by design: audit data never leaves the device.
 
-7. **Fig 7: Data Model** (`Fig7-Data-Model.svg`) — Entity-relationship diagram across three storage layers: IndexedDB (on-device audit data), localStorage (preferences and cache), and Supabase (auth.users, credits, credit_transactions, and grandfathered licenses). Privacy by design: audit data never leaves the device.
+7. **Fig 7: App Screenshots** (`Fig7-Screenshots-Guide.md`) — Guide for capturing 11 annotated screenshots covering the full audit workflow: cover screen, account sign-in, EULA, pricing tab, dashboard, new audit, camera phases, AI detection results, compliance checklist, and paywall.

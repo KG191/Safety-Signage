@@ -379,37 +379,7 @@ INPUTS:
 
 ---
 
-## Figure 6: App Screenshots
-
-**Purpose:** Show the user interface at each stage of the audit workflow.
-
-**Layout:** A series of 6-8 annotated mobile phone screenshots arranged in workflow order.
-
-**Content — capture these screens from the app:**
-
-1. **Cover screen** — branded splash with Enter button
-2. **Settings — Account & Licence** — sign-in form, licence status, EULA
-3. **Pricing tab — model selection** — Sonnet and Opus columns, batch options, site condition guide
-4. **Pricing tab — credit balance** — balance card showing Sonnet: X | Opus: X after purchase
-5. **Dashboard** — audit list, credit counter ("Credits: Sonnet 100 | Opus 0" or "2 of 3 free captures used")
-6. **New Audit form** — site name, client, auditor, date fields
-7. **Camera — Phase 1** — context photo capture with phase label "Step 1 of 2"
-8. **Camera — Phase 2 + Detection results** — sign close-up with AI detection panel showing source badge ("Vision AI (Opus)"), confidence badge, category, reasoning, Accept/Edit/Reject buttons
-9. **Compliance checklist** — 20 checks with AI-suggested items highlighted in green
-10. **Report output** — gap analysis summary, compliance breakdown, sign-by-sign findings with thumbnails
-11. **Paywall modal** — "Free Captures Used" with "View Pricing" and "From $49 for 100 signs"
-
-**Notes:**
-- Use a real device or browser at mobile width (375px)
-- Annotate each screenshot with callout arrows pointing to key features
-- Screenshots are in `assets/Screenshots/` — update if needed with current UI
-- Arrange in a grid or single-column strip showing the workflow sequence
-- Add a numbered caption below each: "Fig 6a: Cover screen", "Fig 6d: Pricing tab", etc.
-- See `Fig6-Screenshots-Guide.md` for detailed per-screenshot instructions
-
----
-
-## Figure 7: Data Model Diagram
+## Figure 6: Data Model Diagram
 
 **Purpose:** Show how data is structured and stored across IndexedDB, localStorage, and Supabase.
 
@@ -511,3 +481,33 @@ INPUTS:
 - Show the licenses table labelled as "grandfathered" / "legacy"
 - The `detection` field in captures is a nested object — show its key subfields
 - Note that credits has separate sonnet_balance and opus_balance (cannot cross-spend)
+
+---
+
+## Figure 7: App Screenshots
+
+**Purpose:** Show the user interface at each stage of the audit workflow.
+
+**Layout:** 11 annotated mobile phone screenshots arranged in workflow order.
+
+**Content — capture these screens from the app:**
+
+1. **Cover screen** — branded splash with Enter button
+2. **Settings — Account & Licence** — sign-in form, licence status, EULA
+3. **Pricing tab — model selection** — Sonnet and Opus columns, batch options, site condition guide
+4. **Pricing tab — credit balance** — balance card showing Sonnet: X | Opus: X after purchase
+5. **Dashboard** — audit list, credit counter ("Credits: Sonnet 100 | Opus 0" or "2 of 3 free captures used")
+6. **New Audit form** — site name, client, auditor, date fields
+7. **Camera — Phase 1** — context photo capture with phase label "Step 1 of 2"
+8. **Camera — Phase 2 + Detection results** — sign close-up with AI detection panel showing source badge ("Vision AI (Opus)"), confidence badge, category, reasoning, Accept/Edit/Reject buttons
+9. **Compliance checklist** — 20 checks with AI-suggested items highlighted in green
+10. **Report output** — gap analysis summary, compliance breakdown, sign-by-sign findings with thumbnails
+11. **Paywall modal** — "Free Captures Used" with "View Pricing" and "From $49 for 100 signs"
+
+**Notes:**
+- Use a real device or browser at mobile width (375px)
+- Annotate each screenshot with callout arrows pointing to key features
+- Screenshots are in `assets/Screenshots/` — update if needed with current UI
+- Arrange in a grid or single-column strip showing the workflow sequence
+- Add a numbered caption below each: "Fig 7a: Cover screen", "Fig 7d: Pricing tab", etc.
+- See `Fig7-Screenshots-Guide.md` for detailed per-screenshot instructions

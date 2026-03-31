@@ -4,7 +4,7 @@
     <marker id="arrowRel" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#2980B9"/></marker>
   </defs>
 
-  <text x="480" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a">Figure 7: Data Model — Storage Architecture</text>
+  <text x="480" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a">Figure 6: Data Model — Storage Architecture</text>
 
   <!-- ON DEVICE boundary -->
   <rect x="15" y="50" width="570" height="530" rx="12" fill="#EBF5FB" stroke="#2980B9" stroke-width="2" stroke-dasharray="8,4"/>
