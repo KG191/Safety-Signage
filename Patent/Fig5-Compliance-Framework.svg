@@ -106,10 +106,10 @@
   <rect x="605" y="490" width="260" height="30" rx="5" fill="#fff" stroke="#BDC3C7" stroke-width="1"/>
   <text x="615" y="510" font-size="9" fill="#555">20. Tag compliant (Section 5)</text>
 
-  <text x="615" y="550" font-size="9" font-weight="600" fill="#717D7E">These checks require:</text>
-  <text x="615" y="566" font-size="8" fill="#95A5A6">- Physical inspection</text>
-  <text x="615" y="578" font-size="8" fill="#95A5A6">- Distance/height measurement</text>
-  <text x="615" y="590" font-size="8" fill="#95A5A6">- Site context knowledge</text>
+  <text x="615" y="538" font-size="9" font-weight="600" fill="#717D7E">These checks require:</text>
+  <text x="615" y="552" font-size="8" fill="#95A5A6">- Physical inspection</text>
+  <text x="615" y="564" font-size="8" fill="#95A5A6">- Distance/height measurement</text>
+  <text x="615" y="576" font-size="8" fill="#95A5A6">- Site context knowledge</text>
 
   <!-- Overall Assessment Formula -->
   <rect x="20" y="600" width="860" height="55" rx="10" fill="#004B87" filter="url(#sh)"/>

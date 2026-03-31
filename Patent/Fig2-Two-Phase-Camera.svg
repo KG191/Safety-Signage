@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 860" font-family="'Segoe UI', Arial, sans-serif">
   <defs>
-    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#333"/></marker>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#27AE60"/></marker>
     <marker id="arrR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#E74C3C"/></marker>
     <filter id="sh" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.08"/></filter>
   </defs>
@@ -12,13 +12,13 @@
   <rect x="185" y="50" width="230" height="40" rx="20" fill="#004B87" filter="url(#sh)"/>
   <text x="300" y="75" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Start Camera</text>
 
-  <line x1="300" y1="90" x2="300" y2="115" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="90" x2="300" y2="115" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Credit Check -->
   <rect x="170" y="115" width="260" height="36" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1"/>
   <text x="300" y="138" text-anchor="middle" font-size="10" fill="#B7950B">Credit check (free captures remaining?)</text>
 
-  <line x1="300" y1="151" x2="300" y2="178" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="151" x2="300" y2="178" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- ═══ PHASE 1 ═══ -->
   <rect x="80" y="178" width="420" height="135" rx="10" fill="#E8F8F5" stroke="#1ABC9C" stroke-width="2" filter="url(#sh)"/>
@@ -41,14 +41,14 @@
   <path d="M500,245 L540,245 L540,400 L500,400" stroke="#E74C3C" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arrR)"/>
 
   <!-- Arrow Phase 1 → Transition -->
-  <line x1="300" y1="313" x2="300" y2="338" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="313" x2="300" y2="338" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Transition -->
   <rect x="145" y="338" width="310" height="36" rx="8" fill="#fff" stroke="#1ABC9C" stroke-width="1"/>
   <text x="300" y="356" text-anchor="middle" font-size="10" fill="#148F77">Thumbnail shown — camera stays live</text>
   <text x="300" y="368" text-anchor="middle" font-size="9" fill="#999">Phase transitions to sign close-up</text>
 
-  <line x1="300" y1="374" x2="300" y2="400" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="374" x2="300" y2="400" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- ═══ PHASE 2 ═══ -->
   <rect x="80" y="400" width="420" height="135" rx="10" fill="#EBF5FB" stroke="#2980B9" stroke-width="2" filter="url(#sh)"/>
@@ -66,27 +66,27 @@
   <text x="382" y="500" text-anchor="middle" font-size="8" fill="#666">Sign fills frame = accuracy</text>
 
   <!-- Arrow Phase 2 → Camera Stops -->
-  <line x1="300" y1="535" x2="300" y2="562" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="535" x2="300" y2="562" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Camera Stops -->
   <rect x="170" y="562" width="260" height="32" rx="8" fill="#FADBD8" stroke="#E74C3C" stroke-width="1"/>
   <text x="300" y="583" text-anchor="middle" font-size="10" fill="#C0392B">Camera stops (save battery)</text>
 
-  <line x1="300" y1="594" x2="300" y2="622" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="594" x2="300" y2="622" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Detection Pipeline -->
   <rect x="120" y="622" width="360" height="48" rx="8" fill="#E8DAEF" stroke="#8E44AD" stroke-width="1.5" filter="url(#sh)"/>
   <text x="300" y="643" text-anchor="middle" font-size="11" font-weight="600" fill="#6C3483">Image → Detection Pipeline</text>
   <text x="300" y="660" text-anchor="middle" font-size="9" fill="#8E44AD">Sonnet / Opus → ML Model → CV (3-tier fallback)</text>
 
-  <line x1="300" y1="670" x2="300" y2="698" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="670" x2="300" y2="698" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Form Population -->
   <rect x="120" y="698" width="360" height="48" rx="8" fill="#D5F5E3" stroke="#27AE60" stroke-width="1.5" filter="url(#sh)"/>
   <text x="300" y="718" text-anchor="middle" font-size="11" font-weight="600" fill="#1E8449">Auto-populate compliance form</text>
   <text x="300" y="736" text-anchor="middle" font-size="9" fill="#27AE60">Category, sign number, 20 checks, overall</text>
 
-  <line x1="300" y1="746" x2="300" y2="774" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="300" y1="746" x2="300" y2="774" stroke="#27AE60" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Save -->
   <rect x="120" y="774" width="360" height="40" rx="8" fill="#fff" stroke="#333" stroke-width="1.5"/>

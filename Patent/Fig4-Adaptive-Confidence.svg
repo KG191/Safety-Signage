@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 720" font-family="'Segoe UI', Arial, sans-serif">
   <defs>
-    <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#333"/></marker>
+    <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#27AE60"/></marker>
     <marker id="arO" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#E67E22"/></marker>
     <filter id="sh" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.08"/></filter>
   </defs>
@@ -21,8 +21,8 @@
   <text x="655" y="96" text-anchor="middle" font-size="10" fill="#E67E22">mlConf (0.0 – 1.0)</text>
 
   <!-- Arrows: Colour and Shape down to Step 1 -->
-  <line x1="135" y1="110" x2="135" y2="145" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
-  <line x1="395" y1="110" x2="395" y2="145" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="135" y1="110" x2="135" y2="145" stroke="#27AE60" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="395" y1="110" x2="395" y2="145" stroke="#27AE60" stroke-width="1.5" marker-end="url(#ar)"/>
 
   <!-- STEP 1 -->
   <rect x="50" y="145" width="490" height="130" rx="10" fill="#F5F5F5" stroke="#555" stroke-width="1.5" filter="url(#sh)"/>
@@ -43,7 +43,7 @@
   <text x="420" y="252" text-anchor="middle" font-size="9" fill="#666">Trust stronger signal</text>
 
   <!-- Arrow Step 1 → Step 2 -->
-  <line x1="275" y1="275" x2="275" y2="310" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="275" y1="275" x2="275" y2="310" stroke="#27AE60" stroke-width="1.5" marker-end="url(#ar)"/>
 
   <!-- STEP 2 -->
   <rect x="100" y="310" width="400" height="70" rx="10" fill="#F5F5F5" stroke="#555" stroke-width="1.5" filter="url(#sh)"/>
@@ -55,25 +55,25 @@
   <text x="120" y="372" font-size="11" font-weight="700" fill="#27AE60">    base += 0.10</text>
 
   <!-- Arrow Step 2 → Step 3 -->
-  <line x1="300" y1="380" x2="300" y2="415" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="300" y1="380" x2="300" y2="415" stroke="#27AE60" stroke-width="1.5" marker-end="url(#ar)"/>
 
-  <!-- ML arrow: vertical down then horizontal left into Step 3 (orthogonal) -->
-  <path d="M655,110 L655,405 L560,405 L560,415" stroke="#E67E22" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arO)"/>
+  <!-- ML arrow: vertical down then horizontal left to Step 3 right edge (orthogonal) -->
+  <path d="M655,110 L655,460 L540,460" stroke="#E67E22" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arO)"/>
   <text x="665" y="260" font-size="8" fill="#E67E22">ML input</text>
 
-  <!-- STEP 3 -->
-  <rect x="100" y="415" width="460" height="100" rx="10" fill="#F5F5F5" stroke="#555" stroke-width="1.5" filter="url(#sh)"/>
-  <rect x="110" y="420" width="100" height="20" rx="4" fill="#555"/>
-  <text x="160" y="434" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">STEP 3</text>
-  <text x="225" y="434" font-size="11" font-weight="600" fill="#333">ML Blending</text>
+  <!-- STEP 3 (shifted left to make room for ML arrow connection) -->
+  <rect x="50" y="415" width="490" height="100" rx="10" fill="#F5F5F5" stroke="#555" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="60" y="420" width="100" height="20" rx="4" fill="#555"/>
+  <text x="110" y="434" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">STEP 3</text>
+  <text x="175" y="434" font-size="11" font-weight="600" fill="#333">ML Blending</text>
 
-  <text x="120" y="458" font-size="10" fill="#333">IF ML model available:</text>
-  <text x="135" y="475" font-size="9" fill="#E67E22">mlWeight = 0.4 (fine-tuned) or 0.2 (generic MobileNet)</text>
-  <text x="135" y="492" font-size="10" font-weight="600" fill="#333">base = base × (1 − mlW) + mlConf × mlW</text>
-  <text x="120" y="509" font-size="9" fill="#27AE60">IF fine-tuned ML matches CV category: base += 0.05</text>
+  <text x="70" y="458" font-size="10" fill="#333">IF ML model available:</text>
+  <text x="85" y="475" font-size="9" fill="#E67E22">mlWeight = 0.4 (fine-tuned) or 0.2 (generic MobileNet)</text>
+  <text x="85" y="492" font-size="10" font-weight="600" fill="#333">base = base × (1 − mlW) + mlConf × mlW</text>
+  <text x="70" y="509" font-size="9" fill="#27AE60">IF fine-tuned ML matches CV category: base += 0.05</text>
 
   <!-- Arrow Step 3 → Output -->
-  <line x1="330" y1="515" x2="330" y2="550" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="330" y1="515" x2="330" y2="550" stroke="#27AE60" stroke-width="1.5" marker-end="url(#ar)"/>
 
   <!-- OUTPUT -->
   <rect x="150" y="550" width="360" height="80" rx="10" fill="#004B87" filter="url(#sh)"/>
