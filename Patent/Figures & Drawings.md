@@ -389,21 +389,23 @@ INPUTS:
 
 1. **Cover screen** — branded splash with Enter button
 2. **Settings — Account & Licence** — sign-in form, licence status, EULA
-3. **Settings — Vision AI** — API key entry, model selection (Opus recommended)
-4. **Dashboard** — audit list, capture counter ("2 of 3 free captures used" or "Unlimited")
-5. **New Audit form** — site name, client, auditor, date fields
-6. **Camera — Phase 1** — context photo capture with phase label "Step 1 of 2"
-7. **Camera — Phase 2 + Detection results** — sign close-up with AI detection panel showing confidence badge, detected category, reasoning, Accept/Edit/Reject buttons
-8. **Compliance checklist** — 20 checks with AI-suggested items highlighted in green
-9. **Report output** — gap analysis summary, compliance breakdown, sign-by-sign findings with thumbnails
-10. **Paywall modal** — "$149 AUD" with Purchase Licence button
+3. **Pricing tab — model selection** — Sonnet and Opus columns, batch options, site condition guide
+4. **Pricing tab — credit balance** — balance card showing Sonnet: X | Opus: X after purchase
+5. **Dashboard** — audit list, credit counter ("Credits: Sonnet 100 | Opus 0" or "2 of 3 free captures used")
+6. **New Audit form** — site name, client, auditor, date fields
+7. **Camera — Phase 1** — context photo capture with phase label "Step 1 of 2"
+8. **Camera — Phase 2 + Detection results** — sign close-up with AI detection panel showing source badge ("Vision AI (Opus)"), confidence badge, category, reasoning, Accept/Edit/Reject buttons
+9. **Compliance checklist** — 20 checks with AI-suggested items highlighted in green
+10. **Report output** — gap analysis summary, compliance breakdown, sign-by-sign findings with thumbnails
+11. **Paywall modal** — "Free Captures Used" with "View Pricing" and "From $49 for 100 signs"
 
 **Notes:**
 - Use a real device or browser at mobile width (375px)
 - Annotate each screenshot with callout arrows pointing to key features
 - Screenshots are in `assets/Screenshots/` — update if needed with current UI
-- Arrange in a 2x5 grid or single-column strip showing the workflow sequence
-- Add a numbered caption below each: "Fig 6a: Dashboard with capture counter", etc.
+- Arrange in a grid or single-column strip showing the workflow sequence
+- Add a numbered caption below each: "Fig 6a: Cover screen", "Fig 6d: Pricing tab", etc.
+- See `Fig6-Screenshots-Guide.md` for detailed per-screenshot instructions
 
 ---
 
@@ -449,34 +451,53 @@ INPUTS:
 ┌─────────────────────────────────────────────────────────┐
 │ LOCALSTORAGE (On Device)                                │
 │                                                         │
-│ signageAudit_apiKey     → Anthropic API key (encrypted) │
-│ signageAudit_modelPref  → "fast" | "balanced" | "best" │
-│ license_cache           → { licensed: bool, until: ts } │
+│ signageAudit_modelPref  → "sonnet" | "opus"             │
+│ credit_cache            → { sonnet, opus, licensed, ts }│
 │ eula-accepted           → timestamp                     │
 └─────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────┐
-│ SUPABASE (Cloud — Auth & Licensing Only)                │
+│ SUPABASE (Cloud — Auth, Credits & Licensing)            │
 │                                                         │
 │ auth.users (managed by Supabase)                        │
 │ │ id, email, encrypted_password, confirmed_at           │
 │ │                                                       │
-│ │  1:1                                                  │
+│ │  one user → one credits row                           │
 │ ▼                                                       │
 │ ┌─────────────────────┐                                 │
-│ │ LICENSES            │                                 │
+│ │ CREDITS             │                                 │
 │ │                     │                                 │
-│ │ id (PK)             │                                 │
-│ │ user_id (FK, UQ)    │                                 │
-│ │ stripe_checkout_id  │                                 │
-│ │ stripe_customer_id  │                                 │
-│ │ status              │                                 │
+│ │ user_id (PK, FK)    │                                 │
+│ │ sonnet_balance      │ ← separate pools                │
+│ │ opus_balance        │ ← per model                     │
+│ │ updated_at          │                                 │
+│ └─────────────────────┘                                 │
+│                                                         │
+│ ┌─────────────────────────┐                             │
+│ │ CREDIT_TRANSACTIONS     │                             │
+│ │ (immutable audit log)   │                             │
+│ │                         │                             │
+│ │ id (PK)                 │                             │
+│ │ user_id (FK)            │                             │
+│ │ model (sonnet | opus)   │                             │
+│ │ amount (+N / -1)        │                             │
+│ │ balance_after           │                             │
+│ │ reason (purchase/capture│                             │
+│ │   /free_tier)           │                             │
+│ │ stripe_session_id       │                             │
+│ │ created_at              │                             │
+│ └─────────────────────────┘                             │
+│                                                         │
+│ ┌─────────────────────┐                                 │
+│ │ LICENSES            │ ← grandfathered $149 users      │
+│ │ (legacy)            │   get unlimited credits         │
+│ │ user_id, status,    │                                 │
+│ │ stripe_ids,         │                                 │
 │ │ purchased_at        │                                 │
-│ │ amount_aud          │                                 │
 │ └─────────────────────┘                                 │
 │                                                         │
 │ NOTE: Audit data NEVER leaves the device.               │
-│ Supabase stores auth + licence only.                    │
+│ Supabase stores auth, credits, and licence status only. │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -485,5 +506,8 @@ INPUTS:
 - Draw a clear boundary between "On Device" (IndexedDB + localStorage) and "Cloud" (Supabase)
 - Highlight the privacy design: "Audit data NEVER leaves the device" in bold/red
 - Show the 1:N relationship between audits and captures
-- Show the 1:1 relationship between auth.users and licenses
+- Show the 1:1 relationship between auth.users and credits
+- Show the 1:N relationship between auth.users and credit_transactions
+- Show the licenses table labelled as "grandfathered" / "legacy"
 - The `detection` field in captures is a nested object — show its key subfields
+- Note that credits has separate sonnet_balance and opus_balance (cannot cross-spend)
