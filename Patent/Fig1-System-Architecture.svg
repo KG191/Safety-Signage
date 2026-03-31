@@ -73,12 +73,16 @@
   <!-- Arrow: Pipeline down-left to Capture Form -->
   <!-- Go left from Pipeline left edge, then down, then right to Form -->
   <path d="M265,150 L245,150 L245,252 L225,252" stroke="#2980B9" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#aB)"/>
-  <text x="248" y="200" font-size="8" fill="#2980B9" transform="rotate(-90,248,200)">Auto-populate</text>
+  <text x="236" y="200" font-size="8" fill="#2980B9" transform="rotate(-90,236,200)">Auto-populate</text>
 
   <!-- Report Generator -->
   <rect x="310" y="225" width="185" height="55" rx="8" fill="#fff" stroke="#2980B9" stroke-width="1"/>
   <text x="402" y="249" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">Report Generator</text>
   <text x="402" y="266" text-anchor="middle" font-size="9" fill="#666">Gap analysis, HTML, CSV</text>
+
+  <!-- Arrow: IndexedDB → Report Generator (horizontal, left) -->
+  <line x1="575" y1="252" x2="495" y2="252" stroke="#2980B9" stroke-width="1" marker-end="url(#aB)"/>
+  <text x="535" y="245" text-anchor="middle" font-size="7" fill="#2980B9">Read audits</text>
 
   <!-- Credits Module -->
   <rect x="575" y="225" width="195" height="55" rx="8" fill="#fff" stroke="#2980B9" stroke-width="1"/>
@@ -86,21 +90,22 @@
   <text x="672" y="262" text-anchor="middle" font-size="9" fill="#666">Auth, credit balance, paywall</text>
   <text x="672" y="276" text-anchor="middle" font-size="8" fill="#666">Sonnet + Opus credit pools</text>
 
-  <!-- ─── Row 3: Vertical connections down to External Services ─── -->
-  <!-- All arrows route along the LEFT margin (x=30) to avoid crossing boxes -->
+  <!-- Arrow: Credits Module → create-checkout (drawn AFTER server-side box so it's on top) -->
 
-  <!-- Arrow: Detection Pipeline → vision-proxy -->
-  <!-- Exit Pipeline left side, go down along left margin, then across to vision-proxy -->
-  <path d="M265,180 L30,180 L30,580 L40,580" stroke="#8E44AD" stroke-width="1.5" fill="none" marker-end="url(#aP)"/>
-  <text x="33" y="400" font-size="8" fill="#8E44AD" transform="rotate(-90,33,400)">Sign image + model pref</text>
+  <!-- ─── Row 3: Vertical connections down to External Services ─── -->
+
+  <!-- Arrow: Detection Pipeline → Anthropic API (purple, main data flow) -->
+  <!-- Exit Pipeline bottom (inward from left), down below Row 2, left to Anthropic x, down to Anthropic top -->
+  <path d="M300,203 L300,300 L145,300 L145,420" stroke="#8E44AD" stroke-width="1.5" fill="none" marker-end="url(#aP)"/>
+  <text x="155" y="295" font-size="8" fill="#8E44AD">Sign image (via proxy)</text>
 
   <!-- Arrow: Credits Module → Supabase -->
-  <!-- Exit Credits bottom, go down, then left to Supabase -->
+  <!-- Exit Credits bottom, down to clear zone, left to Supabase x, down -->
   <path d="M672,280 L672,310 L500,310 L500,420" stroke="#1ABC9C" stroke-width="1.5" fill="none" marker-end="url(#aG)"/>
   <text x="590" y="305" font-size="8" fill="#1ABC9C">Auth + credit check</text>
 
   <!-- Arrow: Credits Module → Stripe -->
-  <!-- Exit Credits right side, go right to Stripe x, then down -->
+  <!-- Exit Credits right side, right to Stripe x, down -->
   <path d="M770,252 L865,252 L865,420" stroke="#F39C12" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#aO)"/>
   <text x="818" y="246" font-size="8" fill="#B7950B">Redirect</text>
 
@@ -132,48 +137,54 @@
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- SWIM LANE 3: SERVER-SIDE                            -->
   <!-- ═══════════════════════════════════════════════════ -->
-  <rect x="20" y="525" width="980" height="200" rx="12" fill="#F2F3F4" stroke="#95A5A6" stroke-width="1.5" filter="url(#shadow)"/>
-  <text x="510" y="550" text-anchor="middle" font-size="13" font-weight="700" fill="#717D7E">SERVER-SIDE (Supabase Edge Functions)</text>
+  <rect x="20" y="525" width="980" height="210" rx="12" fill="#F2F3F4" stroke="#95A5A6" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="510" y="548" text-anchor="middle" font-size="13" font-weight="700" fill="#717D7E">SERVER-SIDE (Supabase Edge Functions)</text>
 
   <!-- vision-proxy -->
-  <rect x="40" y="565" width="250" height="65" rx="8" fill="#fff" stroke="#8E44AD" stroke-width="1.5"/>
-  <text x="165" y="587" text-anchor="middle" font-size="10" font-weight="600" fill="#6C3483">vision-proxy</text>
-  <text x="165" y="602" text-anchor="middle" font-size="8" fill="#666">Credit check → deduct → proxy to</text>
-  <text x="165" y="616" text-anchor="middle" font-size="8" fill="#666">Anthropic API → return result</text>
+  <rect x="40" y="575" width="250" height="65" rx="8" fill="#fff" stroke="#8E44AD" stroke-width="1.5"/>
+  <text x="165" y="597" text-anchor="middle" font-size="10" font-weight="600" fill="#6C3483">vision-proxy</text>
+  <text x="165" y="612" text-anchor="middle" font-size="8" fill="#666">Credit check → deduct → proxy to</text>
+  <text x="165" y="626" text-anchor="middle" font-size="8" fill="#666">Anthropic API → return result</text>
 
-  <!-- Arrow: vision-proxy up to Anthropic (vertical) -->
-  <line x1="200" y1="565" x2="200" y2="490" stroke="#8E44AD" stroke-width="1.5" marker-end="url(#aP)"/>
-  <text x="210" y="530" font-size="8" fill="#8E44AD">JPEG + prompt</text>
+  <!-- Arrow: vision-proxy up to Anthropic (vertical, left of title) -->
+  <line x1="100" y1="575" x2="100" y2="490" stroke="#8E44AD" stroke-width="1.5" marker-end="url(#aP)"/>
+  <text x="110" y="535" font-size="8" fill="#8E44AD">JPEG + prompt</text>
 
-  <!-- Arrow: vision-proxy right to Supabase for credit deduct -->
-  <path d="M290,595 L350,595 L350,545 L460,545 L460,490" stroke="#1ABC9C" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#aG)"/>
-  <text x="410" y="540" font-size="8" fill="#148F77">Deduct credit</text>
+  <!-- Arrow: vision-proxy right to Supabase for credit deduct (below title) -->
+  <path d="M290,605 L350,605 L350,560 L460,560 L460,490" stroke="#1ABC9C" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#aG)"/>
+  <text x="405" y="556" font-size="8" fill="#148F77">Deduct credit</text>
 
   <!-- create-checkout -->
-  <rect x="395" y="565" width="210" height="65" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
-  <text x="500" y="587" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">create-checkout</text>
-  <text x="500" y="602" text-anchor="middle" font-size="8" fill="#666">Product key → Stripe Checkout URL</text>
-  <text x="500" y="616" text-anchor="middle" font-size="8" fill="#666">(sonnet_100, opus_250, etc.)</text>
+  <rect x="395" y="575" width="210" height="65" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
+  <text x="500" y="597" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">create-checkout</text>
+  <text x="500" y="612" text-anchor="middle" font-size="8" fill="#666">Product key → Stripe Checkout URL</text>
+  <text x="500" y="626" text-anchor="middle" font-size="8" fill="#666">(sonnet_100, opus_250, etc.)</text>
 
   <!-- stripe-webhook -->
-  <rect x="710" y="565" width="250" height="65" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
-  <text x="835" y="587" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">stripe-webhook</text>
-  <text x="835" y="602" text-anchor="middle" font-size="8" fill="#666">Payment confirmed → add credits</text>
-  <text x="835" y="616" text-anchor="middle" font-size="8" fill="#666">to user's Sonnet or Opus pool</text>
+  <rect x="710" y="575" width="250" height="65" rx="8" fill="#fff" stroke="#95A5A6" stroke-width="1"/>
+  <text x="835" y="597" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">stripe-webhook</text>
+  <text x="835" y="612" text-anchor="middle" font-size="8" fill="#666">Payment confirmed → add credits</text>
+  <text x="835" y="626" text-anchor="middle" font-size="8" fill="#666">to user's Sonnet or Opus pool</text>
 
-  <!-- Arrow: Stripe down to stripe-webhook (vertical) -->
-  <line x1="865" y1="490" x2="865" y2="565" stroke="#F39C12" stroke-width="1.5" marker-end="url(#aO)"/>
-  <text x="878" y="530" font-size="8" fill="#B7950B">Webhook</text>
+  <!-- Arrow: Stripe down to stripe-webhook (vertical, right of title) -->
+  <line x1="900" y1="490" x2="900" y2="575" stroke="#F39C12" stroke-width="1.5" marker-end="url(#aO)"/>
+  <text x="910" y="535" font-size="8" fill="#B7950B">Webhook</text>
 
-  <!-- Arrow: stripe-webhook left to Supabase (horizontal then vertical) -->
-  <path d="M710,595 L660,595 L660,545 L540,545 L540,490" stroke="#1ABC9C" stroke-width="1.5" fill="none" marker-end="url(#aG)"/>
-  <text x="620" y="540" font-size="8" fill="#148F77">Upsert credits</text>
+  <!-- Arrow: stripe-webhook left to Supabase (below title) -->
+  <path d="M710,605 L660,605 L660,560 L540,560 L540,490" stroke="#1ABC9C" stroke-width="1.5" fill="none" marker-end="url(#aG)"/>
+  <text x="625" y="556" font-size="8" fill="#148F77">Upsert credits</text>
+
+  <!-- Arrow: Credits Module → create-checkout (rendered last so it's on top) -->
+  <!-- Top-right of Credits, right to margin, down past webhook, left to checkout bottom-center, up -->
+  <defs><marker id="aRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#CC0000"/></marker></defs>
+  <path d="M770,230 L975,230 L975,670 L500,670 L500,640" stroke="#CC0000" stroke-width="1.5" fill="none" marker-end="url(#aRed)"/>
+  <text x="830" y="224" font-size="8" fill="#CC0000">Buy credits request</text>
 
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- FREE TIER NOTE                                      -->
   <!-- ═══════════════════════════════════════════════════ -->
-  <rect x="40" y="742" width="940" height="30" rx="6" fill="#E8DAEF" stroke="#8E44AD" stroke-width="0.5"/>
-  <text x="510" y="762" text-anchor="middle" font-size="10" font-weight="600" fill="#6C3483">FREE TIER: 3 captures with Opus (no payment required) — proxied server-side, tracked via credit_transactions</text>
+  <rect x="40" y="752" width="940" height="30" rx="6" fill="#E8DAEF" stroke="#8E44AD" stroke-width="0.5"/>
+  <text x="510" y="772" text-anchor="middle" font-size="10" font-weight="600" fill="#6C3483">FREE TIER: 3 captures with Opus (no payment required) — proxied server-side, tracked via credit_transactions</text>
 
   <!-- Copyright -->
   <text x="510" y="820" text-anchor="middle" font-size="9" fill="#aaa">SymbioTeK Pty Ltd (ACN 694 230 334) — Confidential</text>
