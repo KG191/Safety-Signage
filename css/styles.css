@@ -273,6 +273,252 @@ body.cover-active #app {
     transform: translateX(-50%) translateY(0);
 }
 
+/* === Pricing View === */
+.pricing-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.pricing-header h2 {
+    font-size: 1.4rem;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.pricing-header p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.pricing-balance-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.pricing-balance-card h3 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.pricing-balance-pills {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.balance-pill {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.balance-pill.sonnet-pill {
+    background: #EBF5FB;
+    color: #2471A3;
+}
+
+.balance-pill.opus-pill {
+    background: #FEF9E7;
+    color: #B7950B;
+}
+
+/* Site Condition Guide */
+.site-guide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.site-guide-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 0.85rem;
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.site-guide-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.site-guide-card strong {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 0.15rem;
+}
+
+.site-guide-card p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+}
+
+.site-guide-rec {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+}
+
+.sonnet-rec {
+    background: #EBF5FB;
+    color: #2471A3;
+}
+
+.opus-rec {
+    background: #FEF9E7;
+    color: #B7950B;
+}
+
+/* Pricing Columns */
+.pricing-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.pricing-column {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border-top: 4px solid;
+}
+
+.sonnet-column {
+    border-top-color: #2980B9;
+}
+
+.opus-column {
+    border-top-color: #F39C12;
+}
+
+.pricing-column h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.1rem;
+}
+
+.sonnet-column h3 { color: #2471A3; }
+.opus-column h3 { color: #B7950B; }
+
+.pricing-column-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+/* Batch Options */
+.batch-option {
+    display: block;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.batch-option input[type="radio"] {
+    display: none;
+}
+
+.batch-option-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.6rem 0.75rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.batch-option input[type="radio"]:checked + .batch-option-content {
+    border-color: var(--primary);
+    background: #f0f6fc;
+}
+
+.sonnet-column .batch-option input[type="radio"]:checked + .batch-option-content {
+    border-color: #2980B9;
+    background: #EBF5FB;
+}
+
+.opus-column .batch-option input[type="radio"]:checked + .batch-option-content {
+    border-color: #F39C12;
+    background: #FEF9E7;
+}
+
+.batch-size {
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+.batch-price {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--primary);
+}
+
+.per-sign-cost {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    width: 100%;
+}
+
+.batch-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.batch-badge.popular {
+    background: #2980B9;
+    color: #fff;
+}
+
+.batch-badge.value {
+    background: #27AE60;
+    color: #fff;
+}
+
+.pricing-buy-btn {
+    margin-top: 0.5rem;
+}
+
+.pricing-free-note {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 600px) {
+    .pricing-columns {
+        grid-template-columns: 1fr;
+    }
+    .site-guide {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* === BYOK Guide === */
 .byok-guide {
     background: var(--bg);

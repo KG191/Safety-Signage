@@ -85,6 +85,7 @@ function switchView(viewName) {
         if (typeof updateAuditCounter === 'function') updateAuditCounter();
     }
     if (viewName === 'capture') refreshCaptureView();
+    if (viewName === 'pricing' && typeof refreshPricingView === 'function') refreshPricingView();
     if (viewName === 'reports') refreshReportSelector();
     if (viewName === 'settings') {
         if (typeof refreshBackupStats === 'function') refreshBackupStats();

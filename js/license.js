@@ -1,18 +1,18 @@
 /**
- * License management — Supabase auth, license validation, paywall gating.
+ * Credit-based licence management — Supabase auth, credit balance, paywall gating.
  *
- * Free tier: 3 audits without an account.
- * Paid: $149 AUD one-off lifetime license via Stripe Checkout.
- * Offline: license cached in localStorage for 7 days.
+ * Free tier: 3 captures with Opus (no account needed for local CV, account needed for AI).
+ * Paid: Batch credit purchases (Sonnet or Opus) via Stripe Checkout.
+ * Grandfathered: $149 lifetime licence holders get unlimited credits.
+ * Offline: local CV fallback works without credits.
  */
 
 // ── Configuration ──────────────────────────────────────────────────
-// Replace these with your actual Supabase project values
 const SUPABASE_URL = 'https://auacwdtbncawmpjqcnal.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1YWN3ZHRibmNhd21wanFjbmFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjQzMTIsImV4cCI6MjA5MDI0MDMxMn0.cqrpLHF8nyS6rfI_9UuUoRG6XcVZFkR4I2v4lJH-8Fw';
-const FREE_AUDIT_LIMIT = 3;
-const LICENSE_CACHE_KEY = 'license_cache';
-const LICENSE_CACHE_DAYS = 7;
+const FREE_CAPTURE_LIMIT = 3;
+const CREDIT_CACHE_KEY = 'credit_cache';
+const CREDIT_CACHE_SECONDS = 60; // Short TTL for credit balance cache
 
 let supabaseClient = null;
 
@@ -23,74 +23,95 @@ function getSupabase() {
     return supabaseClient;
 }
 
-// ── License Status ─────────────────────────────────────────────────
+// ── Credit Status ──────────────────────────────────────────────────
 
 /**
- * Returns { status: 'free'|'trial_expired'|'licensed', auditCount }
+ * Returns { status, sonnetBalance, opusBalance, captureCount }
+ * Status: 'free' | 'has_credits' | 'no_credits' | 'licensed' (grandfathered)
  */
-async function getLicenseStatus() {
+async function getCreditStatus() {
     const captures = await getAllCaptures();
     const captureCount = captures.length;
 
-    if (captureCount < FREE_AUDIT_LIMIT) {
-        return { status: 'free', captureCount };
+    // Check cache first
+    const cache = getCreditCache();
+    if (cache) {
+        if (cache.licensed) return { status: 'licensed', sonnetBalance: 999, opusBalance: 999, captureCount };
+        if (cache.sonnet > 0 || cache.opus > 0) return { status: 'has_credits', sonnetBalance: cache.sonnet, opusBalance: cache.opus, captureCount };
     }
 
-    // Check localStorage cache first (works offline)
-    const cache = getLicenseCache();
-    if (cache && cache.licensed) {
-        return { status: 'licensed', captureCount };
+    // Free tier: check local capture count (works offline)
+    if (captureCount < FREE_CAPTURE_LIMIT) {
+        return { status: 'free', sonnetBalance: 0, opusBalance: 0, captureCount };
     }
 
-    // Try server validation if online
+    // Need to check server for credits/licence
     const sb = getSupabase();
-    if (sb) {
-        try {
-            const { data: { user } } = await sb.auth.getUser();
-            if (user) {
-                const { data } = await sb.from('licenses')
-                    .select('status')
-                    .eq('user_id', user.id)
-                    .single();
+    if (!sb) return { status: 'no_credits', sonnetBalance: 0, opusBalance: 0, captureCount };
 
-                if (data && data.status === 'active') {
-                    setLicenseCache(true);
-                    return { status: 'licensed', captureCount };
-                }
-            }
-        } catch (e) {
-            // Offline or network error — if we had a previous valid cache
-            // that just expired, be lenient (show banner, don't lock out)
-            console.warn('License check failed (offline?):', e.message);
+    try {
+        const { data: { user } } = await sb.auth.getUser();
+        if (!user) return { status: 'no_credits', sonnetBalance: 0, opusBalance: 0, captureCount };
+
+        // Check grandfathered licence
+        const { data: license } = await sb.from('licenses')
+            .select('status')
+            .eq('user_id', user.id)
+            .single();
+
+        if (license && license.status === 'active') {
+            setCreditCache(0, 0, true);
+            return { status: 'licensed', sonnetBalance: 999, opusBalance: 999, captureCount };
         }
-    }
 
-    return { status: 'trial_expired', captureCount };
+        // Check credit balance
+        const { data: credits } = await sb.from('credits')
+            .select('sonnet_balance, opus_balance')
+            .eq('user_id', user.id)
+            .single();
+
+        const sonnet = credits?.sonnet_balance || 0;
+        const opus = credits?.opus_balance || 0;
+
+        setCreditCache(sonnet, opus, false);
+
+        if (sonnet > 0 || opus > 0) {
+            return { status: 'has_credits', sonnetBalance: sonnet, opusBalance: opus, captureCount };
+        }
+
+        return { status: 'no_credits', sonnetBalance: 0, opusBalance: 0, captureCount };
+    } catch (e) {
+        console.warn('Credit check failed (offline?):', e.message);
+        // If cache just expired, be lenient
+        if (cache) {
+            return { status: cache.licensed ? 'licensed' : 'has_credits', sonnetBalance: cache.sonnet || 0, opusBalance: cache.opus || 0, captureCount };
+        }
+        return { status: 'no_credits', sonnetBalance: 0, opusBalance: 0, captureCount };
+    }
 }
 
-// ── License Cache ──────────────────────────────────────────────────
+// ── Credit Cache ───────────────────────────────────────────────────
 
-function getLicenseCache() {
+function getCreditCache() {
     try {
-        const raw = localStorage.getItem(LICENSE_CACHE_KEY);
+        const raw = localStorage.getItem(CREDIT_CACHE_KEY);
         if (!raw) return null;
         const cache = JSON.parse(raw);
         if (cache.until && Date.now() < cache.until) return cache;
-        // Expired
-        localStorage.removeItem(LICENSE_CACHE_KEY);
+        localStorage.removeItem(CREDIT_CACHE_KEY);
         return null;
     } catch {
         return null;
     }
 }
 
-function setLicenseCache(licensed) {
-    const until = Date.now() + LICENSE_CACHE_DAYS * 24 * 60 * 60 * 1000;
-    localStorage.setItem(LICENSE_CACHE_KEY, JSON.stringify({ licensed, until }));
+function setCreditCache(sonnet, opus, licensed) {
+    const until = Date.now() + CREDIT_CACHE_SECONDS * 1000;
+    localStorage.setItem(CREDIT_CACHE_KEY, JSON.stringify({ sonnet, opus, licensed, until }));
 }
 
-function clearLicenseCache() {
-    localStorage.removeItem(LICENSE_CACHE_KEY);
+function clearCreditCache() {
+    localStorage.removeItem(CREDIT_CACHE_KEY);
 }
 
 // ── Auth Helpers ───────────────────────────────────────────────────
@@ -115,7 +136,7 @@ async function licenseSignOut() {
     const sb = getSupabase();
     if (!sb) return;
     await sb.auth.signOut();
-    clearLicenseCache();
+    clearCreditCache();
 }
 
 async function getLicenseUser() {
@@ -131,14 +152,14 @@ async function getLicenseUser() {
 
 // ── Checkout ───────────────────────────────────────────────────────
 
-async function startCheckout() {
+async function startCheckout(productKey) {
     const user = await getLicenseUser();
     if (!user) throw new Error('Please sign in first.');
 
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, userId: user.id }),
+        body: JSON.stringify({ email: user.email, userId: user.id, productKey }),
     });
 
     if (!res.ok) {
@@ -162,50 +183,48 @@ function hidePaywall() {
 }
 
 /**
- * Check license before creating an audit. Returns true if allowed.
+ * Check credits before creating an audit. Returns true if allowed.
  */
 async function checkLicenseForNewAudit() {
-    const { status } = await getLicenseStatus();
-
-    if (status === 'free' || status === 'licensed') {
-        return true;
-    }
-
-    // trial_expired — show paywall
-    showPaywall();
-    return false;
+    // Audits themselves are always free — the gate is on camera/AI usage
+    return true;
 }
 
 /**
- * Check license before starting the camera. Returns true if allowed.
+ * Check credits before starting the camera. Returns true if allowed.
  */
 async function checkLicenseForCamera() {
-    const { status } = await getLicenseStatus();
+    const { status } = await getCreditStatus();
 
-    if (status === 'free' || status === 'licensed') {
+    if (status === 'free' || status === 'has_credits' || status === 'licensed') {
         return true;
     }
 
-    // trial_expired — show paywall
     showPaywall();
     return false;
 }
 
-// ── Audit Counter UI ───────────────────────────────────────────────
+// ── Dashboard Counter ──────────────────────────────────────────────
 
 async function updateAuditCounter() {
     const counterEl = document.getElementById('audit-counter');
     if (!counterEl) return;
 
-    const { status, captureCount } = await getLicenseStatus();
+    const { status, sonnetBalance, opusBalance, captureCount } = await getCreditStatus();
 
     if (status === 'licensed') {
-        counterEl.textContent = 'Unlimited';
+        counterEl.textContent = 'Unlimited (Lifetime Licence)';
         counterEl.className = 'audit-counter licensed';
-    } else {
-        const remaining = Math.max(0, FREE_AUDIT_LIMIT - captureCount);
-        counterEl.textContent = `${captureCount} of ${FREE_AUDIT_LIMIT} free captures used`;
+    } else if (status === 'has_credits') {
+        counterEl.innerHTML = `Credits: <strong>Sonnet ${sonnetBalance}</strong> | <strong>Opus ${opusBalance}</strong>`;
+        counterEl.className = 'audit-counter licensed';
+    } else if (status === 'free') {
+        const remaining = FREE_CAPTURE_LIMIT - captureCount;
+        counterEl.textContent = `${captureCount} of ${FREE_CAPTURE_LIMIT} free captures used (Opus)`;
         counterEl.className = 'audit-counter' + (remaining === 0 ? ' exhausted' : '');
+    } else {
+        counterEl.innerHTML = 'No credits — <a href="#" onclick="switchView(\'pricing\');return false;">Buy more</a>';
+        counterEl.className = 'audit-counter exhausted';
     }
 }
 
@@ -216,7 +235,13 @@ async function refreshAuthUI() {
     if (!authSection) return;
 
     const user = await getLicenseUser();
-    const { status } = await getLicenseStatus();
+    const { status, sonnetBalance, opusBalance } = await getCreditStatus();
+
+    const creditDisplay = status === 'licensed'
+        ? '<span class="vision-indicator active">Unlimited (Lifetime)</span>'
+        : status === 'has_credits'
+        ? `<span class="vision-indicator active">Sonnet: ${sonnetBalance} | Opus: ${opusBalance}</span>`
+        : '<span class="vision-indicator inactive">No credits</span>';
 
     const signedInHTML = `
         <div class="vision-status-row">
@@ -224,12 +249,10 @@ async function refreshAuthUI() {
             <span class="vision-indicator active">${escapeHtml(user?.email || '')}</span>
         </div>
         <div class="vision-status-row">
-            <span>License:</span>
-            <span class="vision-indicator ${status === 'licensed' ? 'active' : 'inactive'}">
-                ${status === 'licensed' ? 'Active (Lifetime)' : 'Not purchased'}
-            </span>
+            <span>Credits:</span>
+            ${creditDisplay}
         </div>
-        ${status !== 'licensed' ? '<button class="btn btn-primary" onclick="startCheckout()">Purchase License — $149 AUD</button>' : ''}
+        ${status !== 'licensed' ? '<button class="btn btn-primary" onclick="switchView(\'pricing\')">Buy Credits</button>' : ''}
         <button class="btn btn-secondary" onclick="handleSignOut()" style="margin-top:0.5rem;">Sign Out</button>
     `;
 
@@ -252,7 +275,7 @@ async function refreshAuthUI() {
 
     authSection.innerHTML = user ? signedInHTML : signedOutHTML;
 
-    // Reorder cards: show licence & EULA at top until payment is made
+    // Reorder cards: show licence & EULA at top until user has credits
     reorderSettingsCards(status);
 }
 
@@ -262,12 +285,10 @@ function reorderSettingsCards(status) {
     const eulaCard = document.getElementById('eula-card');
     if (!settingsView || !licenseCard || !eulaCard) return;
 
-    if (status === 'licensed') {
-        // Licensed: move to bottom (append)
+    if (status === 'licensed' || status === 'has_credits') {
         settingsView.appendChild(licenseCard);
         settingsView.appendChild(eulaCard);
     } else {
-        // Not licensed: move to top (before first child)
         const firstChild = settingsView.firstElementChild;
         settingsView.insertBefore(eulaCard, firstChild);
         settingsView.insertBefore(licenseCard, eulaCard);
@@ -360,17 +381,13 @@ function handlePaymentReturn() {
     const payment = params.get('payment');
 
     if (payment === 'success') {
-        clearLicenseCache();
-        // Clean URL
+        clearCreditCache();
         history.replaceState(null, '', window.location.pathname);
-        // Re-check license after a brief delay (webhook may take a moment)
         setTimeout(async () => {
-            const { status } = await getLicenseStatus();
-            if (status === 'licensed') {
-                showPaymentSuccessToast();
-            }
+            showPaymentSuccessToast();
             await updateAuditCounter();
             await refreshAuthUI();
+            await refreshPricingView();
         }, 2000);
     } else if (payment === 'cancelled') {
         history.replaceState(null, '', window.location.pathname);
@@ -380,7 +397,7 @@ function handlePaymentReturn() {
 function showPaymentSuccessToast() {
     const toast = document.createElement('div');
     toast.className = 'payment-toast';
-    toast.textContent = 'Payment received. Unlimited audits unlocked!';
+    toast.textContent = 'Credits added to your account!';
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('visible'), 50);
     setTimeout(() => {
@@ -392,15 +409,11 @@ function showPaymentSuccessToast() {
 // ── Password Reset Handler ─────────────────────────────────────────
 
 function handlePasswordReset() {
-    // Supabase sends the user back with a hash fragment containing the access token
     const hash = window.location.hash;
     const params = new URLSearchParams(window.location.search);
 
     if (params.get('reset') === 'true' || (hash && hash.includes('type=recovery'))) {
-        // Clean URL
         history.replaceState(null, '', window.location.pathname);
-
-        // Show password reset modal after a brief delay for Supabase to process the token
         setTimeout(() => {
             switchView('settings');
             showPasswordResetUI();
@@ -448,6 +461,58 @@ async function handleSetNewPassword() {
     }
 }
 
+// ── Pricing View ───────────────────────────────────────────────────
+
+async function refreshPricingView() {
+    // Update balance display
+    const balanceCard = document.getElementById('pricing-balance');
+    const user = await getLicenseUser();
+
+    if (user) {
+        const { status, sonnetBalance, opusBalance } = await getCreditStatus();
+        if (status === 'licensed') {
+            balanceCard.style.display = 'block';
+            document.getElementById('pricing-sonnet-bal').textContent = 'Unlimited';
+            document.getElementById('pricing-opus-bal').textContent = 'Unlimited';
+        } else if (sonnetBalance > 0 || opusBalance > 0) {
+            balanceCard.style.display = 'block';
+            document.getElementById('pricing-sonnet-bal').textContent = sonnetBalance;
+            document.getElementById('pricing-opus-bal').textContent = opusBalance;
+        } else {
+            balanceCard.style.display = 'none';
+        }
+    } else {
+        balanceCard.style.display = 'none';
+    }
+
+    // Wire up buy buttons
+    document.querySelectorAll('.pricing-buy-btn').forEach(btn => {
+        btn.onclick = async () => {
+            const model = btn.dataset.model;
+            const selectedRadio = document.querySelector(`input[name="${model}-batch"]:checked`);
+            if (!selectedRadio) return;
+
+            const productKey = selectedRadio.value;
+            const user = await getLicenseUser();
+
+            if (!user) {
+                switchView('settings');
+                return;
+            }
+
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Redirecting to checkout...';
+                await startCheckout(productKey);
+            } catch (err) {
+                alert('Checkout error: ' + err.message);
+                btn.disabled = false;
+                btn.textContent = `Buy ${model.charAt(0).toUpperCase() + model.slice(1)} Credits`;
+            }
+        };
+    });
+}
+
 // ── Init ───────────────────────────────────────────────────────────
 
 function initLicense() {
@@ -455,11 +520,10 @@ function initLicense() {
     handlePasswordReset();
     updateAuditCounter();
 
-    // Paywall modal close button
+    // Paywall modal buttons
     const closeBtn = document.getElementById('paywall-close-btn');
     if (closeBtn) closeBtn.addEventListener('click', hidePaywall);
 
-    // Paywall sign-in redirect
     const paywallSignIn = document.getElementById('paywall-signin-btn');
     if (paywallSignIn) {
         paywallSignIn.addEventListener('click', () => {
@@ -468,25 +532,12 @@ function initLicense() {
         });
     }
 
-    // Paywall purchase button
-    const paywallBuy = document.getElementById('paywall-buy-btn');
-    if (paywallBuy) {
-        paywallBuy.addEventListener('click', async () => {
-            const user = await getLicenseUser();
-            if (!user) {
-                hidePaywall();
-                switchView('settings');
-                return;
-            }
-            try {
-                paywallBuy.disabled = true;
-                paywallBuy.textContent = 'Redirecting to checkout...';
-                await startCheckout();
-            } catch (err) {
-                alert('Checkout error: ' + err.message);
-                paywallBuy.disabled = false;
-                paywallBuy.textContent = 'Purchase Licence';
-            }
+    // Paywall "View Pricing" button
+    const paywallPricing = document.getElementById('paywall-pricing-btn');
+    if (paywallPricing) {
+        paywallPricing.addEventListener('click', () => {
+            hidePaywall();
+            switchView('pricing');
         });
     }
 }

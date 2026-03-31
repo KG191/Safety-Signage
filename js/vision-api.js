@@ -1,19 +1,13 @@
 /**
- * Vision API Module — Sends captured sign images to Claude's Vision API
- * for high-accuracy AS 1319-1994 sign detection and compliance assessment.
+ * Vision API Module — Sends captured sign images to the vision proxy
+ * for AI-powered AS 1319-1994 sign detection and compliance assessment.
  *
  * Primary detection method (online). CV pipeline is the offline fallback.
- * API key is stored in localStorage and provided by the user.
+ * AI calls are proxied through Supabase Edge Functions (server-side API key).
+ * Users purchase Sonnet or Opus credits in batches.
  */
 
-const VISION_API_URL = 'https://api.anthropic.com/v1/messages';
-const VISION_API_VERSION = '2023-06-01';
-const VISION_MODEL_OPTIONS = {
-    fast:     'claude-haiku-4-5-20251001',
-    balanced: 'claude-sonnet-4-6',
-    best:     'claude-opus-4-6'
-};
-const VISION_STORAGE_KEY = 'signageAudit_apiKey';
+const VISION_PROXY_URL = SUPABASE_URL + '/functions/v1/vision-proxy';
 const VISION_MODEL_PREF_KEY = 'signageAudit_modelPref';
 
 /** The structured prompt sent with every image analysis */
@@ -90,47 +84,27 @@ Do NOT be conservative — if the sign is clearly identifiable, return 0.9+.
 Return ONLY the JSON object.`;
 
 /**
- * Get the stored API key.
- * @returns {string|null}
- */
-function getVisionApiKey() {
-    return localStorage.getItem(VISION_STORAGE_KEY);
-}
-
-/**
- * Store the API key.
- * @param {string} key
- */
-function setVisionApiKey(key) {
-    if (key) {
-        localStorage.setItem(VISION_STORAGE_KEY, key.trim());
-    } else {
-        localStorage.removeItem(VISION_STORAGE_KEY);
-    }
-}
-
-/**
- * Get the preferred model tier.
- * @returns {string} 'fast'|'balanced'|'best'
+ * Get the preferred model.
+ * @returns {string} 'sonnet'|'opus'
  */
 function getVisionModelPref() {
-    return localStorage.getItem(VISION_MODEL_PREF_KEY) || 'best';
+    return localStorage.getItem(VISION_MODEL_PREF_KEY) || 'opus';
 }
 
 /**
- * Set the preferred model tier.
- * @param {string} pref
+ * Set the preferred model.
+ * @param {string} pref 'sonnet'|'opus'
  */
 function setVisionModelPref(pref) {
     localStorage.setItem(VISION_MODEL_PREF_KEY, pref);
 }
 
 /**
- * Check if the Vision API is configured and available.
+ * Check if the Vision API is available (always true — proxy handles gating).
  * @returns {boolean}
  */
 function isVisionApiAvailable() {
-    return !!getVisionApiKey();
+    return true;
 }
 
 /**
@@ -140,18 +114,19 @@ function isVisionApiAvailable() {
  * @returns {Promise<object>} Structured detection result or null on failure
  */
 async function analyseWithVisionAPI(dataUrl) {
-    const apiKey = getVisionApiKey();
-    if (!apiKey) return null;
-
     const modelPref = getVisionModelPref();
-    const model = VISION_MODEL_OPTIONS[modelPref] || VISION_MODEL_OPTIONS.best;
 
     // Strip data URL prefix to get raw base64
     const base64Data = dataUrl.split(',')[1];
     if (!base64Data) return null;
 
+    // Get user ID for credit deduction
+    const user = await getLicenseUser();
+    if (!user) throw new Error('NO_CREDITS'); // Must be signed in for AI
+
     const requestBody = {
-        model: model,
+        userId: user.id,
+        modelPref: modelPref,
         max_tokens: 1024,
         messages: [{
             role: 'user',
@@ -172,25 +147,25 @@ async function analyseWithVisionAPI(dataUrl) {
         }]
     };
 
-    const response = await fetch(VISION_API_URL, {
+    const response = await fetch(VISION_PROXY_URL, {
         method: 'POST',
-        headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': VISION_API_VERSION,
-            'content-type': 'application/json',
-            'anthropic-dangerous-direct-browser-access': 'true'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
         const errBody = await response.text().catch(() => '');
         console.error(`[Vision API] Error ${response.status}: ${errBody}`);
-        if (response.status === 401) {
-            throw new Error('Invalid API key. Check your key in Settings.');
+        if (response.status === 403) {
+            // Clear credit cache so UI updates
+            clearCreditCache();
+            throw new Error('NO_CREDITS');
         }
         throw new Error(`Vision API error: ${response.status}`);
     }
+
+    // Clear credit cache after successful use (balance changed)
+    clearCreditCache();
 
     const result = await response.json();
     const text = result.content?.[0]?.text;
@@ -274,58 +249,5 @@ function visionResultToDetection(visionResult, durationMs) {
     };
 }
 
-// --- Settings Panel Logic ---
-
-function initVisionSettings() {
-    const apiKeyInput = document.getElementById('vision-api-key');
-    const modelSelect = document.getElementById('vision-model-pref');
-    const saveBtn = document.getElementById('btn-save-vision-settings');
-    const statusEl = document.getElementById('vision-settings-status');
-
-    if (!apiKeyInput) return;
-
-    // Load current values
-    const currentKey = getVisionApiKey();
-    if (currentKey) {
-        apiKeyInput.value = currentKey;
-    }
-    if (modelSelect) {
-        modelSelect.value = getVisionModelPref();
-    }
-
-    // Update status indicator
-    updateVisionStatus();
-
-    // Save button
-    if (saveBtn) {
-        saveBtn.addEventListener('click', () => {
-            setVisionApiKey(apiKeyInput.value);
-            if (modelSelect) setVisionModelPref(modelSelect.value);
-            updateVisionStatus();
-            if (statusEl) {
-                statusEl.textContent = 'Settings saved.';
-                statusEl.className = 'vision-status-msg success';
-                setTimeout(() => { statusEl.textContent = ''; }, 2000);
-            }
-        });
-    }
-}
-
-function updateVisionStatus() {
-    const indicator = document.getElementById('vision-api-indicator');
-    if (!indicator) return;
-    if (isVisionApiAvailable()) {
-        indicator.textContent = 'Active';
-        indicator.className = 'vision-indicator active';
-    } else {
-        indicator.textContent = 'Not configured';
-        indicator.className = 'vision-indicator inactive';
-    }
-}
-
-// Initialise settings when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initVisionSettings);
-} else {
-    initVisionSettings();
-}
+// Vision AI is proxied server-side — no client-side settings needed.
+// Model preference (sonnet/opus) is stored in localStorage.

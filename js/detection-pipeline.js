@@ -42,8 +42,14 @@ async function runDetectionPipeline(dataUrl) {
             await Promise.race([visionPromise, timeoutPromise]);
             return; // Vision API succeeded
         } catch (err) {
-            console.warn('[Detection] Vision API failed, falling back to CV:', err.message);
-            showDetectionStatus('Vision AI unavailable — running local analysis...', 10);
+            if (err.message === 'NO_CREDITS') {
+                showDetectionStatus('No AI credits — using local analysis', -1);
+                if (typeof showPaywall === 'function') showPaywall();
+                // Fall through to CV pipeline
+            } else {
+                console.warn('[Detection] Vision API failed, falling back to CV:', err.message);
+            }
+            showDetectionStatus('Running local analysis...', 10);
         }
     }
 

@@ -21,11 +21,10 @@
     <!-- Paywall Modal -->
     <div id="paywall-modal" class="paywall-modal" style="display:none;">
         <div class="paywall-content">
-            <h2>Unlock Unlimited Access</h2>
-            <p class="paywall-msg">You've used your 3 free sign captures. Unlock unlimited captures with a one-off lifetime licence.</p>
-            <div class="paywall-price">$149 <span>AUD (inc. GST)</span></div>
-            <p class="paywall-value">Less than the cost of auditing 3 signs manually.</p>
-            <button id="paywall-buy-btn" class="btn btn-primary">Purchase Licence</button>
+            <h2>Free Captures Used</h2>
+            <p class="paywall-msg">You've used your 3 free sign captures with Opus AI. Purchase credits to continue analysing signs.</p>
+            <p class="paywall-value">From <strong>$49</strong> for 100 signs — 99% cheaper than manual auditing.</p>
+            <button id="paywall-pricing-btn" class="btn btn-primary">View Pricing</button>
             <button id="paywall-signin-btn" class="btn btn-secondary" style="margin-top:0.5rem;">Sign In / Create Account</button>
             <button id="paywall-close-btn" class="btn-text" style="margin-top:0.75rem;">Continue viewing existing audits</button>
         </div>
@@ -44,6 +43,7 @@
                 <button class="nav-btn" data-view="capture">Capture</button>
                 <button class="nav-btn" data-view="reports">Reports</button>
                 <button class="nav-btn" data-view="reference">Reference</button>
+                <button class="nav-btn" data-view="pricing">Pricing</button>
                 <button class="nav-btn" data-view="settings">Settings</button>
             </nav>
         </header>
@@ -535,74 +535,142 @@
                 </ul>
             </div>
         </section>
-        <!-- Settings View -->
-        <section id="view-settings" class="view">
-            <div class="card">
-                <h2>Vision AI Settings</h2>
-
-                <div class="vision-status-row">
-                    <span>Vision AI Status:</span>
-                    <span id="vision-api-indicator" class="vision-indicator inactive">Not configured</span>
-                </div>
-
-                <div class="byok-guide">
-                    <h3>What is this?</h3>
-                    <p>This app uses AI to automatically detect and classify safety signs from your photos. To enable this, you need your own API key from Anthropic (the company behind Claude AI).</p>
-
-                    <h3>How to get your API key</h3>
-                    <ol>
-                        <li>Go to <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a></li>
-                        <li>Create a free account (or sign in)</li>
-                        <li>Go to <strong>API Keys</strong> and click <strong>Create Key</strong></li>
-                        <li>Copy the key (starts with <code>sk-ant-...</code>) and paste it below</li>
-                    </ol>
-
-                    <h3>How much does it cost?</h3>
-                    <p>You pay Anthropic directly based on usage. Typical costs per sign photographed:</p>
-                    <div class="byok-cost-table">
-                        <div class="byok-cost-row">
-                            <span class="byok-model">Haiku</span>
-                            <span class="byok-cost">~$0.01/sign</span>
-                            <span class="byok-note">Fastest, good accuracy</span>
-                        </div>
-                        <div class="byok-cost-row">
-                            <span class="byok-model">Sonnet</span>
-                            <span class="byok-cost">~$0.05/sign</span>
-                            <span class="byok-note">Balanced</span>
-                        </div>
-                        <div class="byok-cost-row byok-recommended">
-                            <span class="byok-model">Opus</span>
-                            <span class="byok-cost">~$0.25/sign</span>
-                            <span class="byok-note">Best accuracy (recommended)</span>
-                        </div>
-                    </div>
-                    <p class="byok-example">Example: Auditing 100 signs with Opus costs ~$25.</p>
-
-                    <h3>Is it safe?</h3>
-                    <p>Your API key is stored <strong>locally on this device only</strong>. It is never sent to us or any third party. Sign images are sent directly from your device to Anthropic for analysis.</p>
-
-                    <h3>Do I need this?</h3>
-                    <p>No — the app works without it using local detection (lower accuracy, fully offline). The AI simply provides faster, more accurate results.</p>
-                </div>
-
-                <div class="form-group" style="margin-top:1rem;">
-                    <label for="vision-api-key">Your Anthropic API Key</label>
-                    <input type="password" id="vision-api-key" placeholder="sk-ant-...">
-                </div>
-
-                <div class="form-group">
-                    <label for="vision-model-pref">AI Model</label>
-                    <select id="vision-model-pref">
-                        <option value="fast">Haiku — fastest, lowest cost</option>
-                        <option value="balanced">Sonnet — balanced accuracy & cost</option>
-                        <option value="best" selected>Opus — highest accuracy (recommended)</option>
-                    </select>
-                </div>
-
-                <button id="btn-save-vision-settings" class="btn btn-primary">Save Settings</button>
-                <span id="vision-settings-status" class="vision-status-msg"></span>
+        <!-- Pricing View -->
+        <section id="view-pricing" class="view">
+            <div class="pricing-header">
+                <h2>Choose Your Plan</h2>
+                <p>Purchase AI sign detection credits. No subscription — buy what you need.</p>
             </div>
 
+            <!-- Credit Balance (shown when signed in with credits) -->
+            <div id="pricing-balance" class="pricing-balance-card" style="display:none;">
+                <h3>Your Credits</h3>
+                <div class="pricing-balance-pills">
+                    <span class="balance-pill sonnet-pill">Sonnet: <strong id="pricing-sonnet-bal">0</strong></span>
+                    <span class="balance-pill opus-pill">Opus: <strong id="pricing-opus-bal">0</strong></span>
+                </div>
+            </div>
+
+            <!-- Site Condition Guide -->
+            <div class="site-guide">
+                <div class="site-guide-card">
+                    <div class="site-guide-icon" style="background:#E8F8F5; color:#1ABC9C;">&#10003;</div>
+                    <div>
+                        <strong>Well-maintained site</strong>
+                        <p>Clear signage, good lighting, minimal wear</p>
+                        <span class="site-guide-rec sonnet-rec">Sonnet recommended</span>
+                    </div>
+                </div>
+                <div class="site-guide-card">
+                    <div class="site-guide-icon" style="background:#FEF9E7; color:#F39C12;">&#9888;</div>
+                    <div>
+                        <strong>Faded or damaged signs</strong>
+                        <p>Weathered, poor lighting, worn, partial text</p>
+                        <span class="site-guide-rec opus-rec">Opus recommended</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Columns -->
+            <div class="pricing-columns">
+                <!-- Sonnet Column -->
+                <div class="pricing-column sonnet-column">
+                    <h3>Sonnet</h3>
+                    <p class="pricing-column-sub">Fast & accurate</p>
+
+                    <label class="batch-option">
+                        <input type="radio" name="sonnet-batch" value="sonnet_100">
+                        <div class="batch-option-content">
+                            <span class="batch-size">100 signs</span>
+                            <span class="batch-price">$49</span>
+                            <span class="per-sign-cost">$0.49/sign</span>
+                        </div>
+                    </label>
+
+                    <label class="batch-option">
+                        <input type="radio" name="sonnet-batch" value="sonnet_250">
+                        <div class="batch-option-content">
+                            <span class="batch-size">250 signs</span>
+                            <span class="batch-price">$99</span>
+                            <span class="per-sign-cost">$0.40/sign</span>
+                        </div>
+                    </label>
+
+                    <label class="batch-option">
+                        <input type="radio" name="sonnet-batch" value="sonnet_500" checked>
+                        <div class="batch-option-content">
+                            <span class="batch-size">500 signs</span>
+                            <span class="batch-price">$149</span>
+                            <span class="per-sign-cost">$0.30/sign</span>
+                            <span class="batch-badge popular">Most popular</span>
+                        </div>
+                    </label>
+
+                    <label class="batch-option">
+                        <input type="radio" name="sonnet-batch" value="sonnet_1000">
+                        <div class="batch-option-content">
+                            <span class="batch-size">1,000 signs</span>
+                            <span class="batch-price">$249</span>
+                            <span class="per-sign-cost">$0.25/sign</span>
+                            <span class="batch-badge value">Best value</span>
+                        </div>
+                    </label>
+
+                    <button class="btn btn-primary pricing-buy-btn" data-model="sonnet">Buy Sonnet Credits</button>
+                </div>
+
+                <!-- Opus Column -->
+                <div class="pricing-column opus-column">
+                    <h3>Opus</h3>
+                    <p class="pricing-column-sub">Maximum accuracy</p>
+
+                    <label class="batch-option">
+                        <input type="radio" name="opus-batch" value="opus_100">
+                        <div class="batch-option-content">
+                            <span class="batch-size">100 signs</span>
+                            <span class="batch-price">$79</span>
+                            <span class="per-sign-cost">$0.79/sign</span>
+                        </div>
+                    </label>
+
+                    <label class="batch-option">
+                        <input type="radio" name="opus-batch" value="opus_250">
+                        <div class="batch-option-content">
+                            <span class="batch-size">250 signs</span>
+                            <span class="batch-price">$169</span>
+                            <span class="per-sign-cost">$0.68/sign</span>
+                        </div>
+                    </label>
+
+                    <label class="batch-option">
+                        <input type="radio" name="opus-batch" value="opus_500" checked>
+                        <div class="batch-option-content">
+                            <span class="batch-size">500 signs</span>
+                            <span class="batch-price">$299</span>
+                            <span class="per-sign-cost">$0.60/sign</span>
+                        </div>
+                    </label>
+
+                    <label class="batch-option">
+                        <input type="radio" name="opus-batch" value="opus_1000">
+                        <div class="batch-option-content">
+                            <span class="batch-size">1,000 signs</span>
+                            <span class="batch-price">$499</span>
+                            <span class="per-sign-cost">$0.50/sign</span>
+                            <span class="batch-badge value">Best value</span>
+                        </div>
+                    </label>
+
+                    <button class="btn btn-primary pricing-buy-btn" data-model="opus">Buy Opus Credits</button>
+                </div>
+            </div>
+
+            <p class="pricing-free-note">New users get <strong>3 free sign captures with Opus</strong> — no credit card required.</p>
+            <p class="pricing-free-note">All prices in AUD, inclusive of GST.</p>
+        </section>
+
+        <!-- Settings View -->
+        <section id="view-settings" class="view">
             <div class="card">
                 <h2>Data Backup & Restore</h2>
                 <p class="settings-desc">
