@@ -712,7 +712,7 @@
             <div class="card" id="license-card">
                 <h2>Account & Licence</h2>
                 <p class="settings-desc">
-                    Sign in to purchase or restore your lifetime licence.
+                    Sign in to purchase or manage your AI detection credits.
                     Your first 3 sign captures are free — no account needed.
                 </p>
                 <div id="license-auth-section"></div>
@@ -724,14 +724,14 @@
                     <h3>1. Ownership</h3>
                     <p>This application ("the App") is owned and operated by <strong>SymbioTeK Pty Ltd</strong>, a company registered in Australia (ACN 694 230 334). All intellectual property rights in the App remain with SymbioTeK Pty Ltd.</p>
 
-                    <h3>2. Licence</h3>
-                    <p>SymbioTeK Pty Ltd grants you a non-exclusive, non-transferable, revocable licence to use the App. Free users may create up to 3 audits. A one-off payment of $149 AUD (inc. GST) unlocks unlimited lifetime access. SymbioTeK Pty Ltd reserves the right to terminate or restrict access at any time, without prior notice and at its sole discretion.</p>
+                    <h3>2. Licence & Credits</h3>
+                    <p>SymbioTeK Pty Ltd grants you a non-exclusive, non-transferable, revocable licence to use the App. New users receive <strong>3 free AI-powered sign captures</strong> (using the Opus model). Additional AI detection credits are purchased in batches via the Pricing tab, with two models available: <strong>Sonnet</strong> (for well-maintained sites) and <strong>Opus</strong> (for faded or damaged signage). Credits are non-refundable and do not expire. SymbioTeK Pty Ltd reserves the right to adjust pricing, terminate, or restrict access at any time, without prior notice and at its sole discretion.</p>
 
-                    <h3>3. AI-Powered Detection (Bring Your Own Key)</h3>
-                    <p>The App offers optional AI-powered sign detection using Anthropic's Claude Vision API. To use this feature, you must provide <strong>your own Anthropic API key</strong>. API usage is billed directly by Anthropic to your account. SymbioTeK Pty Ltd is not responsible for any charges incurred through your use of the Anthropic API. Your API key is stored <strong>locally on your device only</strong> and is never transmitted to SymbioTeK Pty Ltd.</p>
+                    <h3>3. AI-Powered Detection</h3>
+                    <p>The App provides AI-powered sign detection using Anthropic's Claude Vision API, proxied through SymbioTeK's server infrastructure. Each AI detection consumes one credit from your purchased batch (Sonnet or Opus). When no credits are available, the App falls back to local computer vision (lower accuracy, no credits required, works offline). SymbioTeK Pty Ltd is not liable for the accuracy of AI or local detection results.</p>
 
                     <h3>4. Data</h3>
-                    <p>All audit data — including photographs, GPS coordinates, and compliance records — is stored <strong>locally on your device</strong>. When AI detection is used, sign images are sent directly from your device to Anthropic's API using your API key. Account authentication (email and password) is processed by Supabase. Payment is processed by Stripe. SymbioTeK Pty Ltd does not access your audit data.</p>
+                    <p>All audit data — including photographs, GPS coordinates, and compliance records — is stored <strong>locally on your device</strong>. When AI detection is used, sign images are transmitted to Anthropic's API via SymbioTeK's server-side proxy for analysis; images are not stored by SymbioTeK. Account authentication (email and password) is processed by Supabase. Payment is processed by Stripe. SymbioTeK Pty Ltd does not access or store your audit data.</p>
 
                     <h3>5. Disclaimer</h3>
                     <p>The App is provided on an <strong>"as is" and "as available"</strong> basis, without warranties of any kind, whether express or implied. The App is intended as a field auditing aid only and is <strong>not a substitute for professional compliance assessment</strong> by a qualified person. Users should verify all compliance findings independently against AS 1319-1994 and any applicable legislation. AI detection results are indicative only and must be reviewed by the auditor.</p>
