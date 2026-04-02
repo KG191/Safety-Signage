@@ -8,8 +8,7 @@
  */
 
 // ── Configuration ──────────────────────────────────────────────────
-const SUPABASE_URL = 'https://auacwdtbncawmpjqcnal.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1YWN3ZHRibmNhd21wanFjbmFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjQzMTIsImV4cCI6MjA5MDI0MDMxMn0.cqrpLHF8nyS6rfI_9UuUoRG6XcVZFkR4I2v4lJH-8Fw';
+// SUPABASE_URL and SUPABASE_ANON_KEY defined in index.html inline script
 const FREE_CAPTURE_LIMIT = 3;
 const CREDIT_CACHE_KEY = 'credit_cache';
 const CREDIT_CACHE_SECONDS = 60; // Short TTL for credit balance cache
